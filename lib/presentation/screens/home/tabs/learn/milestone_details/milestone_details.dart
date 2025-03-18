@@ -6,6 +6,7 @@ import 'package:intervyou_app/core/colors_manager.dart';
 import 'package:intervyou_app/core/constants_string.dart';
 import 'package:intervyou_app/presentation/screens/home/home.dart';
 import 'package:intervyou_app/presentation/screens/home/tabs/learn/learn.dart';
+import 'package:intervyou_app/presentation/screens/home/tabs/learn/widget/milestone_topic_item.dart';
 import 'package:intervyou_app/presentation/screens/home/tabs/learn/widget/widget.dart';
 
 class MilestoneDetails extends StatefulWidget {
@@ -149,7 +150,7 @@ class _MilestoneDetailsState extends State<MilestoneDetails> {
                               height: 15.h,
                             ),
                             itemBuilder: (context, index) =>
-                                Center(child: milestoneTopicWidget(index)),
+                                Center(child: MilestoneTopicItem( index: index+1)),
                             itemCount: 20,
                           ),
                         ),

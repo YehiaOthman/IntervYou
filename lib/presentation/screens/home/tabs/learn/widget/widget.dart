@@ -63,7 +63,6 @@ Widget milestoneCard(Color color) {
     ),
   ]);
 }
-
 Widget quizItemWidget() {
   return Container(
     width: 325.w,
@@ -135,45 +134,6 @@ Widget quizItemWidget() {
           )
         ],
       ),
-    ),
-  );
-}
-
-Widget milestoneTopicWidget(int index,) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 20),
-    child: Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(35.r)),
-      color: ColorsManger.semiBlack.withOpacity(0.1),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12,vertical: 14),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text('$index', style: LightAppStyle.email.copyWith(
-                color: Colors.white.withOpacity(0.5),
-                fontSize: 20.sp,
-                fontWeight: FontWeight.bold), ),
-            Text('Introduction to Arrays', style: LightAppStyle.email.copyWith(
-              fontSize: 15.sp,
-              fontWeight: FontWeight.normal
-
-            )),
-            Container(
-              height: 25.h,
-              width: 25.h,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15.r),
-                color: ColorsManger.secondaryColor.withOpacity(0.5)
-              ),
-              child: Icon(Icons.check,color: ColorsManger.secondaryColor,),
-            )
-          ],
-        ),
-      ),
-
     ),
   );
 }
