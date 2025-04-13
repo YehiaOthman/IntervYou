@@ -2,15 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pw_validator/flutter_pw_validator.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:intervyou_app/core/routes_manger.dart';
-import 'package:pinput/pinput.dart';
-
 import '../../../../../config/styles/light_app_style.dart';
 import '../../../../../core/assets_manager.dart';
 import '../../../../../core/colors_manager.dart';
 import '../../../../../core/strings_manager.dart';
 import '../../widgets/custom_txt_field.dart';
-import '../login.dart';
+import 'login.dart';
 
 class ResetPassword extends StatefulWidget {
   const ResetPassword({super.key});

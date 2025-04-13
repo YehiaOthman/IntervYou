@@ -6,7 +6,7 @@ import 'package:intervyou_app/core/assets_manager.dart';
 import 'package:intervyou_app/core/colors_manager.dart';
 import 'package:intervyou_app/core/routes_manger.dart';
 import 'package:intervyou_app/core/strings_manager.dart';
-import 'package:intervyou_app/presentation/screens/auth/widgets/custom_txt_field.dart';
+import '../../widgets/custom_txt_field.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});

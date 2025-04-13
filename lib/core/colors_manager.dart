@@ -9,4 +9,5 @@ class ColorsManger{
   static const Color pink = Color(0xffF6D6D6);
   static const Color yellow = Color(0xff7BD3EA);
   static const Color blue = Color(0xffF6F7C4);
+  static const Color newSecondaryColor = Color(0xff3F474B);
 }
