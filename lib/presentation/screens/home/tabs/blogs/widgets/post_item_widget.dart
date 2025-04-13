@@ -76,7 +76,11 @@ class _PostItemWidgetState extends State<PostItemWidget> {
                         reverseCurve: Curves.easeInCirc,
                       ),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15.r),
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(25.r),
+                            bottomLeft: Radius.circular(25.r),
+                            bottomRight: Radius.circular(25.r),
+                        ),
                         side: BorderSide(
                             color: ColorsManger.secondaryColor.withOpacity(0.3),
                             width: 2.w),
@@ -195,9 +199,10 @@ class _PostItemWidgetState extends State<PostItemWidget> {
                 ),
               ),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  SizedBox(height: 40.h),
                   InkWell(
                     onTap: () => toggleUpVote(),
                     child: Icon(

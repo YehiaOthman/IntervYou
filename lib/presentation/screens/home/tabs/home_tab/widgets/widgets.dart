@@ -163,49 +163,38 @@ Widget buildDailyQuizTaskItem() {
   );
 }
 Widget homeHeader() {
-  return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 18),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Let's Conquer",
-              style: GoogleFonts.poppins(
-                color: Colors.white70,
-                fontSize: 20.sp,
-              ),
-            ),
-            RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: "Your Future!",
-                    style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 30,
-                      color: Colors.white,
-                    ),
-                  ),
-                  WidgetSpan(
-                    child: Text("🫵",
-                        style: GoogleFonts.notoColorEmoji(fontSize: 20)),
-                  ),
-                ],
-              ),
-            ),
-          ],
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.start,
+    children: [
+      CircleAvatar(
+        radius: 23.r,
+        backgroundImage: AssetImage(
+          AssetsManager.pp,
         ),
-        CircleAvatar(
-          radius: 40.r,
-          backgroundImage: AssetImage(
-            AssetsManager.pp,
+      ),
+      SizedBox(width: 10.w),
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "Welcome Back",
+            style: GoogleFonts.poppins(
+              color: Colors.white70,
+              fontSize: 12.sp,
+            ),
           ),
-        ),
-      ],
-    ),
+          Text(
+            "Yehia Mohamed Othman",
+            style: GoogleFonts.poppins(
+              color: Colors.white,
+              fontSize: 14.sp,
+            ),
+          ),
+        ],
+      ),
+      Spacer(),
+      Icon(Icons.notifications_none, color: Colors.white,size: 30.sp,),
+    ],
   );
 }
 Widget learnHeader() {

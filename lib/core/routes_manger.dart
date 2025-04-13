@@ -10,4 +10,5 @@ class RoutesManger{
   static const String otp = 'otp';
   static const String quiz = 'quiz';
   static const String milestoneTopic = 'milestoneTopic';
+  static const String roadMap = 'roadMap';
 }

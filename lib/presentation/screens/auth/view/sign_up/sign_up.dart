@@ -1,13 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../../config/styles/light_app_style.dart';
-import '../../../../core/assets_manager.dart';
-import '../../../../core/colors_manager.dart';
-import '../../../../core/routes_manger.dart';
-import '../../../../core/strings_manager.dart';
+import '../../../../../config/styles/light_app_style.dart';
+import '../../../../../core/assets_manager.dart';
+import '../../../../../core/colors_manager.dart';
+import '../../../../../core/routes_manger.dart';
+import '../../../../../core/strings_manager.dart';
+import '../../widgets/custom_txt_field.dart';
 import '../login/login.dart';
-import '../widgets/custom_txt_field.dart';
+
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});

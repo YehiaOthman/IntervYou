@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intervyou_app/presentation/screens/home/tabs/blogs/tab_bar_tabs/chat_tab.dart';
+import 'package:intervyou_app/presentation/screens/home/tabs/blogs/tab_bar_tabs/netwrok_tab.dart';
 import 'package:intervyou_app/presentation/screens/home/tabs/blogs/widgets/post_item_widget.dart';
 import 'package:intervyou_app/presentation/screens/home/tabs/blogs/widgets/widgets.dart';
 
 import '../../../../../config/styles/light_app_style.dart';
+import '../../../../../core/assets_manager.dart';
 import '../../../../../core/colors_manager.dart';
 
 class Blogs extends StatefulWidget {
@@ -42,106 +45,85 @@ class _BlogsState extends State<Blogs> {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-        backgroundColor: Colors.black,
+        backgroundColor: ColorsManger.semiBlack,
         body: Column(
           children: [
-            SizedBox(height: 50.h),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 40),
-              child: blogsHeader(),
-            ),
-            SizedBox(height: 15.h),
+            SizedBox(height: 30.h),
             Expanded(
-              child: Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: ColorsManger.semiBlack,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(35.r),
-                    topRight: Radius.circular(35.r),
-                  ),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Column(
-                    children: [
-                      SizedBox(height: 20.h),
-                      TabBar(
-                        indicatorColor: ColorsManger.secondaryColor,
-                        unselectedLabelColor: Colors.white.withOpacity(0.6),
-                        dividerColor: Colors.transparent,
-                        labelColor: ColorsManger.secondaryColor,
-                        labelStyle: LightAppStyle.email,
-                        isScrollable: false,
-                        tabs: const [
-                          Tab(text: 'Posts'),
-                          Tab(text: 'Network'),
-                          Tab(text: 'Chat'),
-                        ],
-                      ),
-                      Expanded(
-                        child: TabBarView(
-                          children: [
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                SizedBox(height: 20.h),
-                                TextFormField(
-                                    style: LightAppStyle.email.copyWith(
-                                        fontWeight: FontWeight.normal,
-                                        fontSize: 14.sp),
-                                    cursorColor: ColorsManger.secondaryColor,
-                                    decoration: InputDecoration(
-                                      prefixIcon: Icon(
-                                        Icons.image,
-                                        color: Colors.white.withOpacity(0.5),
-                                      ),
-                                      suffixIcon: Icon(
-                                        Icons.emoji_emotions,
-                                        color: Colors.white.withOpacity(0.5),
-                                      ),
-                                      hintText: 'Write something....',
-                                      hintStyle: LightAppStyle.email.copyWith(
-                                          color: Colors.white.withOpacity(0.5),
-                                          fontSize: 14.sp),
-                                      fillColor: Colors.black.withOpacity(0.1),
-                                      filled: true,
-                                      border: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(18.r),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(18.r),
-                                        borderSide: BorderSide(
-                                          color: ColorsManger.secondaryColor,
-                                          width: 1.w,
-                                        ),
-                                      ),
-                                    )),
-                                Expanded(
-                                    child: ListView.separated(
-                                        itemBuilder: (context, index) =>
-                                            posts[index],
-                                        separatorBuilder: (context, index) =>
-                                            SizedBox(
-                                              height: 20.h,
-                                            ),
-                                        itemCount: posts.length))
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  children: [
+                    SizedBox(height: 20.h),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Stack(children: [
+                          Image.asset(AssetsManager.pp, width: 55.w),
+                          Positioned(
+                            left: 4.w,
+                            top: 3.h,
+                            child: Container(
+                              width: 12.w,
+                              height: 12.h,
+                              decoration: BoxDecoration(
+                                color: Colors.green,
+                                border: Border.all(
+                                    color: Colors.white, width: 1.w),
+                                borderRadius: BorderRadius.circular(15.r),
+                              ),
+                            ),
+                          ),
+                        ]),
+                        Expanded(
+                          child: IntrinsicWidth(
+                            child: TabBar(
+                              indicatorColor: ColorsManger.secondaryColor,
+                              unselectedLabelColor:
+                                  Colors.white.withOpacity(0.6),
+                              dividerColor: Colors.transparent,
+                              labelColor: ColorsManger.secondaryColor,
+                              labelStyle: LightAppStyle.email.copyWith(
+                                fontSize: 15.sp
+                              ),
+                              isScrollable: false,
+                              splashFactory: NoSplash.splashFactory,
+                              overlayColor:
+                                  MaterialStateProperty.all(Colors.transparent),
+                              tabs: const [
+                                Tab(text: 'Posts'),
+                                Tab(text: 'Network'),
+                                Tab(text: 'Chat'),
                               ],
                             ),
-                            Center(
-                                child: Text('Network Content',
-                                    style: TextStyle(color: Colors.white))),
-                            Center(
-                                child: Text('Chat Content',
-                                    style: TextStyle(color: Colors.white))),
-                          ],
+                          ),
                         ),
+                      ],
+                    ),
+                    Expanded(
+                      child: TabBarView(
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Expanded(
+                                  child: ListView.separated(
+                                      itemBuilder: (context, index) =>
+                                          posts[index],
+                                      separatorBuilder: (context, index) =>
+                                          SizedBox(
+                                            height: 20.h,
+                                          ),
+                                      itemCount: posts.length))
+                            ],
+                          ),
+                          NetwrokTab(),
+                          ChatTab()
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),
