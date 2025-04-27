@@ -21,7 +21,7 @@ class RectangularButton extends StatelessWidget {
         height: 60.h,
         width: double.infinity,
         child: Card(
-          color: ColorsManger.secondaryColor,
+          color: ColorsManger.newSecondaryColor,
           child: Center(
             child: Text(
               label,

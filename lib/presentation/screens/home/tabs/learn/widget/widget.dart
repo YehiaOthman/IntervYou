@@ -6,18 +6,10 @@ import 'package:intervyou_app/core/colors_manager.dart';
 Widget milestoneCard(Color color) {
   return Stack(children: [
     Container(
-        height: 110.h,
-        width: 155.w,
-        decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.6),
-          border: Border.all(color: color, width: 2.5.w),
-          borderRadius: BorderRadius.circular(25.r),
-        )),
-    Container(
       height: 110.h,
       width: 155.w,
       decoration: BoxDecoration(
-        color: color.withOpacity(0.5),
+        color: color,
         border: Border.all(color: color, width: 2.w),
         borderRadius: BorderRadius.circular(25.r),
       ),
@@ -35,14 +27,14 @@ Widget milestoneCard(Color color) {
               Text(
                 '7',
                 style: LightAppStyle.email.copyWith(
-                    color: ColorsManger.semiBlack,
+                    color: Colors.white,
                     fontSize: 30.sp,
                     fontWeight: FontWeight.bold),
               ),
               Text(
                 '/14',
                 style: LightAppStyle.email.copyWith(
-                    color: ColorsManger.semiBlack.withOpacity(0.4),
+                    color: Colors.white.withOpacity(0.4),
                     fontSize: 20.sp,
                     fontWeight: FontWeight.normal),
               ),
@@ -53,7 +45,7 @@ Widget milestoneCard(Color color) {
             child: Text(
               'Arrays',
               style: LightAppStyle.email.copyWith(
-                  color: ColorsManger.semiBlack,
+                  color: Colors.white,
                   fontSize: 22.sp,
                   fontWeight: FontWeight.normal),
             ),
@@ -61,16 +53,27 @@ Widget milestoneCard(Color color) {
         ],
       ),
     ),
+    Positioned(
+      left: 2.5.w,
+      top: 2.h,
+      child: Container(
+          height: 105.h,
+          width: 150.w,
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.05),
+            border: Border.all(color: Colors.white.withOpacity(0.1), width: 1.w),
+            borderRadius: BorderRadius.circular(25.r),
+          )),
+    ),
   ]);
 }
 Widget quizItemWidget() {
   return Container(
     width: 325.w,
-    height: 100.h,
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(25.r),
-      color: Colors.black,
-      border: Border.all(color: ColorsManger.secondaryColor, width: 2.w),
+      color: Colors.transparent,
+      border: Border.all(color: ColorsManger.newSecondaryColor, width: 1.w),
     ),
     child: Padding(
       padding: const EdgeInsets.all(15),
@@ -80,13 +83,13 @@ Widget quizItemWidget() {
             width: 50.w,
             height: 50.h,
             decoration: BoxDecoration(
-              color: ColorsManger.secondaryColor,
+              color: ColorsManger.newSecondaryColor,
               borderRadius: BorderRadius.circular(25.r),
             ),
             child: Center(
                 child: Text('1',
                     style: LightAppStyle.email.copyWith(
-                        color: Colors.black,
+                        color: Colors.white,
                         fontSize: 20.sp,
                         fontWeight: FontWeight.bold))),
           ),
@@ -99,14 +102,14 @@ Widget quizItemWidget() {
                 Text(
                   'Widgets Types',
                   style: LightAppStyle.email.copyWith(
-                    color: Colors.white,
-                    fontSize: 16.sp,),
+                    color: ColorsManger.newSecondaryColor,
+                    fontSize: 18.sp,),
                 ),
                 Text(
                   '20',
                   style: LightAppStyle.email.copyWith(
-                    color: Colors.white,
-                    fontSize: 16.sp,),
+                    color: ColorsManger.newSecondaryColor,
+                    fontSize: 18.sp,),
                 ),
               ],
             ),
@@ -121,13 +124,13 @@ Widget quizItemWidget() {
                 Padding(
                   padding: const EdgeInsets.only(right: 5),
                   child: Icon(
-                    Icons.timer_sharp, color: ColorsManger.secondaryColor,
+                    Icons.timer_sharp, color: ColorsManger.newSecondaryColor,
                     size: 30.sp,),
                 ),
                 Text('30min',
                     style: LightAppStyle.email.copyWith(
-                      color: ColorsManger.secondaryColor,
-                      fontSize: 11.sp,
+                      color: ColorsManger.newSecondaryColor,
+                      fontSize: 12.sp,
                     ))
               ],
             ),

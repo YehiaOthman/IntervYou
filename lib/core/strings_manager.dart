@@ -19,7 +19,6 @@ class StringsManger{
   static const String upperCase = 'An UpperCase Letter (A-Z)';
   static const String specialChar = 'A Special Character (!@#&*)';
   static const String passwordConditions = 'Enter your new password, fulfill all conditions';
-  static const String otpMail = '''Please enter code we just sent to
-example@email.com''';
+  static const String otpMail = 'Please enter code we just sent to';
 
 }

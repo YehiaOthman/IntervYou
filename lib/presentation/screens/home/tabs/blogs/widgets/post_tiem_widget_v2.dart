@@ -19,6 +19,7 @@ class _PostItemWidgetV2State extends State<PostItemWidgetV2> {
   bool isVotedUp = false;
   bool isVotedDown = false;
   int votes = 50;
+  int comments = 50;
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +60,7 @@ class _PostItemWidgetV2State extends State<PostItemWidgetV2> {
                       style: LightAppStyle.email.copyWith(
                           fontSize: 15.sp,
                           color: Colors.black,
-                          fontWeight: FontWeight.w700),
+                          fontWeight: FontWeight.w500),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -75,7 +76,7 @@ class _PostItemWidgetV2State extends State<PostItemWidgetV2> {
                 ),
                 Expanded(child: SizedBox()),
                 PopupMenuButton<int>(
-                  color: ColorsManger.semiBlack,
+                  color: ColorsManger.newSecondaryColor,
                   popUpAnimationStyle: AnimationStyle(
                     duration: Duration(milliseconds: 300),
                     curve: Curves.easeInCirc,
@@ -88,7 +89,7 @@ class _PostItemWidgetV2State extends State<PostItemWidgetV2> {
                       bottomRight: Radius.circular(25.r),
                     ),
                     side: BorderSide(
-                        color: ColorsManger.secondaryColor.withOpacity(0.3),
+                        color: ColorsManger.newSecondaryColor.withOpacity(0.3),
                         width: 2.w),
                   ),
                   icon:
@@ -146,15 +147,22 @@ class _PostItemWidgetV2State extends State<PostItemWidgetV2> {
               ],
             ),
             SizedBox(height: 15.h),
+
             Text(
               widget.postContent,
               style: LightAppStyle.email.copyWith(
                 color: Colors.black,
                 fontSize: 16.sp,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w500,
               ),
             ),
-            SizedBox(height: 10.h),
+            SizedBox(height: 15.h),
+            Container(
+              width: double.infinity,
+              height: 1.h,
+              color: ColorsManger.newSecondaryColor.withOpacity(0.3),
+            ),
+            SizedBox(height: 15.h),
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -163,7 +171,7 @@ class _PostItemWidgetV2State extends State<PostItemWidgetV2> {
                   child: Icon(
                     Icons.arrow_upward,
                     color:
-                        isVotedUp ? ColorsManger.newSecondaryColor : Colors.black.withOpacity(0.3),
+                        isVotedUp ? Colors.green : Colors.black.withOpacity(0.3),
                     size: 30.sp,
                   ),
                 ),
@@ -181,8 +189,26 @@ class _PostItemWidgetV2State extends State<PostItemWidgetV2> {
                   child: Icon(
                     Icons.arrow_downward,
                     color:
-                    isVotedDown ? ColorsManger.newSecondaryColor : Colors.black.withOpacity(0.3),
+                    isVotedDown ? Colors.red : Colors.black.withOpacity(0.3),
                     size: 30.sp,
+                  ),
+                ),
+                Spacer(),
+                InkWell(
+                  onTap: () {},
+                  child: Icon(
+                    Icons.reply_all,
+                    color: Colors.black.withOpacity(0.3),
+                    size: 30.sp,
+                  ),
+                ),
+                SizedBox(width: 10.w),
+                Text(
+                  comments.toString(),
+                  style: LightAppStyle.email.copyWith(
+                    color: Colors.black.withOpacity(0.5),
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
               ],

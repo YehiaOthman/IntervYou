@@ -37,21 +37,28 @@ class AnswerCard extends StatelessWidget {
     bool isCorrectAnswer = currentIndex == correctAnswerIndex;
     bool isWrongAnswer = !isCorrectAnswer && isSelected;
     return Padding(
-      padding: const EdgeInsets.symmetric(
+      padding:  REdgeInsets.symmetric(
         vertical: 10.0,
       ),
       child: selectedAnswerIndex != null
           // if one option is chosen
           ? Container(
-              height: 70,
-              padding: const EdgeInsets.all(16.0),
+              padding:  REdgeInsets.all(25.0),
               decoration: BoxDecoration(
                 color: isCorrectAnswer
-                    ? ColorsManger.secondaryColor
+                    ? ColorsManger.newSecondaryColor
                     : isWrongAnswer
                         ? Colors.red
                         : Colors.white,
                 borderRadius: BorderRadius.circular(20.r),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 5,
+                    blurRadius: 7,
+                    offset: const Offset(0, 3),
+                  ),
+                ]
               ),
               child: Row(
                 children: [
@@ -59,27 +66,35 @@ class AnswerCard extends StatelessWidget {
                     child: Text(
                       question,
                       style: LightAppStyle.email.copyWith(
-                          color: Colors.black,
+                          color: isCorrectAnswer
+                              ? Colors.white: Colors.black,
                           fontSize: 16.sp,
                           fontWeight: FontWeight.bold),
                     ),
                   ),
-                  const SizedBox(height: 10),
+                   SizedBox(height: 10),
                   isCorrectAnswer
                       ? buildCorrectIcon()
                       : isWrongAnswer
                           ? buildWrongIcon()
-                          : const SizedBox.shrink(),
+                          :  SizedBox.shrink(),
                 ],
               ),
             )
           // If no option is selected
           : Container(
-              height: 70,
-              padding: const EdgeInsets.all(16.0),
+              padding:  REdgeInsets.all(25.0),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 5,
+                      blurRadius: 7,
+                      offset: const Offset(0, 3),
+                    ),
+                  ]
               ),
               child: Row(
                 children: [
@@ -101,7 +116,7 @@ class AnswerCard extends StatelessWidget {
 
 Widget buildCorrectIcon() => const CircleAvatar(
       radius: 15,
-      backgroundColor: Colors.green,
+      backgroundColor: Colors.transparent,
       child: Icon(
         Icons.check,
         color: Colors.white,
