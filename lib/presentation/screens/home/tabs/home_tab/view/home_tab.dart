@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intervyou_app/config/styles/light_app_style.dart';
 import 'package:intervyou_app/presentation/screens/home/tabs/home_tab/widgets/widgets.dart';
-import '../../../../../core/colors_manager.dart';
+import '../../../../../../core/colors_manager.dart';
 
 class HomeTab extends StatefulWidget {
   const HomeTab({super.key});
@@ -17,6 +17,7 @@ class _HomeTabState extends State<HomeTab> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFFF0F0F0),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -94,20 +95,18 @@ class _HomeTabState extends State<HomeTab> {
             ),
             SizedBox(height: 16.h),
             SizedBox(
-              height: 180.h,
+              height: 185.h,
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
-                padding: REdgeInsets.symmetric(horizontal: 18),
                 itemCount: tasks.length,
+                padding: REdgeInsets.symmetric(horizontal: 10),
                 separatorBuilder: (_, __) => SizedBox(
-                  width: 12.w,
+                  width: 8.w,
                 ),
-                itemBuilder: (_, index) => Padding(
-                  padding: REdgeInsets.only(bottom: 20),
-                  child: tasks[index],
-                ),
+                itemBuilder: (_, index) => tasks[index],
               ),
             ),
+            SizedBox(height: 15.h),
             Padding(
               padding: REdgeInsets.symmetric(horizontal: 18),
               child: Text(

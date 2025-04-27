@@ -3,9 +3,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:intervyou_app/core/assets_manager.dart';
-import 'package:intervyou_app/presentation/screens/home/tabs/blogs/blogs.dart';
-import 'package:intervyou_app/presentation/screens/home/tabs/home_tab/home_tab.dart';
-import 'package:intervyou_app/presentation/screens/home/tabs/learn/learn.dart';
+import 'package:intervyou_app/presentation/screens/home/tabs/blogs/view/blogs.dart';
+import 'package:intervyou_app/presentation/screens/home/tabs/home_tab/view/home_tab.dart';
+import 'package:intervyou_app/presentation/screens/home/tabs/learn/view/learn.dart';
 import 'package:intervyou_app/presentation/screens/home/tabs/profile/profile.dart';
 
 import '../../../core/colors_manager.dart';
@@ -33,7 +33,7 @@ class _HomeState extends State<Home> {
       backgroundColor: Colors.black,
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: ColorsManger.newSecondaryColor,
           boxShadow: [
             BoxShadow(
               blurRadius: 20,
@@ -43,52 +43,44 @@ class _HomeState extends State<Home> {
         ),
         child: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
+            padding:  REdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
             child: GNav(
-              rippleColor: Colors.grey[300]!,
-              hoverColor: Colors.grey[100]!,
+              rippleColor: Colors.white.withOpacity(0.1),
+              hoverColor: Colors.white.withOpacity(0.1),
               gap: 8,
               activeColor: ColorsManger.newSecondaryColor,
               iconSize: 24,
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-              duration: Duration(milliseconds: 400),
-              tabBackgroundColor: Colors.grey[100]!,
+              duration: Duration(milliseconds: 300),
+              tabBackgroundColor: Colors.white.withOpacity(0.1),
               color: Colors.black,
-              textStyle: TextStyle(fontWeight: FontWeight.bold),
+              textStyle: TextStyle(fontWeight: FontWeight.w500,color: Colors.white),
               tabs: [
                 GButton(
                   leading: SvgPicture.asset(
                     AssetsManager.home,
-                    color: selectedIndex == 0
-                        ? ColorsManger.newSecondaryColor
-                        : Colors.black,
+                    color: Colors.white
                   ),
                   text: 'Home', icon: Icons.circle,
                 ),
                 GButton(
                   leading: SvgPicture.asset(
                     AssetsManager.blogs,
-                    color: selectedIndex == 1
-                        ? ColorsManger.newSecondaryColor
-                        : Colors.black,
+                    color: Colors.white,
                   ),
                   text: 'Blogs', icon: Icons.circle,
                 ),
                 GButton(
                   leading: SvgPicture.asset(
                     AssetsManager.learn,
-                    color: selectedIndex == 2
-                        ? ColorsManger.newSecondaryColor
-                        : Colors.black,
+                    color: Colors.white,
                   ),
                   text: 'Learning', icon: Icons.circle,
                 ),
                 GButton(
                   leading: SvgPicture.asset(
                     AssetsManager.profile,
-                    color: selectedIndex == 3
-                        ? ColorsManger.newSecondaryColor
-                        : Colors.black,
+                    color:  Colors.white,
                   ),
                   text: 'Profile', icon: Icons.circle,
                 ),

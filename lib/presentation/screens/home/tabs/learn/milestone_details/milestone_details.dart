@@ -5,7 +5,7 @@ import 'package:intervyou_app/config/styles/light_app_style.dart';
 import 'package:intervyou_app/core/colors_manager.dart';
 import 'package:intervyou_app/core/constants_string.dart';
 import 'package:intervyou_app/presentation/screens/home/home.dart';
-import 'package:intervyou_app/presentation/screens/home/tabs/learn/learn.dart';
+import 'package:intervyou_app/presentation/screens/home/tabs/learn/view/learn.dart';
 import 'package:intervyou_app/presentation/screens/home/tabs/learn/widget/milestone_topic_item.dart';
 import 'package:intervyou_app/presentation/screens/home/tabs/learn/widget/widget.dart';
 
@@ -20,7 +20,7 @@ class _MilestoneDetailsState extends State<MilestoneDetails> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Color(0xFFF0F0F0),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -31,9 +31,9 @@ class _MilestoneDetailsState extends State<MilestoneDetails> {
                 Text(
                   'Arrays',
                   style: LightAppStyle.email.copyWith(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 22.sp,
-                  ),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 25.sp,
+                      color: Colors.black),
                 ),
                 const Spacer(),
                 GestureDetector(
@@ -47,7 +47,7 @@ class _MilestoneDetailsState extends State<MilestoneDetails> {
                   },
                   child: Icon(
                     Icons.close,
-                    color: Colors.white,
+                    color: Colors.black,
                     size: 35.sp,
                   ),
                 ),
@@ -60,8 +60,9 @@ class _MilestoneDetailsState extends State<MilestoneDetails> {
             child: Text(
               'Category Data Structure',
               style: LightAppStyle.email.copyWith(
-                color: Colors.white.withOpacity(0.5),
-                fontSize: 10.sp,
+                color: Colors.black.withOpacity(0.5),
+                fontSize: 12.sp,
+                fontWeight: FontWeight.w600,
               ),
             ),
           ),
@@ -76,8 +77,8 @@ class _MilestoneDetailsState extends State<MilestoneDetails> {
                     child: Text(
                       ConstantsString.arrayDoc,
                       style: LightAppStyle.email.copyWith(
-                        color: Colors.white.withOpacity(0.6),
-                        fontSize: 12.sp,
+                        color: Colors.black,
+                        fontSize: 14.sp,
                         fontWeight: FontWeight.normal,
                       ),
                       textAlign: TextAlign.center,
@@ -97,14 +98,13 @@ class _MilestoneDetailsState extends State<MilestoneDetails> {
                           Text(
                             'Documentation',
                             style: LightAppStyle.email.copyWith(
-                              color:
-                                  ColorsManger.secondaryColor.withOpacity(0.5),
-                              fontSize: 13.sp,
+                              color: ColorsManger.newSecondaryColor,
+                              fontSize: 15.sp,
                             ),
                           ),
                           Icon(
                             Icons.arrow_right_outlined,
-                            color: ColorsManger.secondaryColor,
+                            color: ColorsManger.newSecondaryColor,
                             size: 30.sp,
                           ),
                         ],
@@ -116,7 +116,7 @@ class _MilestoneDetailsState extends State<MilestoneDetails> {
                     width: double.infinity,
                     height: 700.h,
                     decoration: BoxDecoration(
-                      color: ColorsManger.semiBlack,
+                      color: ColorsManger.newSecondaryColor.withOpacity(0.08),
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(25.r),
                         topRight: Radius.circular(25.r),
@@ -129,18 +129,26 @@ class _MilestoneDetailsState extends State<MilestoneDetails> {
                               top: 30, left: 30, right: 30, bottom: 10),
                           child: Row(
                             children: [
-                              Text(
-                                'Topic Details',
-                                style: LightAppStyle.email,
-                              ),
+                              Text('Topic Details',
+                                  style: LightAppStyle.email.copyWith(
+                                    color: ColorsManger.newSecondaryColor,
+                                    fontSize: 18.sp,
+                                    fontWeight: FontWeight.w500,
+                                  )),
                               Spacer(),
                               Text(
-                                '1/30',
+                                '1',
+                                style: LightAppStyle.email
+                                    .copyWith(color: ColorsManger.newSecondaryColor, fontSize: 22.sp,
+                                    fontWeight: FontWeight.bold)
+                              ),
+                              Text(
+                                '/30',
                                 style: LightAppStyle.email.copyWith(
-                                  fontSize: 13,
-                                  color: Colors.white.withOpacity(0.5),
+                                  color: ColorsManger.newSecondaryColor.withOpacity(0.5),
+                                  fontSize: 22.sp,
                                 ),
-                              )
+                              ),
                             ],
                           ),
                         ),
@@ -149,11 +157,12 @@ class _MilestoneDetailsState extends State<MilestoneDetails> {
                             separatorBuilder: (context, index) => SizedBox(
                               height: 15.h,
                             ),
-                            itemBuilder: (context, index) =>
-                                Center(child: MilestoneTopicItem( index: index+1)),
+                            itemBuilder: (context, index) => Center(
+                                child: MilestoneTopicItem(index: index + 1)),
                             itemCount: 20,
                           ),
                         ),
+                        SizedBox(height: 50.h),
                       ],
                     ),
                   )

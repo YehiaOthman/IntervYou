@@ -27,7 +27,7 @@ class CustomTxtField extends StatelessWidget {
       children: [
         Text(
           label,
-          style: LightAppStyle.email.copyWith(fontWeight: FontWeight.w400),
+          style: LightAppStyle.email.copyWith(fontWeight: FontWeight.w700,color: Colors.black),
         ),
         SizedBox(
           height: 10.h,
@@ -36,36 +36,40 @@ class CustomTxtField extends StatelessWidget {
           width: double.infinity,
           height: 50,
           child: TextFormField(
-            style: LightAppStyle.email,
+            style: LightAppStyle.email.copyWith(
+              color: Colors.black,
+              fontWeight: FontWeight.w500,
+              fontSize: 15.sp,
+            ),
             cursorColor: ColorsManger.secondaryColor,
             controller: controller,
             validator: validator,
             decoration: InputDecoration(
               filled: true,
-              fillColor: ColorsManger.txtFillColor.withOpacity(0.2),
+              fillColor: Colors.transparent,
               prefixIcon: Icon(
                 icon,
-                color: ColorsManger.txtFillColor.withOpacity(0.4),
+                color: Colors.black.withOpacity(0.3),
               ),
               disabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12.r),
-                borderSide: BorderSide(color: Colors.transparent),
+                borderSide: BorderSide(color: Colors.grey.withOpacity(0.3),width: 2.w),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12.r),
-                borderSide: BorderSide(color: Colors.transparent),
+                borderSide: BorderSide(color: Colors.grey.withOpacity(0.3),width: 2.w),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12.r),
-                borderSide: BorderSide(color: ColorsManger.secondaryColor,width: 2.w),
+                borderSide: BorderSide(color: Colors.grey.withOpacity(0.3),width: 2.w),
               ),
               hintText: title,
               hintStyle: TextStyle(
-                  color: ColorsManger.txtFillColor.withOpacity(0.4),
+                  color: Colors.black.withOpacity(0.3),
                   fontWeight: FontWeight.w400),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12.r),
-                borderSide: BorderSide(color: Colors.transparent),
+                borderSide: BorderSide(color: Colors.grey.withOpacity(0.3),width: 2.w),
               ),
             ),
           ),

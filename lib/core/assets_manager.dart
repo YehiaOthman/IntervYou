@@ -11,4 +11,7 @@ class AssetsManager{
   static const String pp = 'assets/images/pp.png';
   static const String quizPP = 'assets/images/QuizScreen.png';
   static const String appBarLogo = 'assets/images/logoAB.png';
+  static const String svgLogo = 'assets/svg/svg_logo.svg';
+  static const String whiteLogo = 'assets/images/white_logo.png';
+  static const String splashBg = 'assets/images/Splash_bg.png';
 }

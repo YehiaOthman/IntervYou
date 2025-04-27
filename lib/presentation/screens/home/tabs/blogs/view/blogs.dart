@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:intervyou_app/presentation/screens/home/tabs/blogs/tab_bar_tabs/chat_tab.dart';
-import 'package:intervyou_app/presentation/screens/home/tabs/blogs/tab_bar_tabs/netwrok_tab.dart';
-import 'package:intervyou_app/presentation/screens/home/tabs/blogs/widgets/post_item_widget.dart';
+import 'package:intervyou_app/config/styles/light_app_style.dart';
+import 'package:intervyou_app/core/colors_manager.dart';
+import 'package:intervyou_app/presentation/screens/home/tabs/blogs/view/chat_tab.dart';
+import 'package:intervyou_app/presentation/screens/home/tabs/blogs/view/netwrok_tab.dart';
 import 'package:intervyou_app/presentation/screens/home/tabs/blogs/widgets/post_tiem_widget_v2.dart';
-import '../../../../../core/assets_manager.dart';
-import '../../../../../core/colors_manager.dart';
+import '../../../../../../core/assets_manager.dart';
 
 class Blogs extends StatefulWidget {
   const Blogs({super.key});
@@ -46,8 +46,7 @@ Write down 3 goals for the day.
 
 Move your body – even 5 minutes of stretching helps.
 Start small, stay consistent, and you’ll notice the difference within a week! 🌞💪'''),
-    PostItemWidgetV2(
-        postContent: '''العنوان: ٣ عادات صباحية لتبدأ يومك بنشاط
+    PostItemWidgetV2(postContent: '''العنوان: ٣ عادات صباحية لتبدأ يومك بنشاط
 المحتوى:
 هل تشعر بالخمول في الصباح؟ جرب هذه العادات السهلة لتبدأ يومك بطاقة إيجابية:
 ١. استيقظ مبكرًا بـ ٢٠ دقيقة.
@@ -82,8 +81,15 @@ Start small, stay consistent, and you’ll notice the difference within a week! 
           children: [
             Image.asset(AssetsManager.appBarLogo, height: 30.h),
             Spacer(),
-            DropdownButtonHideUnderline(
+            Container(
+              padding: REdgeInsets.symmetric(horizontal: 12),
+              decoration: BoxDecoration(
+                color: ColorsManger.newSecondaryColor.withOpacity(0.3),
+                borderRadius: BorderRadius.circular(25.r),
+              ),
               child: DropdownButton<String>(
+                dropdownColor: Colors.white,
+                borderRadius: BorderRadius.circular(25.r),
                 value: currentTab,
                 onChanged: (value) {
                   if (value != null) {
@@ -93,27 +99,14 @@ Start small, stay consistent, and you’ll notice the difference within a week! 
                   }
                 },
                 icon: Icon(Icons.keyboard_arrow_down, color: Colors.black),
-
-                // 👇 Keep the widget's size, but hide the content
-                selectedItemBuilder: (context) {
-                  return tabs.map((tab) {
-                    return Opacity(
-                      opacity: 0,
-                      child: Text(
-                        tab,
-                        style: TextStyle(fontSize: 16.sp),
-                      ),
-                    );
-                  }).toList();
-                },
-
-                // 👇 Proper item width for menu
+                style: TextStyle(color: Colors.black, fontSize: 16.sp),
                 items: tabs.map((tab) {
                   return DropdownMenuItem<String>(
                     value: tab,
                     child: Text(
                       tab,
-                      style: TextStyle(color: Colors.black, fontSize: 16.sp),
+                      style: LightAppStyle.email
+                          .copyWith(color: Colors.black, fontSize: 16.sp),
                     ),
                   );
                 }).toList(),
@@ -150,8 +143,14 @@ Start small, stay consistent, and you’ll notice the difference within a week! 
         ),
       ),
       body: Padding(
-        padding:  REdgeInsets.symmetric(horizontal: 15),
-        child: _buildTabContent(),
+        padding: REdgeInsets.symmetric(horizontal: 15),
+        child: Column(
+          children: [
+            SizedBox(height: 10.h),
+            Expanded(child: _buildTabContent()),
+            SizedBox(height: 10.h),
+          ],
+        ),
       ),
     );
   }
