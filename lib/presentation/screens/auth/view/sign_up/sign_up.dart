@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intervyou_app/config/handler_functions.dart';
 import '../../../../../config/styles/light_app_style.dart';
 import '../../../../../core/assets_manager.dart';
 import '../../../../../core/colors_manager.dart';
@@ -19,47 +20,60 @@ class SignUp extends StatefulWidget {
 
 class _SignUpState extends State<SignUp> {
   TextEditingController emailController = TextEditingController();
+  TextEditingController nameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
   bool isRememberMeChecked = false;
   bool isAgreeChecked = false;
 
   @override
+  void dispose() {
+    emailController.dispose();
+    nameController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorsManger.newWhite,
       resizeToAvoidBottomInset: true,
-      body: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SizedBox(height: 100.h),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'Create Account',
-                style: LightAppStyle.login.copyWith(
-                    color: Colors.black,
-                    fontSize: 24.sp,
-                    fontWeight: FontWeight.bold),
-              ),
-              SizedBox(width: 5.w),
-              SvgPicture.asset(
-                AssetsManager.svgLogo,
-                width: 25.w,
-                height: 25.h,
-              )
-            ],
-          ),
-          Padding(
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
             padding: REdgeInsets.symmetric(horizontal: 18),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Text(
-                  StringsManger.createAccount,
-                  style: LightAppStyle.login,
-                  textAlign: TextAlign.center,
+                SizedBox(height: 60.h),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Create Account',
+                      style: LightAppStyle.login.copyWith(
+                        color: Colors.black,
+                        fontSize: 24.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(width: 5.w),
+                    SvgPicture.asset(
+                      AssetsManager.svgLogo,
+                      width: 25.w,
+                      height: 25.h,
+                    ),
+                  ],
+                ),
+                SizedBox(height: 25.h),
+                CustomTxtField(
+                  title: 'Enter your name',
+                  label: 'Name',
+                  validator: (String? value) => null,
+                  controller: nameController,
+                  icon: Icons.person_outline,
                 ),
                 SizedBox(height: 25.h),
                 CustomTxtField(
@@ -94,10 +108,19 @@ class _SignUpState extends State<SignUp> {
                     ),
                   ),
                   onPressed: () {
-                    Navigator.pushAndRemoveUntil(
+                    if (HandlerFunctions.checkEmailAndPasswordValidation(
                         context,
-                        MaterialPageRoute(builder: (context) => Login()),
-                        (route) => false);
+                        passwordController.text,
+                        confirmPasswordController.text,
+                        emailController.text,
+                    )) {
+                      HandlerFunctions.handleRegister(
+                          context,
+                          nameController.text,
+                          emailController.text,
+                          passwordController.text,
+                          confirmPasswordController.text);
+                    }
                   },
                   child: Padding(
                     padding: REdgeInsets.symmetric(vertical: 10.h),
@@ -110,14 +133,11 @@ class _SignUpState extends State<SignUp> {
                 ),
                 SizedBox(height: 14.h),
                 Row(
-                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Transform.scale(
                       scale: 1.5,
                       child: Checkbox(
-                        shape: CircleBorder(
-                            side: BorderSide(color: Colors.red,width: 0)
-                        ),
+                        shape: const CircleBorder(),
                         checkColor: Colors.white,
                         value: isRememberMeChecked,
                         onChanged: (value) =>
@@ -136,14 +156,11 @@ class _SignUpState extends State<SignUp> {
                   ],
                 ),
                 Row(
-                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Transform.scale(
                       scale: 1.5,
                       child: Checkbox(
-                        shape: CircleBorder(
-                            side: BorderSide(color: Colors.red,width: 0)
-                        ),
+                        shape: const CircleBorder(),
                         checkColor: Colors.white,
                         value: isAgreeChecked,
                         onChanged: (value) =>
@@ -181,7 +198,10 @@ class _SignUpState extends State<SignUp> {
                     SizedBox(width: 10.w),
                     Text(
                       'OR',
-                      style: LightAppStyle.email.copyWith(fontSize: 14.sp,color: Colors.black,fontWeight: FontWeight.w700),
+                      style: LightAppStyle.email.copyWith(
+                          fontSize: 14.sp,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w700),
                     ),
                     SizedBox(width: 10.w),
                     Container(
@@ -191,7 +211,7 @@ class _SignUpState extends State<SignUp> {
                     ),
                   ],
                 ),
-                SizedBox(height: 5.h),
+                SizedBox(height: 10.h),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -211,33 +231,33 @@ class _SignUpState extends State<SignUp> {
                     ),
                   ],
                 ),
+                SizedBox(height: 20.h),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Already have an account?',
+                      style: LightAppStyle.email
+                          .copyWith(fontSize: 14, color: Colors.black),
+                    ),
+                    SizedBox(width: 5.w),
+                    InkWell(
+                      onTap: () => Navigator.pushReplacementNamed(
+                          context, RoutesManger.login),
+                      child: Text(
+                        'Login',
+                        style: LightAppStyle.email.copyWith(
+                          fontSize: 14,
+                          color: ColorsManger.newSecondaryColor,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
-          Spacer(),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'Already have an account?',
-                style: LightAppStyle.email.copyWith(fontSize: 14,color: Colors.black),
-              ),
-              SizedBox(width: 5.w),
-              InkWell(
-                onTap: () => Navigator.pushReplacementNamed(
-                    context, RoutesManger.login),
-                child: Text(
-                  'Login',
-                  style: LightAppStyle.email.copyWith(
-                    fontSize: 14,
-                    color: ColorsManger.newSecondaryColor,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 10.h),
-        ],
+        ),
       ),
     );
   }

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intervyou_app/config/theme/my_theme.dart';
 import 'package:intervyou_app/core/routes_manger.dart';
+import 'package:intervyou_app/presentation/screens/auth/view/email_confirmation_otp/email_confirmation_otp.dart';
+import 'package:intervyou_app/presentation/screens/auth/view/forgot_password_otp/forgot_password_otp.dart';
 import 'package:intervyou_app/presentation/screens/auth/view/login/login.dart';
 import 'package:intervyou_app/presentation/screens/auth/view/login/reset_password.dart';
 import 'package:intervyou_app/presentation/screens/auth/view/sign_up/sign_up.dart';
@@ -11,7 +13,6 @@ import 'package:intervyou_app/presentation/screens/home/tabs/learn/view/learn.da
 import 'package:intervyou_app/presentation/screens/home/tabs/learn/milestone_details/milestone_details.dart';
 import 'package:intervyou_app/presentation/screens/home/tabs/profile/profile.dart';
 import 'package:intervyou_app/presentation/screens/splash/splash.dart';
-import '../presentation/screens/auth/view/otp/otp.dart';
 import '../presentation/screens/home/home.dart';
 import '../presentation/screens/home/tabs/learn/road_map/road_map.dart';
 
@@ -35,13 +36,14 @@ class MyApp extends StatelessWidget {
           RoutesManger.profile:(_)=> Profile(),
           RoutesManger.login:(_)=> Login(),
           RoutesManger.signup:(_)=> SignUp(),
-          RoutesManger.otp:(_)=> Otp(),
+          RoutesManger.forgotPasswordOtp:(_)=> ForgotPasswordOtp(),
           RoutesManger.resetPassword:(_)=> ResetPassword(),
           RoutesManger.quiz:(_)=> DailyQuiz(),
           RoutesManger.milestoneTopic:(_)=> MilestoneDetails(),
           RoutesManger.roadMap:(_)=> RoadMap(),
+          RoutesManger.emailConfirmationOtp:(_)=> EmailConfirmationOtp(),
         },
-        initialRoute: RoutesManger.splash,
+        initialRoute: RoutesManger.login,
       ),
     );
   }

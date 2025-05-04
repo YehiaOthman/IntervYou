@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pw_validator/flutter_pw_validator.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intervyou_app/config/handler_functions.dart';
 import '../../../../../config/styles/light_app_style.dart';
 import '../../../../../core/assets_manager.dart';
 import '../../../../../core/colors_manager.dart';
@@ -18,10 +19,13 @@ class ResetPassword extends StatefulWidget {
 
 class _ResetPasswordState extends State<ResetPassword> {
   TextEditingController passwordController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
   bool isChecked = false;
+  late String email;
 
   @override
   Widget build(BuildContext context) {
+    email = ModalRoute.of(context)!.settings.arguments as String;
     return Scaffold(
       backgroundColor: ColorsManger.newWhite,
       resizeToAvoidBottomInset: false,
@@ -80,7 +84,7 @@ class _ResetPasswordState extends State<ResetPassword> {
               title: 'Re-Enter your Password ',
               label: 'Confirm Password',
               validator: (String? value) => null,
-              controller: passwordController,
+              controller: confirmPasswordController,
               icon: CupertinoIcons.lock,
             ),
             // SizedBox(height: 20.h),
@@ -104,10 +108,9 @@ class _ResetPasswordState extends State<ResetPassword> {
                 ),
               ),
               onPressed: () {
-                Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(builder: (context) => Login()),
-                    (route) => false);
+                if(HandlerFunctions.confirmPasswordValidation(context, passwordController.text, confirmPasswordController.text)){
+                  HandlerFunctions.handleResetPassword(context, email, passwordController.text, confirmPasswordController.text);
+                }
               },
               child: Text(
                 StringsManger.resetPassword,

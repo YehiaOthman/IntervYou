@@ -13,9 +13,11 @@ class HomeTab extends StatefulWidget {
 
 class _HomeTabState extends State<HomeTab> {
   List<Widget> tasks = List.generate(10, (_) => buildCardItem());
+  @override
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: Color(0xFFF0F0F0),
       body: SingleChildScrollView(
@@ -95,7 +97,7 @@ class _HomeTabState extends State<HomeTab> {
             ),
             SizedBox(height: 16.h),
             SizedBox(
-              height: 185.h,
+              height: 170.h,
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 itemCount: tasks.length,
@@ -106,7 +108,7 @@ class _HomeTabState extends State<HomeTab> {
                 itemBuilder: (_, index) => tasks[index],
               ),
             ),
-            SizedBox(height: 15.h),
+            SizedBox(height: 10.h),
             Padding(
               padding: REdgeInsets.symmetric(horizontal: 18),
               child: Text(

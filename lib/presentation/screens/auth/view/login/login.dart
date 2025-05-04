@@ -2,11 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intervyou_app/config/handler_functions.dart';
 import 'package:intervyou_app/config/styles/light_app_style.dart';
 import 'package:intervyou_app/core/assets_manager.dart';
 import 'package:intervyou_app/core/colors_manager.dart';
 import 'package:intervyou_app/core/routes_manger.dart';
 import 'package:intervyou_app/core/strings_manager.dart';
+import 'package:intervyou_app/data/api_manager.dart';
+import 'package:intervyou_app/data/models/login_response.dart';
 import '../../widgets/custom_txt_field.dart';
 
 class Login extends StatefulWidget {
@@ -46,7 +49,7 @@ class _LoginState extends State<Login> {
           SizedBox(height: 20.h),
           Expanded(
             child: Padding(
-              padding:  REdgeInsets.symmetric(horizontal: 18),
+              padding: REdgeInsets.symmetric(horizontal: 18),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -71,8 +74,13 @@ class _LoginState extends State<Login> {
                     children: [
                       Spacer(),
                       InkWell(
-                        onTap: () =>
-                            Navigator.pushNamed(context, RoutesManger.otp),
+                        onTap: () {
+                          if(emailController.text.isEmpty){
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Please enter your email')));
+                          }else{
+                            HandlerFunctions.handleForgotPassword(context, emailController.text);
+                          }
+                        },
                         child: Text(
                           StringsManger.forgotPassword,
                           style: LightAppStyle.email.copyWith(
@@ -91,8 +99,7 @@ class _LoginState extends State<Login> {
                         scale: 0.8,
                         child: Switch(
                           value: isChecked,
-                          inactiveThumbColor:
-                              ColorsManger.newSecondaryColor,
+                          inactiveThumbColor: ColorsManger.newSecondaryColor,
                           activeColor: Colors.white,
                           activeTrackColor: ColorsManger.newSecondaryColor,
                           inactiveTrackColor:
@@ -109,7 +116,8 @@ class _LoginState extends State<Login> {
                         style: LightAppStyle.email.copyWith(
                           fontWeight: FontWeight.w700,
                           color: Colors.black,
-                          fontSize: 15.5.sp,                        ),
+                          fontSize: 15.5.sp,
+                        ),
                       )
                     ],
                   ),
@@ -122,13 +130,15 @@ class _LoginState extends State<Login> {
                         borderRadius: BorderRadius.circular(12.r),
                       ),
                     ),
-                    onPressed: () => Navigator.pushReplacementNamed(
-                        context, RoutesManger.home),
+                    onPressed: () {
+                    if( HandlerFunctions.checkLoginValidation(context, passwordController.text, emailController.text)){
+                      HandlerFunctions.handleLogin(context, emailController.text, passwordController.text);
+                    }
+                    },
                     child: Text(
                       StringsManger.loggedIn,
-                      style: LightAppStyle.loggedIn.copyWith(
-                        color: Colors.white
-                      ),
+                      style:
+                          LightAppStyle.loggedIn.copyWith(color: Colors.white),
                     ),
                   ),
                   SizedBox(height: 28.h),
@@ -143,7 +153,10 @@ class _LoginState extends State<Login> {
                       SizedBox(width: 10.w),
                       Text(
                         'OR',
-                        style: LightAppStyle.email.copyWith(fontSize: 14.sp,color: Colors.black,fontWeight: FontWeight.w700),
+                        style: LightAppStyle.email.copyWith(
+                            fontSize: 14.sp,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w700),
                       ),
                       SizedBox(width: 10.w),
                       Container(
@@ -179,7 +192,8 @@ class _LoginState extends State<Login> {
                     children: [
                       Text(
                         'Don’t have an account ?',
-                        style: LightAppStyle.email.copyWith(fontSize: 14,color: Colors.black),
+                        style: LightAppStyle.email
+                            .copyWith(fontSize: 14, color: Colors.black),
                       ),
                       SizedBox(width: 5.w),
                       InkWell(

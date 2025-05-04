@@ -1,24 +1,25 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intervyou_app/config/handler_functions.dart';
 import 'package:pinput/pinput.dart';
-
 import '../../../../../../config/styles/light_app_style.dart';
-import '../../../../../../core/assets_manager.dart';
 import '../../../../../../core/colors_manager.dart';
 import '../../../../../../core/routes_manger.dart';
 import '../../../../../../core/strings_manager.dart';
 
-class Otp extends StatefulWidget {
-  const Otp({super.key});
+class ForgotPasswordOtp extends StatefulWidget {
+  const ForgotPasswordOtp({super.key});
 
   @override
-  State<Otp> createState() => _OtpState();
+  State<ForgotPasswordOtp> createState() => _ForgotPasswordOtpState();
 }
 
-class _OtpState extends State<Otp> {
+class _ForgotPasswordOtpState extends State<ForgotPasswordOtp> {
+  late String email;
+  TextEditingController otpController = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    email = ModalRoute.of(context)!.settings.arguments as String;
     return Scaffold(
       backgroundColor: ColorsManger.newWhite,
       resizeToAvoidBottomInset: false,
@@ -66,7 +67,7 @@ class _OtpState extends State<Otp> {
               textAlign: TextAlign.center,
             ),
             Text(
-              'example@email.com',
+              email,
               style: LightAppStyle.login.copyWith(
                   fontSize: 12.sp,
                   color: Colors.black,
@@ -75,6 +76,7 @@ class _OtpState extends State<Otp> {
             ),
             SizedBox(height: 25.h),
             Pinput(
+              controller: otpController,
               focusedPinTheme: PinTheme(
                 width: 50.w,
                 height: 50.h,
@@ -85,7 +87,7 @@ class _OtpState extends State<Otp> {
                   borderRadius: BorderRadius.circular(12.r),
                 ),
               ),
-              length: 4,
+              length: 6,
               defaultPinTheme: PinTheme(
                 width: 50.w,
                 height: 50.h,
@@ -119,8 +121,15 @@ class _OtpState extends State<Otp> {
                   borderRadius: BorderRadius.circular(12.r),
                 ),
               ),
-              onPressed: () =>
-                  Navigator.pushNamed(context, RoutesManger.resetPassword),
+              onPressed: () {
+                if(otpController.text.isEmpty){
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Please enter otp')));
+                }
+                else{
+                  HandlerFunctions.handleVerifyForgotPasswordOtp(context, email, otpController.text);
+                }
+              },
               child: Text(
                 StringsManger.verify,
                 style: LightAppStyle.loggedIn.copyWith(

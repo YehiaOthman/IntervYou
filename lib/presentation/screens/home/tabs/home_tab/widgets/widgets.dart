@@ -157,7 +157,7 @@ Widget homeHeader() {
             ),
           ),
           Text(
-            "Yehia Mohamed Othman",
+            'Yehia Mohamed Othman',
             style: GoogleFonts.poppins(
               color: Colors.white,
               fontSize: 15.sp,
