@@ -33,6 +33,7 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: ColorsManger.newWhite,
       resizeToAvoidBottomInset: false,
@@ -176,7 +177,9 @@ class _LoginState extends State<Login> {
                       ),
                       SizedBox(width: 16.w),
                       GestureDetector(
-                        onTap: () => print('Navigate to google'),
+                        onTap: () {
+                          HandlerFunctions.handleExternalLogin(context);
+                        },
                         child: Image.asset(AssetsManager.chrome),
                       ),
                       SizedBox(width: 16.w),

@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
 
@@ -11,22 +13,54 @@ class ApiManger {
   static const String forgotPasswordOtpEndPoint = '/api/Auth/forgot-password';
   static const String verifyForgotPasswordOtpEndPoint = '/api/Auth/verify-otp';
   static const String resetPasswordEndPoint = '/api/Auth/reset-password';
+  static const String externalLoginEndPoint = '/api/auth/external/login/{provider}';
 
   static Future<http.Response> loginUser(String email, String password) async {
-     final Map<String, String> headers = {
-       'Content-Type': 'application/json'
-     };
-     final Map<String, String> body = {
-       'email': email,
-       'password': password
-     };
-      final response = await post(
-        Uri.https(baseUrl, loginEndPoint),
-        headers: headers,
-        body: jsonEncode(body),
-      );
-      return response;
-   }
+    final Map<String, String> headers = {
+      'Content-Type': 'application/json',
+    };
+    final Map<String, String> body = {
+      'email': email,
+      'password': password,
+    };
+
+    final response = await post(
+      Uri.https(baseUrl, loginEndPoint),
+      headers: headers,
+      body: jsonEncode(body),
+    );
+
+    if (response.statusCode == 200) {
+      final json = jsonDecode(response.body);
+      String accessToken = json['accessToken'];
+      String refreshToken = json['refreshToken'];
+
+      final storage = FlutterSecureStorage();
+      await storage.write(key: 'access_token', value: accessToken);
+      await storage.write(key: 'refresh_token', value: refreshToken);
+    }
+
+    return response;
+  }
+
+  static void decodeJwt(String token) {
+    try {
+      final parts = token.split('.');
+      if (parts.length != 3) throw Exception('Invalid token');
+
+      final payload = jsonDecode(utf8.decode(base64Url.decode(base64Url.normalize(parts[1]))));
+      print("Decoded payload: $payload");
+
+      String userName = payload['given_name'];
+      String userId = payload['sub'];
+
+      print('User Name: $userName');
+      print('User ID: $userId');
+    } catch (e) {
+      print("Error decoding token: $e");
+    }
+  }
+
   static Future<void> registerUser(String fullName, String email, String password, String confirmPassword) async {
     final Map<String, String> headers = {
       'Content-Type': 'application/json',
@@ -54,7 +88,7 @@ class ApiManger {
         if (decoded is Map<String, dynamic> && decoded.containsKey('errors')) {
           final errors = List<String>.from(decoded['errors']);
           final emailTakenError = errors.firstWhere(
-            (e) => e.toLowerCase().contains('already taken'),
+                (e) => e.toLowerCase().contains('already taken'),
             orElse: () => '',
           );
 
@@ -69,7 +103,8 @@ class ApiManger {
       throw e.toString();
     }
   }
-  static Future<http.Response> confirmEmail(String email,String otp) async {
+
+  static Future<http.Response> confirmEmail(String email, String otp) async {
     final Map<String, String> headers = {
       'Content-Type': 'application/json'
     };
@@ -85,6 +120,7 @@ class ApiManger {
 
     return response;
   }
+
   static Future<http.Response> resendEmailConfirmationOtp(String email) async {
     final Map<String, String> headers = {
       'Content-Type': 'application/json'
@@ -100,6 +136,7 @@ class ApiManger {
 
     return response;
   }
+
   static Future<http.Response> forgotPassword(String email) async {
     final Map<String, String> headers = {
       'Content-Type': 'application/json'
@@ -115,7 +152,8 @@ class ApiManger {
 
     return response;
   }
-  static Future<http.Response> verifyForgotPasswordOtp(String email,String otp) async {
+
+  static Future<http.Response> verifyForgotPasswordOtp(String email, String otp) async {
     final Map<String, String> headers = {
       'Content-Type': 'application/json'
     };
@@ -131,7 +169,8 @@ class ApiManger {
 
     return response;
   }
-  static Future<http.Response> resetPassword(String email,String password,String confirmPassword) async {
+
+  static Future<http.Response> resetPassword(String email, String password, String confirmPassword) async {
     final Map<String, String> headers = {
       'Content-Type': 'application/json'
     };
@@ -148,5 +187,88 @@ class ApiManger {
 
     return response;
   }
+
+  static Future<String?> getGoogleIdToken() async {
+    final GoogleSignIn googleSignIn = GoogleSignIn(
+      scopes: ['email'],
+    );
+
+    final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+    if (googleUser == null) return null;
+
+    final GoogleSignInAuthentication googleAuth = await googleUser
+        .authentication;
+    return googleAuth.idToken;
+  }
+
+  static Future<http.Response> externalLogin(String provider, String token) async {
+    final String url = "$baseUrl/api/auth/external/login/$provider";
+
+    final Map<String, String> headers = {
+      'Content-Type': 'application/json'
+    };
+
+    final Map<String, String> body = {
+      "providerToken": token
+    };
+
+    final response = await post(
+      Uri.parse(url),
+      headers: headers,
+      body: jsonEncode(body),
+    );
+
+    return response;
+  }
+
+  static Future<http.Response> updatePreferences(String preferredRole, String experienceLevel, String dailyStudyHours) async {
+    final storage = FlutterSecureStorage();
+    String? token = await storage.read(key: 'access_token');
+
+    if (token == null) {
+      throw Exception("User is not authenticated");
+    }
+
+    final Map<String, String> headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+
+    final Map<String, String> body = {
+      'preferredRole': preferredRole,
+      'experienceLevel': experienceLevel,
+      'dailyStudyHours': dailyStudyHours,
+    };
+
+    final response = await put(
+      Uri.https(baseUrl, '/api/Auth/update-preferences'),
+      headers: headers,
+      body: jsonEncode(body),
+    );
+
+    return response;
+  }
+
+  static Future<http.Response> getUserPreferences() async {
+    final storage = FlutterSecureStorage();
+    String? token = await storage.read(key: 'access_token');
+
+    if (token == null) {
+      throw Exception("User is not authenticated");
+    }
+
+    final headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+
+    final response = await get(
+      Uri.https(baseUrl, '/api/Auth/preferences'),
+      headers: headers,
+    );
+
+    return response;
+  }
+
 
 }

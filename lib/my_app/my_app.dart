@@ -12,6 +12,7 @@ import 'package:intervyou_app/presentation/screens/home/tabs/learn/daily_quiz/da
 import 'package:intervyou_app/presentation/screens/home/tabs/learn/view/learn.dart';
 import 'package:intervyou_app/presentation/screens/home/tabs/learn/milestone_details/milestone_details.dart';
 import 'package:intervyou_app/presentation/screens/home/tabs/profile/profile.dart';
+import 'package:intervyou_app/presentation/screens/prefrences/prefrences.dart';
 import 'package:intervyou_app/presentation/screens/splash/splash.dart';
 import '../presentation/screens/home/home.dart';
 import '../presentation/screens/home/tabs/learn/road_map/road_map.dart';
@@ -42,6 +43,7 @@ class MyApp extends StatelessWidget {
           RoutesManger.milestoneTopic:(_)=> MilestoneDetails(),
           RoutesManger.roadMap:(_)=> RoadMap(),
           RoutesManger.emailConfirmationOtp:(_)=> EmailConfirmationOtp(),
+          RoutesManger.preferences:(_)=> Preferences(),
         },
         initialRoute: RoutesManger.login,
       ),

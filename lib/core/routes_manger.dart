@@ -12,4 +12,5 @@ class RoutesManger{
   static const String quiz = 'quiz';
   static const String milestoneTopic = 'milestoneTopic';
   static const String roadMap = 'roadMap';
+  static const String preferences = 'preferences';
 }
