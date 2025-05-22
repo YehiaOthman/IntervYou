@@ -1,17 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intervyou_app/config/styles/light_app_style.dart';
 import 'package:intervyou_app/core/colors_manager.dart';
 import 'package:intervyou_app/presentation/screens/home/home.dart';
-import 'package:intervyou_app/presentation/screens/home/tabs/learn/daily_quiz/result.dart';
-import 'package:intervyou_app/presentation/screens/home/tabs/learn/daily_quiz/widget/answer_item.dart';
-import 'package:intervyou_app/presentation/screens/home/tabs/learn/daily_quiz/widget/next_btn.dart';
-import 'package:intervyou_app/presentation/screens/home/tabs/learn/view/learn.dart';
-
-import '../../../../../../core/assets_manager.dart';
-import 'models/questions.dart';
-
+import 'package:intervyou_app/presentation/screens/home/tabs/learn/view/result.dart';
+import 'package:intervyou_app/presentation/screens/home/tabs/learn/widget/answer_item.dart';
+import 'package:intervyou_app/presentation/screens/home/tabs/learn/widget/next_btn.dart';
+import '../models/questions.dart';
 class DailyQuiz extends StatefulWidget {
   const DailyQuiz({super.key});
 

@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intervyou_app/config/styles/light_app_style.dart';
 import 'package:intervyou_app/core/colors_manager.dart';
 
-Widget milestoneCard(Color color) {
+Widget milestoneCard(Color color , String title , int taskTodo , int taskDone) {
   return Stack(children: [
     Container(
       height: 110.h,
@@ -14,7 +14,7 @@ Widget milestoneCard(Color color) {
         borderRadius: BorderRadius.circular(25.r),
       ),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(height: 15.h),
@@ -25,28 +25,30 @@ Widget milestoneCard(Color color) {
                 width: 15.w,
               ),
               Text(
-                '7',
+                taskDone.toString(),
                 style: LightAppStyle.email.copyWith(
                     color: Colors.white,
-                    fontSize: 30.sp,
-                    fontWeight: FontWeight.bold),
+                    fontSize: 28.sp,
+                    fontWeight: FontWeight.w500),
               ),
               Text(
-                '/14',
+                '/$taskTodo',
                 style: LightAppStyle.email.copyWith(
                     color: Colors.white.withOpacity(0.4),
-                    fontSize: 20.sp,
+                    fontSize: 22.sp,
                     fontWeight: FontWeight.normal),
               ),
             ],
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 12.0),
+            padding:  REdgeInsets.only(left: 12.0),
             child: Text(
-              'Arrays',
+              title,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
               style: LightAppStyle.email.copyWith(
                   color: Colors.white,
-                  fontSize: 22.sp,
+                  fontSize: 15.sp,
                   fontWeight: FontWeight.normal),
             ),
           )

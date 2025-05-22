@@ -8,14 +8,14 @@ import 'package:intervyou_app/presentation/screens/auth/view/login/login.dart';
 import 'package:intervyou_app/presentation/screens/auth/view/login/reset_password.dart';
 import 'package:intervyou_app/presentation/screens/auth/view/sign_up/sign_up.dart';
 import 'package:intervyou_app/presentation/screens/home/tabs/blogs/view/blogs.dart';
-import 'package:intervyou_app/presentation/screens/home/tabs/learn/daily_quiz/daily_quiz.dart';
+import 'package:intervyou_app/presentation/screens/home/tabs/learn/view/daily_quiz.dart';
 import 'package:intervyou_app/presentation/screens/home/tabs/learn/view/learn.dart';
-import 'package:intervyou_app/presentation/screens/home/tabs/learn/milestone_details/milestone_details.dart';
+import 'package:intervyou_app/presentation/screens/home/tabs/learn/view/milestone_details.dart';
 import 'package:intervyou_app/presentation/screens/home/tabs/profile/profile.dart';
 import 'package:intervyou_app/presentation/screens/prefrences/prefrences.dart';
 import 'package:intervyou_app/presentation/screens/splash/splash.dart';
 import '../presentation/screens/home/home.dart';
-import '../presentation/screens/home/tabs/learn/road_map/road_map.dart';
+import '../presentation/screens/home/tabs/learn/view/road_map.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -45,7 +45,7 @@ class MyApp extends StatelessWidget {
           RoutesManger.emailConfirmationOtp:(_)=> EmailConfirmationOtp(),
           RoutesManger.preferences:(_)=> Preferences(),
         },
-        initialRoute: RoutesManger.login,
+        initialRoute: RoutesManger.login ,
       ),
     );
   }

@@ -5,7 +5,7 @@ import 'package:intervyou_app/core/routes_manger.dart';
 import 'package:intervyou_app/presentation/screens/home/home.dart';
 import 'package:intervyou_app/presentation/screens/home/tabs/learn/view/learn.dart';
 import '../../../../../../core/colors_manager.dart';
-import 'models/questions.dart';
+import '../models/questions.dart';
 
 class Result extends StatelessWidget {
   const Result({

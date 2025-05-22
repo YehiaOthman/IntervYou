@@ -1,4 +1,4 @@
-import 'package:intervyou_app/presentation/screens/home/tabs/learn/daily_quiz/models/question.dart';
+import 'package:intervyou_app/presentation/screens/home/tabs/learn/models/question.dart';
 
 const List<Question> questions = [
   Question(

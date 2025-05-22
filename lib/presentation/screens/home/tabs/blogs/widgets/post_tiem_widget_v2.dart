@@ -93,7 +93,7 @@ class _PostItemWidgetV2State extends State<PostItemWidgetV2> {
                         width: 2.w),
                   ),
                   icon:
-                      Icon(Icons.more_horiz, color: Colors.black, size: 30.sp),
+                      Icon(Icons.more_horiz, color: ColorsManger.newSecondaryColor, size: 30.sp),
                   elevation: 6,
                   onSelected: (value) {
                     if (value == 1) {
