@@ -28,7 +28,7 @@ class _PostItemWidgetState extends State<PostItemWidget> {
             constraints: BoxConstraints(minHeight: 175.h),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(25.r),
-              color: Colors.black.withOpacity(0.2),
+              color: ColorsManger.newSecondaryColor.withOpacity(0.3),
             ),
             padding: EdgeInsets.only(left: 65.w, right: 10.w),
             child: Column(
@@ -53,14 +53,14 @@ class _PostItemWidgetState extends State<PostItemWidget> {
                       children: [
                         Text(
                           'Yehia Othman',
-                          style: LightAppStyle.email.copyWith(fontSize: 16.sp),
+                          style: LightAppStyle.email.copyWith(fontSize: 16.sp,color: Colors.black),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
                         Text(
                           '9:12 PM',
                           style: LightAppStyle.email.copyWith(
-                            color: Colors.white.withOpacity(0.4),
+                            color: Colors.black.withOpacity(0.4),
                             fontSize: 10.sp,
                           ),
                           overflow: TextOverflow.ellipsis,

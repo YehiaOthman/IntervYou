@@ -7,8 +7,10 @@ class RoutesManger{
   static const String blogs = 'blogs';
   static const String learn = 'learn';
   static const String profile = 'profile';
-  static const String otp = 'otp';
+  static const String forgotPasswordOtp = 'forgotPasswordOtp';
+  static const String emailConfirmationOtp = 'emailConfirmationOtp';
   static const String quiz = 'quiz';
   static const String milestoneTopic = 'milestoneTopic';
   static const String roadMap = 'roadMap';
+  static const String preferences = 'preferences';
 }
