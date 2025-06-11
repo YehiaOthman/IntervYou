@@ -25,30 +25,38 @@ class _SplashState extends State<Splash> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Spacer(),
-          Center(
-            child: Image.asset(AssetsManager.logo, width: 300.w),
-          ),
-          Center(
-            child: Text(
-              StringsManger.splash,
-              style: LightAppStyle.splash,
-            ),
-          ),
-          Spacer(),
-
-          Center(
-            child: Text(
-              StringsManger.splashBottom,
-              style: LightAppStyle.splashBottom,
-            ),
-          ),
-        ],
-      ),
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(AssetsManager.splashBg,),
+            fit: BoxFit.cover
+          )
+        ),
+      )
     );
   }
 }
+// Column(
+// mainAxisAlignment: MainAxisAlignment.center,
+// crossAxisAlignment: CrossAxisAlignment.center,
+// children: [
+// Spacer(),
+// Center(
+// child: Image.asset(AssetsManager.logo, width: 300.w),
+// ),
+// Center(
+// child: Text(
+// StringsManger.splash,
+// style: LightAppStyle.splash,
+// ),
+// ),
+// Spacer(),
+//
+// Center(
+// child: Text(
+// StringsManger.splashBottom,
+// style: LightAppStyle.splashBottom,
+// ),
+// ),
+// ],
+// ),
