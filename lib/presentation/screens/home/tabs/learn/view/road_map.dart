@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intervyou_app/core/colors_manager.dart';
-import 'package:intervyou_app/data/models/Topics.dart';
+
 import 'package:provider/provider.dart';
 
 import '../../../../../../config/styles/light_app_style.dart';
-import '../../../../../../learn_provider/learn_provider.dart';
+
+import '../view_model/learn_provider.dart';
 
 class RoadMap extends StatefulWidget {
   const RoadMap({
@@ -22,7 +23,6 @@ class _RoadMapState extends State<RoadMap> {
   @override
   void didChangeDependencies() {
     vm = ModalRoute.of(context)!.settings.arguments as LearnViewModel;
-    print(vm.currentTopicIndex);
     super.didChangeDependencies();
   }
 

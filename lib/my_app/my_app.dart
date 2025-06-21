@@ -45,7 +45,7 @@ class MyApp extends StatelessWidget {
           RoutesManger.emailConfirmationOtp:(_)=> EmailConfirmationOtp(),
           RoutesManger.preferences:(_)=> Preferences(),
         },
-        initialRoute: RoutesManger.login ,
+        initialRoute: RoutesManger.splash ,
       ),
     );
   }

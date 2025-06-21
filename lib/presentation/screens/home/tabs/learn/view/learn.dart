@@ -3,12 +3,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intervyou_app/config/styles/light_app_style.dart';
 import 'package:intervyou_app/core/routes_manger.dart';
 import 'package:intervyou_app/data/models/SubTopics.dart';
-import 'package:intervyou_app/presentation/screens/home/tabs/learn/view/milestone_details.dart';
 import 'package:intervyou_app/presentation/screens/home/tabs/learn/widget/widget.dart';
 import 'package:provider/provider.dart';
 import '../../../../../../core/colors_manager.dart';
-import '../../../../../../learn_provider/learn_provider.dart';
 import '../../home_tab/widgets/widgets.dart';
+import '../view_model/learn_provider.dart';
 import 'road_map.dart';
 
 class Learn extends StatefulWidget {
@@ -45,10 +44,13 @@ class _LearnState extends State<Learn> {
           builder: (BuildContext context, value, Widget? child) {
             if (viewModel.loading) {
               return Center(
-                child: CircularProgressIndicator(color: ColorsManger.newSecondaryColor,),
+                child: CircularProgressIndicator(
+                  color: ColorsManger.newSecondaryColor,
+                ),
               );
             } else {
-              subTopics = viewModel.topics[viewModel.currentTopicIndex].subTopics ?? [];
+              subTopics =
+                  viewModel.topics[viewModel.currentTopicIndex].subTopics ?? [];
               return Padding(
                 padding: REdgeInsets.only(left: 20, right: 20),
                 child: SingleChildScrollView(
@@ -65,15 +67,11 @@ class _LearnState extends State<Learn> {
                               context: context,
                               isScrollControlled: true,
                               routeSettings:
-                              RouteSettings(arguments: viewModel),
+                                  RouteSettings(arguments: viewModel),
                               builder: (context) {
-                                print(viewModel.topics.length);
                                 return SizedBox(
                                   height:
-                                  MediaQuery
-                                      .of(context)
-                                      .size
-                                      .height * 0.7,
+                                      MediaQuery.of(context).size.height * 0.7,
                                   child: ClipRRect(
                                       borderRadius: BorderRadius.only(
                                         topLeft: Radius.circular(20.r),
@@ -118,7 +116,7 @@ class _LearnState extends State<Learn> {
                                       children: [
                                         Row(
                                           crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                              CrossAxisAlignment.start,
                                           children: [
                                             Column(
                                               children: [
@@ -164,8 +162,8 @@ class _LearnState extends State<Learn> {
                                                 decoration: BoxDecoration(
                                                   color: Colors.transparent,
                                                   borderRadius:
-                                                  BorderRadius.circular(
-                                                      35.r),
+                                                      BorderRadius.circular(
+                                                          35.r),
                                                   border: Border.all(
                                                       color: ColorsManger
                                                           .newSecondaryColor,
@@ -176,18 +174,22 @@ class _LearnState extends State<Learn> {
                                                       left: 10),
                                                   child: Column(
                                                     crossAxisAlignment:
-                                                    CrossAxisAlignment
-                                                        .start,
+                                                        CrossAxisAlignment
+                                                            .start,
                                                     children: [
                                                       Text(
-                                                        viewModel.topics[viewModel.currentTopicIndex].name ??'',
+                                                        viewModel
+                                                                .topics[viewModel
+                                                                    .currentTopicIndex]
+                                                                .name ??
+                                                            '',
                                                         maxLines: 1,
                                                         overflow: TextOverflow
                                                             .ellipsis,
                                                         style: TextStyle(
                                                           fontSize: 18,
                                                           fontWeight:
-                                                          FontWeight.bold,
+                                                              FontWeight.bold,
                                                           color: Colors.black,
                                                         ),
                                                       ),
@@ -200,7 +202,7 @@ class _LearnState extends State<Learn> {
                                         ),
                                         Row(
                                           crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                              CrossAxisAlignment.start,
                                           children: [
                                             Column(
                                               children: [
@@ -226,8 +228,8 @@ class _LearnState extends State<Learn> {
                                                 decoration: BoxDecoration(
                                                   color: Colors.transparent,
                                                   borderRadius:
-                                                  BorderRadius.circular(
-                                                      35.r),
+                                                      BorderRadius.circular(
+                                                          35.r),
                                                   border: Border.all(
                                                       color: ColorsManger
                                                           .newSecondaryColor,
@@ -238,18 +240,23 @@ class _LearnState extends State<Learn> {
                                                       left: 10),
                                                   child: Column(
                                                     crossAxisAlignment:
-                                                    CrossAxisAlignment
-                                                        .start,
+                                                        CrossAxisAlignment
+                                                            .start,
                                                     children: [
                                                       Text(
-                                                        viewModel.topics[viewModel.currentTopicIndex+1].name ??'',
+                                                        viewModel
+                                                                .topics[viewModel
+                                                                        .currentTopicIndex +
+                                                                    1]
+                                                                .name ??
+                                                            '',
                                                         maxLines: 1,
                                                         overflow: TextOverflow
                                                             .ellipsis,
                                                         style: TextStyle(
                                                           fontSize: 18,
                                                           fontWeight:
-                                                          FontWeight.bold,
+                                                              FontWeight.bold,
                                                           color: Colors.black,
                                                         ),
                                                       ),
@@ -275,7 +282,7 @@ class _LearnState extends State<Learn> {
                         width: 365.w,
                         decoration: BoxDecoration(
                           color:
-                          ColorsManger.newSecondaryColor.withOpacity(0.08),
+                              ColorsManger.newSecondaryColor.withOpacity(0.08),
                           borderRadius: BorderRadius.circular(25.r),
                         ),
                         child: Padding(
@@ -294,30 +301,36 @@ class _LearnState extends State<Learn> {
                               ),
                               SizedBox(
                                 height:
-                                MediaQuery
-                                    .of(context)
-                                    .size
-                                    .height * 0.29,
+                                    MediaQuery.of(context).size.height * 0.29,
                                 width: double.infinity,
                                 child: GridView.builder(
-                                  padding: REdgeInsets.symmetric(vertical: 12.h),
-                                  physics: subTopics.length > 4 ?
-                                      ScrollPhysics(parent: ClampingScrollPhysics()): NeverScrollableScrollPhysics(),
+                                  padding:
+                                      REdgeInsets.symmetric(vertical: 12.h),
+                                  physics: subTopics.length > 4
+                                      ? ScrollPhysics(
+                                          parent: ClampingScrollPhysics())
+                                      : NeverScrollableScrollPhysics(),
                                   gridDelegate:
-                                  SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: 2,
-                                      crossAxisSpacing: 10.w,
-                                      mainAxisSpacing: 10.h,
-                                    childAspectRatio: 1.3
-                                     ),
+                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                          crossAxisCount: 2,
+                                          crossAxisSpacing: 10.w,
+                                          mainAxisSpacing: 10.h,
+                                          childAspectRatio: 1.3),
                                   itemCount: subTopics.length,
                                   itemBuilder: (context, index) {
                                     final donePoints = countDoneTasks(index);
                                     return InkWell(
-                                      onTap: () => Navigator.pushNamed(context, RoutesManger.milestoneTopic,arguments: subTopics[index]),
+                                      onTap: () => Navigator.pushNamed(
+                                          context, RoutesManger.milestoneTopic,
+                                          arguments: subTopics[index]),
                                       child: milestoneCard(
-                                          colors[index%colors.length], subTopics[index].name ??"",
-                                          subTopics[index].learningPoints?.length ?? 0,donePoints),
+                                          colors[index % colors.length],
+                                          subTopics[index].name ?? "",
+                                          subTopics[index]
+                                                  .learningPoints
+                                                  ?.length ??
+                                              0,
+                                          donePoints),
                                     );
                                   },
                                 ),
@@ -344,7 +357,7 @@ class _LearnState extends State<Learn> {
                         width: 365.w,
                         decoration: BoxDecoration(
                           color:
-                          ColorsManger.newSecondaryColor.withOpacity(0.08),
+                              ColorsManger.newSecondaryColor.withOpacity(0.08),
                           borderRadius: BorderRadius.circular(25.r),
                         ),
                         child: Padding(
@@ -369,7 +382,7 @@ class _LearnState extends State<Learn> {
                                         fontSize: 22.sp,
                                         fontWeight: FontWeight.bold),
                                   ),
-                                  Text('/2',
+                                  Text('/${subTopics.length}',
                                       style: LightAppStyle.email.copyWith(
                                         color: ColorsManger.newSecondaryColor
                                             .withOpacity(0.5),
@@ -378,14 +391,33 @@ class _LearnState extends State<Learn> {
                                 ],
                               ),
                               SizedBox(height: 20.h),
-                              GestureDetector(
-                                  onTap: () {
-                                    Navigator.pushNamed(
-                                        context, RoutesManger.quiz);
+                              SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.22.h,
+                                width: double.infinity,
+                                child: ListView.separated(
+                                  padding: EdgeInsets.zero,
+                                  physics: subTopics.length > 2
+                                      ? ScrollPhysics(
+                                          parent: ClampingScrollPhysics())
+                                      : NeverScrollableScrollPhysics(),
+                                  itemCount: subTopics.length,
+                                  itemBuilder: (context, index) {
+                                    return InkWell(
+                                        onTap: () => Navigator.pushNamed(
+                                            context,
+                                            RoutesManger.quiz,
+                                            arguments: {
+                                              'subTopicId': subTopics[index].subTopicId,
+                                              'subTopicName': subTopics[index].name,
+                                            },),
+                                        child: quizItemWidget(index + 1,
+                                            subTopics[index].name ?? ""));
                                   },
-                                  child: quizItemWidget()),
-                              SizedBox(height: 20.h),
-                              quizItemWidget()
+                                  separatorBuilder: (context, index) =>
+                                      SizedBox(height: 15.h),
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -401,10 +433,11 @@ class _LearnState extends State<Learn> {
       ),
     );
   }
- int countDoneTasks(int index){
+
+  int countDoneTasks(int index) {
     int count = 0;
-    for(int i = 0; i < subTopics[index].learningPoints!.length; i++){
-      if(subTopics[index].learningPoints![i].status == 2){
+    for (int i = 0; i < subTopics[index].learningPoints!.length; i++) {
+      if (subTopics[index].learningPoints![i].status == 2) {
         count++;
       }
     }

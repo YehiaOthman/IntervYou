@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intervyou_app/config/styles/light_app_style.dart';
-import 'package:intervyou_app/core/routes_manger.dart';
 import 'package:intervyou_app/presentation/screens/home/home.dart';
-import 'package:intervyou_app/presentation/screens/home/tabs/learn/view/learn.dart';
-import '../../../../../../core/colors_manager.dart';
-import '../models/questions.dart';
+import 'package:intervyou_app/core/colors_manager.dart';
+import 'package:intervyou_app/data/models/SubmitQuizResponse.dart';
 
 class Result extends StatelessWidget {
   const Result({
     super.key,
-    required this.score,
+    required this.quizResult,
   });
 
-  final int score;
+  final submitQuizResponse quizResult;
 
   @override
   Widget build(BuildContext context) {
@@ -22,63 +20,75 @@ class Result extends StatelessWidget {
         body: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-          SizedBox(width: 1000.h),
-          Container(
-              width: 140.w,
-              height: 140.h,
-              decoration: BoxDecoration(
-                color: ColorsManger.newSecondaryColor,
-                borderRadius: BorderRadius.circular(75.r),
+              SizedBox(width: double.infinity),
+              Container(
+                  width: 140.w,
+                  height: 140.h,
+                  decoration: BoxDecoration(
+                    color: quizResult.isPassed ? ColorsManger.newSecondaryColor : Colors.redAccent,
+                    borderRadius: BorderRadius.circular(75.r),
+                  ),
+                  child: Icon(
+                    quizResult.isPassed ? Icons.check : Icons.close_rounded,
+                    color: Colors.white,
+                    size: 110.sp,
+                  )),
+              SizedBox(height: 20.h),
+              Text(
+                quizResult.isPassed ? 'Quiz Completed!' : 'Quiz Failed',
+                style: LightAppStyle.email.copyWith(
+                    color: Colors.black,
+                    fontSize: 24.sp,
+                    fontWeight: FontWeight.bold),
               ),
-              child: Icon(
-                Icons.check,
-                color: Colors.white,
-                size: 110.sp,
-              )),
-          SizedBox(height: 20.h),
-          Text(
-            'Quiz Completed',
-            style: LightAppStyle.email.copyWith(
-                color: Colors.black,
-                fontSize: 24.sp,
-                fontWeight: FontWeight.bold),
-          ),
-          SizedBox(height: 10.h),
-          Text(
-            'You Answered $score out of ${questions.length} correctly.',
-            style: LightAppStyle.email.copyWith(
-                color: ColorsManger.newSecondaryColor,
-                fontSize: 18.sp,
-                fontWeight: FontWeight.w400),
-          ),
-          SizedBox(height: 20.h),
-          SizedBox(
-            width: 350.w,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: ColorsManger.newSecondaryColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25.r),
-                ),
-              ),
-              onPressed: () {
-                Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(builder: (context) => Home()),
-                    (route) => false);
-              },
-              child: Padding(
-                padding: const EdgeInsets.all(12),
+              SizedBox(height: 10.h),
+              Padding(
+                padding: REdgeInsets.symmetric(horizontal: 20.0),
                 child: Text(
-                  'Confirm Submission',
+                  'You Answered ${quizResult.correctAnswers} out of ${quizResult.totalQuestions} correctly.',
                   style: LightAppStyle.email.copyWith(
-                      color: Colors.white,
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.bold),
+                      color: ColorsManger.newSecondaryColor,
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.w400),
+                  textAlign: TextAlign.center,
                 ),
               ),
-            ),
-          )
-        ]));
+              SizedBox(height: 10.h),
+              Text(
+                'Your Score: ${quizResult.scorePercentage}%',
+                style: LightAppStyle.email.copyWith(
+                    color: ColorsManger.newSecondaryColor,
+                    fontSize: 18.sp,
+                    fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 30.h),
+              SizedBox(
+                width: 350.w,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: ColorsManger.newSecondaryColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25.r),
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(builder: (context) => Home()),
+                            (route) => false);
+                  },
+                  child: Padding(
+                    padding: REdgeInsets.all(12),
+                    child: Text(
+                      'Back to Home',
+                      style: LightAppStyle.email.copyWith(
+                          color: Colors.white,
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+              )
+            ]));
   }
 }

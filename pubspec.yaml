@@ -47,12 +47,24 @@ dependencies:
   google_sign_in: ^6.3.0
   dart_jsonwebtoken: ^3.2.0
   url_launcher: ^6.3.1
+  change_app_package_name: ^1.5.0
+  flutter_launcher_icons: ^0.14.4
+  flutter_native_splash: ^2.4.6
 
 
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+
+flutter_icons:
+  android: true
+  ios: true
+  adaptive_icon_background: "#ffffff"
+  adaptive_icon_foreground: "assets/images/intervyouAppIcon.png"
+
+
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

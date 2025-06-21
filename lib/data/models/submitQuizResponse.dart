@@ -1,11 +1,11 @@
-class SubmitQuizResponse {
+class submitQuizResponse {
   final int subTopicId;
   final int scorePercentage;
   final bool isPassed;
   final int correctAnswers;
   final int totalQuestions;
 
-  SubmitQuizResponse({
+  submitQuizResponse({
     required this.subTopicId,
     required this.scorePercentage,
     required this.isPassed,
@@ -13,8 +13,8 @@ class SubmitQuizResponse {
     required this.totalQuestions,
   });
 
-  factory SubmitQuizResponse.fromJson(Map<String, dynamic> json) {
-    return SubmitQuizResponse(
+  factory submitQuizResponse.fromJson(Map<String, dynamic> json) {
+    return submitQuizResponse(
       subTopicId: json['subTopicId'],
       scorePercentage: json['scorePercentage'],
       isPassed: json['isPassed'],

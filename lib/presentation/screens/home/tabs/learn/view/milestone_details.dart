@@ -17,10 +17,15 @@ class MilestoneDetails extends StatefulWidget {
 
 class _MilestoneDetailsState extends State<MilestoneDetails> {
   late List<LearningPoints> learningPoints;
+  late var subtopic;
+@override
+  void didChangeDependencies() {
+  subtopic = ModalRoute.of(context)!.settings.arguments as SubTopics;
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
-    var subtopic = ModalRoute.of(context)!.settings.arguments as SubTopics;
     learningPoints = subtopic.learningPoints ?? [];
     return Scaffold(
       backgroundColor: Color(0xFFF0F0F0),
@@ -146,7 +151,7 @@ class _MilestoneDetailsState extends State<MilestoneDetails> {
                                     fontWeight: FontWeight.w500,
                                   )),
                               Spacer(),
-                              Text('1',
+                              Text('1',// i need if the point statuts is 2 then add one to int var here and make it change
                                   style: LightAppStyle.email.copyWith(
                                       color: ColorsManger.newSecondaryColor,
                                       fontSize: 22.sp,
@@ -189,4 +194,5 @@ class _MilestoneDetailsState extends State<MilestoneDetails> {
       ),
     );
   }
+
 }

@@ -69,7 +69,9 @@ Widget milestoneCard(Color color , String title , int taskTodo , int taskDone) {
     ),
   ]);
 }
-Widget quizItemWidget() {
+
+
+Widget quizItemWidget(int index , String quizName) {
   return Container(
     width: 325.w,
     decoration: BoxDecoration(
@@ -78,7 +80,7 @@ Widget quizItemWidget() {
       border: Border.all(color: ColorsManger.newSecondaryColor, width: 1.w),
     ),
     child: Padding(
-      padding: const EdgeInsets.all(15),
+      padding:  REdgeInsets.all(15),
       child: Row(
         children: [
           Container(
@@ -89,29 +91,44 @@ Widget quizItemWidget() {
               borderRadius: BorderRadius.circular(25.r),
             ),
             child: Center(
-                child: Text('1',
+                child: Text(index.toString(),
                     style: LightAppStyle.email.copyWith(
                         color: Colors.white,
                         fontSize: 20.sp,
                         fontWeight: FontWeight.bold))),
           ),
           Padding(
-            padding: const EdgeInsets.only(top: 8, left: 12),
+            padding: REdgeInsets.only(top: 8, left: 12),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Widgets Types',
+                  quizName.length > 20 ? '${quizName.substring(0, 17)}...' : quizName,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: LightAppStyle.email.copyWith(
                     color: ColorsManger.newSecondaryColor,
-                    fontSize: 18.sp,),
+                    fontWeight: FontWeight.w700,
+                    fontSize: 17.sp,
+                  ),
                 ),
-                Text(
-                  '20',
-                  style: LightAppStyle.email.copyWith(
-                    color: ColorsManger.newSecondaryColor,
-                    fontSize: 18.sp,),
+
+                Row(
+                  children: [
+                    Text(
+                      '10 ',
+                      style: LightAppStyle.email.copyWith(
+                        color: ColorsManger.newSecondaryColor,
+                        fontSize: 18.sp,),
+                    ),
+                    Text(
+                      'Questions',
+                      style: LightAppStyle.email.copyWith(
+                        color: ColorsManger.newSecondaryColor,
+                        fontSize: 16.sp,),
+                    ),
+                  ],
                 ),
               ],
             ),

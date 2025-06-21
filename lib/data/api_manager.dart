@@ -4,10 +4,10 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
 import 'package:intervyou_app/data/models/DailyQuiz.dart';
-
 import 'models/LearnRespone.dart';
 import 'models/LearningPoints.dart';
-import 'models/submitQuizResponse.dart';
+import 'models/SubmitQuizResponse.dart';
+
 
 class ApiManger {
   static const String baseUrl = 'intervyouquestions.runasp.net';
@@ -23,7 +23,7 @@ class ApiManger {
   static const String learningPointsEndPoint = '/learningpoints/{subTopicId}';
   static const String subTopicEndPoint = '/api/Roadmap/subtopics/{subTopicId}/quiz';
   static const String submitQuizEndPoint = '/api/Roadmap/quiz/submit';
-  static const String learningPointsProgressEndPoint = '/api/Roadmap/learningpoints/{learningPointId}/progress';
+
 
   static Future<http.Response> loginUser(String email, String password) async {
     final Map<String, String> headers = {
@@ -283,7 +283,6 @@ class ApiManger {
 
 
 
-
   static Future<LearnResponse?> getLearnData() async {
     final storage = FlutterSecureStorage();
     final token = await storage.read(key: 'access_token');
@@ -326,6 +325,8 @@ class ApiManger {
       return null;
     }
   }
+
+
   static Future<http.Response> updateLearningPointProgress(num learningPointId, num status) async {
     final storage = FlutterSecureStorage();
     final token = await storage.read(key: 'access_token');
@@ -369,7 +370,7 @@ class ApiManger {
       return null;
     }
   }
-  static Future<SubmitQuizResponse?> submitQuizAnswers(int subTopicId, Map<String, int> answers) async {
+  static Future<submitQuizResponse?> submitQuizAnswers(int subTopicId, Map<String, int> answers) async {
     final storage = FlutterSecureStorage();
     final token = await storage.read(key: 'access_token');
     if (token == null) return null;
@@ -390,7 +391,7 @@ class ApiManger {
 
     if (response.statusCode == 200) {
       final jsonData = jsonDecode(response.body);
-      return SubmitQuizResponse.fromJson(jsonData);
+      return submitQuizResponse.fromJson(jsonData);
     } else {
       print("Failed to submit quiz: ${response.statusCode}");
       return null;

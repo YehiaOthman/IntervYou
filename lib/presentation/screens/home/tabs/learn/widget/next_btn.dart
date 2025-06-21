@@ -17,11 +17,22 @@ class RectangularButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton(
       onPressed: onPressed,
+      style: TextButton.styleFrom(
+        padding: EdgeInsets.zero,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8.r),
+        ),
+      ),
       child: SizedBox(
         height: 60.h,
         width: double.infinity,
         child: Card(
-          color: ColorsManger.newSecondaryColor,
+          margin: EdgeInsets.zero,
+          elevation: onPressed != null ? 2 : 0,
+          color: onPressed != null ? ColorsManger.newSecondaryColor : ColorsManger.newSecondaryColor.withOpacity(0.5),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8.r),
+          ),
           child: Center(
             child: Text(
               label,

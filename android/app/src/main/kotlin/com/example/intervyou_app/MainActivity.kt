@@ -1,4 +1,4 @@
-package com.example.intervyou_app
+package com.nub.intervyou
 
 import io.flutter.embedding.android.FlutterActivity
 
