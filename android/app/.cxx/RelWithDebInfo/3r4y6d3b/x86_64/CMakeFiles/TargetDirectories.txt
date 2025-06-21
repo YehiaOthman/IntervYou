@@ -1,0 +1,2 @@
+C:/Users/Yayia/StudioProjects/Intervyouu/android/app/.cxx/RelWithDebInfo/3r4y6d3b/x86_64/CMakeFiles/edit_cache.dir
+C:/Users/Yayia/StudioProjects/Intervyouu/android/app/.cxx/RelWithDebInfo/3r4y6d3b/x86_64/CMakeFiles/rebuild_cache.dir
