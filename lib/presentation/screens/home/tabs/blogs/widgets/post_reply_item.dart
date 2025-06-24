@@ -6,20 +6,19 @@ import '../../../../../../config/styles/light_app_style.dart';
 import '../../../../../../core/assets_manager.dart';
 import '../../../../../../core/colors_manager.dart';
 
-class PostItemWidgetV2 extends StatefulWidget {
-  PostItemWidgetV2({super.key, required this.postContent});
+class PostReplyItem extends StatefulWidget {
+   PostReplyItem({super.key, required this.postContent});
 
   @override
-  State<PostItemWidgetV2> createState() => _PostItemWidgetV2State();
+  State<PostReplyItem> createState() => _PostReplyItemState();
   String postContent;
 }
 
-class _PostItemWidgetV2State extends State<PostItemWidgetV2> {
+class _PostReplyItemState extends State<PostReplyItem> {
   bool isVotedUp = false;
   bool isVotedDown = false;
   int votes = 50;
   int comments = 50;
-
   @override
   Widget build(BuildContext context) {
     return IntrinsicHeight(
@@ -143,18 +142,13 @@ class _PostItemWidgetV2State extends State<PostItemWidgetV2> {
                 ),
               ],
             ),
-            SizedBox(height: 5.h),
-            Text('Post Title',
-                style: LightAppStyle.email.copyWith(
-                    color: Colors.black,
-                    fontSize: 20.sp,
-                    fontWeight: FontWeight.w700)),
+            SizedBox(height: 10.h),
             Text(
               widget.postContent,
               style: LightAppStyle.email.copyWith(
                 color: Colors.black,
                 fontSize: 16.sp,
-                fontWeight: FontWeight.w200,
+                fontWeight: FontWeight.w500,
               ),
             ),
             SizedBox(height: 15.h),
@@ -167,6 +161,7 @@ class _PostItemWidgetV2State extends State<PostItemWidgetV2> {
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                Spacer(),
                 InkWell(
                   onTap: toggleUpVote,
                   child: Container(
@@ -196,37 +191,7 @@ class _PostItemWidgetV2State extends State<PostItemWidgetV2> {
                     child: Icon(Icons.arrow_downward, color: ColorsManger.newSecondaryColor.withOpacity(0.8),size: 22,),
                   ),
                 ),
-                SizedBox(width: 10.w),
-                Spacer(),
-                SizedBox(width: 10.w),
-                InkWell(
-                  onTap: () => print('reply'),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: ColorsManger.newSecondaryColor.withOpacity(0.13),
-                    ),
-                    child: Icon(Icons.add, color: ColorsManger.newSecondaryColor.withOpacity(0.8),size: 22,),
-                  ),
-                ),
-                SizedBox(width: 10.w),
-                Text(
-                  comments.toString(),
-                  style: LightAppStyle.email.copyWith(
-                    color: Colors.black.withOpacity(0.5),
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                SizedBox(width: 5.w),
-                Text(
-                  'replies',
-                  style: LightAppStyle.email.copyWith(
-                    color: Colors.black.withOpacity(0.5),
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
+
               ],
             ),
             SizedBox(height: 15.h),

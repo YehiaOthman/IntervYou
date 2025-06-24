@@ -7,6 +7,7 @@ import 'package:intervyou_app/presentation/screens/home/tabs/blogs/view/netwrok_
 import 'package:intervyou_app/presentation/screens/home/tabs/blogs/view/posts_tab.dart';
 
 import '../../../../../../core/assets_manager.dart';
+import '../../../../../../core/routes_manger.dart';
 
 class Blogs extends StatefulWidget {
   const Blogs({super.key});
@@ -29,7 +30,7 @@ class _BlogsState extends State<Blogs> {
                 floating: true,
                 snap: true,
                 elevation: 0,
-                shape: const RoundedRectangleBorder(
+                shape:  RoundedRectangleBorder(
                   borderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(30),
                     bottomRight: Radius.circular(30),
@@ -37,23 +38,26 @@ class _BlogsState extends State<Blogs> {
                 ),
                 shadowColor: Colors.black,
                 surfaceTintColor: ColorsManger.newWhite,
-                toolbarHeight: 60,
+                toolbarHeight: 75.h,
                 automaticallyImplyLeading: false,
                 title: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: ColorsManger.newWhite,
-                          width: 1.5,
+                    InkWell(
+                      onTap: () => Navigator.pushNamed(context, RoutesManger.userProfile),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: ColorsManger.newWhite,
+                            width: 1.5,
+                          ),
                         ),
-                      ),
-                      child: CircleAvatar(
-                        radius: 20,
-                        backgroundImage: AssetImage(
-                          AssetsManager.pp,
+                        child: CircleAvatar(
+                          radius: 20,
+                          backgroundImage: AssetImage(
+                            AssetsManager.pp,
+                          ),
                         ),
                       ),
                     ),
@@ -65,12 +69,20 @@ class _BlogsState extends State<Blogs> {
                         indicatorColor: ColorsManger.newWhite,
                         labelStyle: LightAppStyle.email,
                         tabs: [
-                          Tab(
-                            text: 'Posts',
-                          ),
+                          Tab(text: 'Posts',),
                           Tab(text: 'Network'),
                           Tab(text: 'Chat'),
                         ],
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () => Navigator.pushNamed(context, RoutesManger.addPost),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.black.withOpacity(0.2),
+                        ),
+                        child: Icon(Icons.add, color: ColorsManger.newWhite,),
                       ),
                     ),
                   ],
@@ -78,11 +90,8 @@ class _BlogsState extends State<Blogs> {
               ),
             ];
           },
-          body: Padding(
-            padding:  REdgeInsets.symmetric(horizontal: 16),
-            child: TabBarView(
-              children: [PostsTab(), NetwrokTab(), ChatTab()],
-            ),
+          body: TabBarView(
+            children: [PostsTab(), NetwrokTab(), ChatTab()],
           ),
         ),
       ),
