@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import '../core/routes_manger.dart';
 import '../data/api_manager.dart';
 
@@ -322,4 +323,24 @@ class HandlerFunctions {
       );
     }
   }
+
+  static String formatSmartDate(String isoTime) {
+    final now = DateTime.now();
+    final dateTime = DateTime.parse(isoTime).toLocal();
+
+    final difference = now.difference(dateTime);
+
+    if (difference.inDays == 0) {
+      // Same day
+      return DateFormat.jm().format(dateTime); // "9:21 PM"
+    } else if (difference.inDays == 1) {
+      return 'Yesterday';
+    } else if (difference.inDays < 7) {
+      return DateFormat.EEEE().format(dateTime); // "Monday"
+    } else {
+      return DateFormat.MMMd().format(dateTime); // "Jun 2"
+    }
+  }
+
+
 }

@@ -1,17 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intervyou_app/config/handler_functions.dart';
 
 import '../../../../../../config/styles/light_app_style.dart';
 import '../../../../../../core/assets_manager.dart';
 import '../../../../../../core/colors_manager.dart';
+import '../../../../../../data/blogs_models/timeline/time_line_item.dart';
 
 class PostItemWidgetV2 extends StatefulWidget {
-  PostItemWidgetV2({super.key, required this.postContent});
+  PostItemWidgetV2({super.key, required this.item});
 
   @override
   State<PostItemWidgetV2> createState() => _PostItemWidgetV2State();
-  String postContent;
+  TimeLineItem item;
+
 }
 
 class _PostItemWidgetV2State extends State<PostItemWidgetV2> {
@@ -42,8 +45,8 @@ class _PostItemWidgetV2State extends State<PostItemWidgetV2> {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(50.r),
-                  child: Image.asset(
-                    AssetsManager.pp,
+                  child: Image.network(
+                    'https://intervyouquestions.runasp.net${widget.item.sourceUserProfilePictureUrl}',
                     width: 40.w.clamp(30, 50),
                     height: 40.h.clamp(30, 50),
                   ),
@@ -53,7 +56,7 @@ class _PostItemWidgetV2State extends State<PostItemWidgetV2> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Yehia Othman',
+                      widget.item.sourceUserName ?? '',
                       style: LightAppStyle.email.copyWith(
                           fontSize: 15.sp,
                           color: Colors.black,
@@ -62,7 +65,7 @@ class _PostItemWidgetV2State extends State<PostItemWidgetV2> {
                       overflow: TextOverflow.ellipsis,
                     ),
                     Text(
-                      '9:12 PM',
+                      '${HandlerFunctions.formatSmartDate(widget.item.timestamp ?? '')}',
                       style: LightAppStyle.email.copyWith(
                         color: Colors.black,
                         fontSize: 11.sp,
@@ -144,13 +147,13 @@ class _PostItemWidgetV2State extends State<PostItemWidgetV2> {
               ],
             ),
             SizedBox(height: 5.h),
-            Text('Post Title',
+            Text(widget.item.blogPostTitle ?? '',
                 style: LightAppStyle.email.copyWith(
                     color: Colors.black,
                     fontSize: 20.sp,
                     fontWeight: FontWeight.w700)),
             Text(
-              widget.postContent,
+              widget.item.blogPostSnippet ?? '',
               style: LightAppStyle.email.copyWith(
                 color: Colors.black,
                 fontSize: 16.sp,
@@ -211,7 +214,7 @@ class _PostItemWidgetV2State extends State<PostItemWidgetV2> {
                 ),
                 SizedBox(width: 10.w),
                 Text(
-                  comments.toString(),
+                  widget.item.blogPostCommentCount.toString(),
                   style: LightAppStyle.email.copyWith(
                     color: Colors.black.withOpacity(0.5),
                     fontSize: 16.sp,

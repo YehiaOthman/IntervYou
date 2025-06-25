@@ -3,11 +3,26 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
+import 'package:intervyou_app/data/blogs_models/profile/Profile_dm.dart';
 import 'package:intervyou_app/data/models/DailyQuiz.dart';
+import 'blogs_models/chat/Conversation.dart';
+import 'blogs_models/chat/ConversationOtherUserId.dart';
+import 'blogs_models/connections/ConnectionStatus.dart';
+import 'blogs_models/connections/Connections.dart';
+import 'blogs_models/connections/PendingConnections.dart';
+import 'blogs_models/connections/SentConnections.dart';
+import 'blogs_models/connections/SuggestionConnection.dart';
+import 'blogs_models/notifications/Notifications.dart';
+import 'blogs_models/notifications/UnReadCountNotifications.dart';
+import 'blogs_models/post/AuthorPosts.dart';
+import 'blogs_models/post/PostComments.dart';
+import 'blogs_models/post/PostDetailsDm.dart';
+import 'blogs_models/post/Posts.dart';
+import 'blogs_models/profile/SearchProfile.dart';
+import 'blogs_models/timeline/TimeLine.dart';
 import 'models/LearnRespone.dart';
 import 'models/LearningPoints.dart';
 import 'models/SubmitQuizResponse.dart';
-
 
 class ApiManger {
   static const String baseUrl = 'intervyouquestions.runasp.net';
@@ -23,6 +38,9 @@ class ApiManger {
   static const String learningPointsEndPoint = '/learningpoints/{subTopicId}';
   static const String subTopicEndPoint = '/api/Roadmap/subtopics/{subTopicId}/quiz';
   static const String submitQuizEndPoint = '/api/Roadmap/quiz/submit';
+
+
+
 
 
   static Future<http.Response> loginUser(String email, String password) async {
@@ -58,7 +76,8 @@ class ApiManger {
       final parts = token.split('.');
       if (parts.length != 3) throw Exception('Invalid token');
 
-      final payload = jsonDecode(utf8.decode(base64Url.decode(base64Url.normalize(parts[1]))));
+      final payload = jsonDecode(
+          utf8.decode(base64Url.decode(base64Url.normalize(parts[1]))));
       print("Decoded payload: $payload");
 
       String userName = payload['given_name'];
@@ -98,7 +117,7 @@ class ApiManger {
         if (decoded is Map<String, dynamic> && decoded.containsKey('errors')) {
           final errors = List<String>.from(decoded['errors']);
           final emailTakenError = errors.firstWhere(
-                (e) => e.toLowerCase().contains('already taken'),
+            (e) => e.toLowerCase().contains('already taken'),
             orElse: () => '',
           );
 
@@ -115,13 +134,8 @@ class ApiManger {
   }
 
   static Future<http.Response> confirmEmail(String email, String otp) async {
-    final Map<String, String> headers = {
-      'Content-Type': 'application/json'
-    };
-    final Map<String, String> body = {
-      'email': email,
-      'otp': otp
-    };
+    final Map<String, String> headers = {'Content-Type': 'application/json'};
+    final Map<String, String> body = {'email': email, 'otp': otp};
     final response = await post(
       Uri.https(baseUrl, confirmEmailOtpEndPoint),
       headers: headers,
@@ -132,9 +146,7 @@ class ApiManger {
   }
 
   static Future<http.Response> resendEmailConfirmationOtp(String email) async {
-    final Map<String, String> headers = {
-      'Content-Type': 'application/json'
-    };
+    final Map<String, String> headers = {'Content-Type': 'application/json'};
     final Map<String, String> body = {
       'email': email,
     };
@@ -148,9 +160,7 @@ class ApiManger {
   }
 
   static Future<http.Response> forgotPassword(String email) async {
-    final Map<String, String> headers = {
-      'Content-Type': 'application/json'
-    };
+    final Map<String, String> headers = {'Content-Type': 'application/json'};
     final Map<String, String> body = {
       'email': email,
     };
@@ -164,13 +174,8 @@ class ApiManger {
   }
 
   static Future<http.Response> verifyForgotPasswordOtp(String email, String otp) async {
-    final Map<String, String> headers = {
-      'Content-Type': 'application/json'
-    };
-    final Map<String, String> body = {
-      'email': email,
-      'otp': otp
-    };
+    final Map<String, String> headers = {'Content-Type': 'application/json'};
+    final Map<String, String> body = {'email': email, 'otp': otp};
     final response = await post(
       Uri.https(baseUrl, verifyForgotPasswordOtpEndPoint),
       headers: headers,
@@ -181,9 +186,7 @@ class ApiManger {
   }
 
   static Future<http.Response> resetPassword(String email, String password, String confirmPassword) async {
-    final Map<String, String> headers = {
-      'Content-Type': 'application/json'
-    };
+    final Map<String, String> headers = {'Content-Type': 'application/json'};
     final Map<String, String> body = {
       'email': email,
       'newPassword': password,
@@ -206,21 +209,17 @@ class ApiManger {
     final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
     if (googleUser == null) return null;
 
-    final GoogleSignInAuthentication googleAuth = await googleUser
-        .authentication;
+    final GoogleSignInAuthentication googleAuth =
+        await googleUser.authentication;
     return googleAuth.idToken;
   }
 
   static Future<http.Response> externalLogin(String provider, String token) async {
     final String url = "$baseUrl/api/auth/external/login/$provider";
 
-    final Map<String, String> headers = {
-      'Content-Type': 'application/json'
-    };
+    final Map<String, String> headers = {'Content-Type': 'application/json'};
 
-    final Map<String, String> body = {
-      "providerToken": token
-    };
+    final Map<String, String> body = {"providerToken": token};
 
     final response = await post(
       Uri.parse(url),
@@ -280,9 +279,6 @@ class ApiManger {
     return response;
   }
 
-
-
-
   static Future<LearnResponse?> getLearnData() async {
     final storage = FlutterSecureStorage();
     final token = await storage.read(key: 'access_token');
@@ -304,13 +300,15 @@ class ApiManger {
       return null;
     }
   }
+
   static Future<List<LearningPoints>?> getLearningPoints(int subTopicId) async {
     final storage = FlutterSecureStorage();
     final token = await storage.read(key: 'access_token');
     if (token == null) return null;
 
     final response = await http.get(
-      Uri.parse("https://intervyouquestions.runasp.net/api/Roadmap/learningpoints/$subTopicId"),
+      Uri.parse(
+          "https://intervyouquestions.runasp.net/api/Roadmap/learningpoints/$subTopicId"),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',
@@ -326,7 +324,6 @@ class ApiManger {
     }
   }
 
-
   static Future<http.Response> updateLearningPointProgress(num learningPointId, num status) async {
     final storage = FlutterSecureStorage();
     final token = await storage.read(key: 'access_token');
@@ -336,7 +333,8 @@ class ApiManger {
     }
 
     final response = await http.post(
-      Uri.parse("https://intervyouquestions.runasp.net/api/Roadmap/learningpoints/$learningPointId/progress"),
+      Uri.parse(
+          "https://intervyouquestions.runasp.net/api/Roadmap/learningpoints/$learningPointId/progress"),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',
@@ -347,15 +345,14 @@ class ApiManger {
     return response;
   }
 
-
-
   static Future<List<DailyQuizzes>?> getQuiz(int subTopicId) async {
     final storage = FlutterSecureStorage();
     final token = await storage.read(key: 'access_token');
     if (token == null) return null;
 
     final response = await http.get(
-      Uri.parse("https://intervyouquestions.runasp.net/api/Roadmap/subtopics/$subTopicId/quiz"),
+      Uri.parse(
+          "https://intervyouquestions.runasp.net/api/Roadmap/subtopics/$subTopicId/quiz"),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',
@@ -370,6 +367,7 @@ class ApiManger {
       return null;
     }
   }
+
   static Future<submitQuizResponse?> submitQuizAnswers(int subTopicId, Map<String, int> answers) async {
     final storage = FlutterSecureStorage();
     final token = await storage.read(key: 'access_token');
@@ -381,7 +379,8 @@ class ApiManger {
     };
 
     final response = await http.post(
-      Uri.parse("https://intervyouquestions.runasp.net/api/Roadmap/quiz/submit"),
+      Uri.parse(
+          "https://intervyouquestions.runasp.net/api/Roadmap/quiz/submit"),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',
@@ -398,15 +397,554 @@ class ApiManger {
     }
   }
 
+  //----------------------------------------------------------------------------------------------------------
+  //                                     *  يارب عدي الترب ده علي خير *
+  //----------------------------------------------------------------------------------------------------------
 
 
+  // Blogs-Get-Apis
+  static Future<TimeLine?> fetchTimelineData({int? page, int? pageSize}) async {
+    try {
+      final storage = FlutterSecureStorage();
+      final token = await storage.read(key: 'access_token');
 
+      if (token == null) {
+        print("Access token not found");
+        return null;
+      }
 
+      final queryParams = {
+        if (page != null) 'page': page.toString(),
+        if (pageSize != null) 'pageSize': pageSize.toString(),
+      };
 
+      final uri = Uri.https(
+        'intervyouquestions.runasp.net',
+        '/api/timeline',
+        queryParams,
+      );
 
+      final response = await http.get(
+        uri,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
 
+      if (response.statusCode == 200) {
+        final jsonData = jsonDecode(response.body);
+        return TimeLine.fromJson(jsonData);
+      } else {
+        print("Failed to load timeline: ${response.statusCode}");
+        print("Response body: ${response.body}");
+        return null;
+      }
+    } catch (e) {
+      print("Exception while fetching timeline: $e");
+      return null;
+    }
+  }
 
+  static Future<ProfileDataModel?> fetchUserProfile(String userId) async {
+    final storage = FlutterSecureStorage();
+    final token = await storage.read(key: 'access_token');
+    if (token == null) return null;
 
+    final url = "https://intervyouquestions.runasp.net/api/Profile/$userId";
+
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final jsonData = jsonDecode(response.body);
+      return ProfileDataModel.fromJson(jsonData);
+    } else {
+      print("Failed to fetch profile: ${response.statusCode}");
+      return null;
+    }
+  }
+
+  static Future<SearchProfile?> fetchSearchProfiles({String? query, int? page, int? pageSize}) async {
+    final storage = FlutterSecureStorage();
+    final token = await storage.read(key: 'access_token');
+    if (token == null) return null;
+
+    // Build query parameters
+    final Map<String, String> queryParams = {};
+    if (query != null) queryParams['query'] = query;
+    if (page != null) queryParams['page'] = page.toString();
+    if (pageSize != null) queryParams['pageSize'] = pageSize.toString();
+
+    final uri = Uri.https(
+      'intervyouquestions.runasp.net',
+      '/api/Profile/search',
+      queryParams,
+    );
+
+    final response = await http.get(
+      uri,
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final jsonData = jsonDecode(response.body);
+      return SearchProfile.fromJson(jsonData);
+    } else {
+      print("Failed to load profiles: ${response.statusCode}");
+      return null;
+    }
+  }
+
+  static Future<Notifications?> fetchNotifications({int? page, int? pageSize, bool? unreadOnly}) async {
+    final storage = FlutterSecureStorage();
+    final token = await storage.read(key: 'access_token');
+    if (token == null) return null;
+
+    final Map<String, String> queryParams = {};
+    if (page != null) queryParams['page'] = page.toString();
+    if (pageSize != null) queryParams['pageSize'] = pageSize.toString();
+    if (unreadOnly != null) queryParams['unreadOnly'] = unreadOnly.toString();
+
+    final uri = Uri.https(
+      'intervyouquestions.runasp.net',
+      '/api/Notifications',
+      queryParams,
+    );
+
+    final response = await http.get(
+      uri,
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final jsonData = jsonDecode(response.body);
+      return Notifications.fromJson(jsonData);
+    } else {
+      print('Failed to fetch notifications: ${response.statusCode}');
+      return null;
+    }
+  }
+
+  static Future<UnReadCountNotifications?> fetchUnreadNotificationCount() async {
+    final storage = FlutterSecureStorage();
+    final token = await storage.read(key: 'access_token');
+    if (token == null) return null;
+
+    final uri = Uri.parse('https://intervyouquestions.runasp.net/api/Notifications/unread-count');
+
+    final response = await http.get(
+      uri,
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final jsonData = jsonDecode(response.body);
+      return UnReadCountNotifications.fromJson(jsonData);
+    } else {
+      print('Failed to fetch unread count: ${response.statusCode}');
+      return null;
+    }
+  }
+
+  static Future<PendingConnections?> fetchPendingConnections({int? page, int? pageSize}) async {
+    final storage = FlutterSecureStorage();
+    final token = await storage.read(key: 'access_token');
+    if (token == null) return null;
+
+    final uri = Uri.https(
+      'intervyouquestions.runasp.net',
+      '/api/Connections/pending',
+      {
+        if (page != null) 'page': page.toString(),
+        if (pageSize != null) 'pageSize': pageSize.toString(),
+      },
+    );
+
+    final response = await http.get(
+      uri,
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final jsonData = jsonDecode(response.body);
+      return PendingConnections.fromJson(jsonData);
+    } else {
+      print('Failed to load pending connections: ${response.statusCode}');
+      return null;
+    }
+  }
+
+  static Future<SentConnections?> fetchSentConnections({int? page, int? pageSize}) async {
+    try {
+      final storage = FlutterSecureStorage();
+      final token = await storage.read(key: 'access_token');
+      if (token == null) return null;
+
+      final uri = Uri.https(
+        'intervyouquestions.runasp.net',
+        '/api/Connections/sent',
+        {
+          if (page != null) 'page': page.toString(),
+          if (pageSize != null) 'pageSize': pageSize.toString(),
+        },
+      );
+
+      final response = await http.get(
+        uri,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final jsonData = jsonDecode(response.body);
+        return SentConnections.fromJson(jsonData);
+      } else {
+        print('Failed to load sent connections: ${response.statusCode}');
+        return null;
+      }
+    } catch (e) {
+      print('Error fetching sent connections: $e');
+      return null;
+    }
+  }
+
+  static Future<Connections?> fetchConnections({int? page, int? pageSize}) async {
+    try {
+      final storage = FlutterSecureStorage();
+      final token = await storage.read(key: 'access_token');
+      if (token == null) return null;
+
+      final uri = Uri.https(
+        'intervyouquestions.runasp.net',
+        '/api/Connections',
+        {
+          if (page != null) 'page': page.toString(),
+          if (pageSize != null) 'pageSize': pageSize.toString(),
+        },
+      );
+
+      final response = await http.get(
+        uri,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final jsonData = jsonDecode(response.body);
+        return Connections.fromJson(jsonData);
+      } else {
+        print('Failed to load connections: ${response.statusCode}');
+        return null;
+      }
+    } catch (e) {
+      print('Error fetching connections: $e');
+      return null;
+    }
+  }
+
+  static Future<SuggestionConnection?> fetchConnectionSuggestions({int? page, int? pageSize, int? minMutual,}) async {
+    try {
+      final storage = FlutterSecureStorage();
+      final token = await storage.read(key: 'access_token');
+      if (token == null) return null;
+
+      final uri = Uri.https(
+        'intervyouquestions.runasp.net',
+        '/api/Connections/suggestions',
+        {
+          if (page != null) 'page': page.toString(),
+          if (pageSize != null) 'pageSize': pageSize.toString(),
+          if (minMutual != null) 'minMutual': minMutual.toString(),
+        },
+      );
+
+      final response = await http.get(
+        uri,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final jsonData = jsonDecode(response.body);
+        return SuggestionConnection.fromJson(jsonData);
+      } else {
+        print('Failed to load suggestions: ${response.statusCode}');
+        return null;
+      }
+    } catch (e) {
+      print('Error fetching connection suggestions: $e');
+      return null;
+    }
+  }
+
+  static Future<ConnectionStatus?> fetchConnectionStatus(String targetUserId) async {
+    try {
+      final storage = FlutterSecureStorage();
+      final token = await storage.read(key: 'access_token');
+      if (token == null) return null;
+
+      final uri = Uri.https(
+        'intervyouquestions.runasp.net',
+        '/api/Connections/status/$targetUserId',
+      );
+
+      final response = await http.get(
+        uri,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final jsonData = jsonDecode(response.body);
+        return ConnectionStatus.fromJson(jsonData);
+      } else {
+        print('Failed to load connection status: ${response.statusCode}');
+        return null;
+      }
+    } catch (e) {
+      print('Error fetching connection status: $e');
+      return null;
+    }
+  }
+
+  static Future<ConversationOtherUserId?> fetchConversationWithUser({required String otherUserId, int? page, int? pageSize,}) async {
+    try {
+      final storage = FlutterSecureStorage();
+      final token = await storage.read(key: 'access_token');
+      if (token == null) return null;
+
+      final uri = Uri.https(
+        'intervyouquestions.runasp.net',
+        '/api/chat/conversation/$otherUserId',
+        {
+          if (page != null) 'page': page.toString(),
+          if (pageSize != null) 'pageSize': pageSize.toString(),
+        },
+      );
+
+      final response = await http.get(
+        uri,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final jsonData = jsonDecode(response.body);
+        return ConversationOtherUserId.fromJson(jsonData);
+      } else {
+        print('Failed to load conversation: ${response.statusCode}');
+        return null;
+      }
+    } catch (e) {
+      print('Error fetching conversation: $e');
+      return null;
+    }
+  }
+
+  static Future<Conversation?> fetchAllConversations({int? page, int? pageSize,}) async {
+    try {
+      final storage = FlutterSecureStorage();
+      final token = await storage.read(key: 'access_token');
+      if (token == null) return null;
+
+      final uri = Uri.https(
+        'intervyouquestions.runasp.net',
+        '/api/chat/conversations',
+        {
+          if (page != null) 'page': page.toString(),
+          if (pageSize != null) 'pageSize': pageSize.toString(),
+        },
+      );
+
+      final response = await http.get(
+        uri,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final jsonData = jsonDecode(response.body);
+        return Conversation.fromJson(jsonData);
+      } else {
+        print('Failed to load conversations: ${response.statusCode}');
+        return null;
+      }
+    } catch (e) {
+      print('Error fetching conversations: $e');
+      return null;
+    }
+  }
+
+  static Future<Posts?> fetchBlogPosts({int? page, int? pageSize,}) async {
+    try {
+      final storage = FlutterSecureStorage();
+      final token = await storage.read(key: 'access_token');
+      if (token == null) return null;
+
+      final uri = Uri.https(
+        'intervyouquestions.runasp.net',
+        '/api/blog/posts',
+        {
+          if (page != null) 'page': page.toString(),
+          if (pageSize != null) 'pageSize': pageSize.toString(),
+        },
+      );
+
+      final response = await http.get(
+        uri,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final jsonData = jsonDecode(response.body);
+        return Posts.fromJson(jsonData);
+      } else {
+        print('Failed to load blog posts: ${response.statusCode}');
+        return null;
+      }
+    } catch (e) {
+      print('Error fetching blog posts: $e');
+      return null;
+    }
+  }
+
+  static Future<PostDetailsDm?> fetchPostDetails(String postId) async {
+    try {
+      final storage = FlutterSecureStorage();
+      final token = await storage.read(key: 'access_token');
+      if (token == null) return null;
+
+      final uri = Uri.https(
+        'intervyouquestions.runasp.net',
+        '/api/blog/posts/$postId',
+      );
+
+      final response = await http.get(
+        uri,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final jsonData = jsonDecode(response.body);
+        return PostDetailsDm.fromJson(jsonData);
+      } else {
+        print('Failed to load post details: ${response.statusCode}');
+        return null;
+      }
+    } catch (e) {
+      print('Error fetching post details: $e');
+      return null;
+    }
+  }
+
+  static Future<AuthorPosts?> fetchPostsByAuthor({required String authorId, int? page, int? pageSize,}) async {
+    try {
+      final storage = FlutterSecureStorage();
+      final token = await storage.read(key: 'access_token');
+      if (token == null) return null;
+
+      final uri = Uri.https(
+        'intervyouquestions.runasp.net',
+        '/api/blog/posts/author/$authorId',
+        {
+          if (page != null) 'page': page.toString(),
+          if (pageSize != null) 'pageSize': pageSize.toString(),
+        },
+      );
+
+      final response = await http.get(
+        uri,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final jsonData = jsonDecode(response.body);
+        return AuthorPosts.fromJson(jsonData);
+      } else {
+        print('Failed to load author posts: ${response.statusCode}');
+        return null;
+      }
+    } catch (e) {
+      print('Error fetching author posts: $e');
+      return null;
+    }
+  }
+
+  static Future<PostComments?> fetchCommentsForPost({required String postId, int? page, int? pageSize,}) async {
+    try {
+      final storage = FlutterSecureStorage();
+      final token = await storage.read(key: 'access_token');
+      if (token == null) return null;
+
+      final uri = Uri.https(
+        'intervyouquestions.runasp.net',
+        '/api/blog/posts/$postId/comments',
+        {
+          if (page != null) 'page': page.toString(),
+          if (pageSize != null) 'pageSize': pageSize.toString(),
+        },
+      );
+
+      final response = await http.get(
+        uri,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final jsonData = jsonDecode(response.body);
+        return PostComments.fromJson(jsonData);
+      } else {
+        print('Failed to load post comments: ${response.statusCode}');
+        return null;
+      }
+    } catch (e) {
+      print('Error fetching post comments: $e');
+      return null;
+    }
+  }
+ // Blogs-Get-Apis
 
 
 

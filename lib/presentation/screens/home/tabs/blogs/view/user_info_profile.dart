@@ -47,7 +47,7 @@ class _UserInfoProfileState extends State<UserInfoProfile> {
             ),
             SizedBox(height: 30.h),
             Container(
-              padding: REdgeInsets.all(30),
+              padding: REdgeInsets.all(24),
               width: double.infinity,
               decoration: BoxDecoration(
                   color: Colors.white,

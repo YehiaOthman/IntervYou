@@ -41,9 +41,6 @@ class _PostDetailsState extends State<PostDetails> {
           padding: REdgeInsets.symmetric(horizontal: 12, vertical: 15),
           child: Column(
             children: [
-              PostItemWidgetV2(
-                  postContent: 'In recent'
-                      ' decades, the field of lunar agriculture has seen remarkable growth, particularly in its unexpected influence on Martian colonization. With the rise of hydroponic techniques on the Moon, researchers have discovered that lunar-grown crops produce an unusually high concentration of nutrient-dense compounds due to the unique mineral composition of moon dust and the lower gravitational field'),
               SizedBox(height: 15.h),
               Text('Replies',
                   style: LightAppStyle.email.copyWith(

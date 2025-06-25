@@ -5,6 +5,8 @@ import 'package:intervyou_app/core/routes_manger.dart';
 import 'package:intervyou_app/presentation/screens/home/tabs/blogs/widgets/post_tiem_widget_v2.dart';
 
 import '../../../../../../config/styles/light_app_style.dart';
+import '../../../../../../data/api_manager.dart';
+import '../../../../../../data/blogs_models/timeline/time_line_item.dart';
 
 class PostsTab extends StatefulWidget {
   const PostsTab({super.key});
@@ -14,45 +16,67 @@ class PostsTab extends StatefulWidget {
 }
 
 class _PostsTabState extends State<PostsTab> {
-  List<Widget> posts = [
-    PostItemWidgetV2(
-        postContent: ''
-            'In recent decades, the field of lunar agriculture has seen remarkable growth, particularly in its unexpected influence on Martian colonization. With the rise of hydroponic techniques on the Moon, researchers have discovered that lunar-grown crops produce an unusually high concentration of nutrient-dense compounds due to the unique mineral composition of moon dust and the lower gravitational field'),
-    PostItemWidgetV2(
-        postContent: ''
-            'In recent decades, the field of lunar agriculture has seen remarkable growth, particularly in its unexpected influence on Martian colonization. With the rise of hydroponic techniques on the Moon, researchers have discovered that lunar-grown crops produce an unusually high concentration of nutrient-dense compounds due to the unique mineral composition of moon dust and the lower gravitational field'),
-    PostItemWidgetV2(
-        postContent: ''
-            'In recent decades, the field of lunar agriculture has seen remarkable growth, particularly in its unexpected influence on Martian colonization. With the rise of hydroponic techniques on the Moon, researchers have discovered that lunar-grown crops produce an unusually high concentration of nutrient-dense compounds due to the unique mineral composition of moon dust and the lower gravitational field'),
-    PostItemWidgetV2(
-        postContent: ''
-            'In recent decades, the field of lunar agriculture has seen remarkable growth, particularly in its unexpected influence on Martian colonization. With the rise of hydroponic techniques on the Moon, researchers have discovered that lunar-grown crops produce an unusually high concentration of nutrient-dense compounds due to the unique mineral composition of moon dust and the lower gravitational field'),
-    PostItemWidgetV2(
-        postContent: ''
-            'In recent decades, the field of lunar agriculture has seen remarkable growth, particularly in its unexpected influence on Martian colonization. With the rise of hydroponic techniques on the Moon, researchers have discovered that lunar-grown crops produce an unusually high concentration of nutrient-dense compounds due to the unique mineral composition of moon dust and the lower gravitational field'),
-    PostItemWidgetV2(
-        postContent: ''
-            'In recent decades, the field of lunar agriculture has seen remarkable growth, particularly in its unexpected influence on Martian colonization. With the rise of hydroponic techniques on the Moon, researchers have discovered that lunar-grown crops produce an unusually high concentration of nutrient-dense compounds due to the unique mineral composition of moon dust and the lower gravitational field'),
-    PostItemWidgetV2(
-        postContent: ''
-            'In recent decades, the field of lunar agriculture has seen remarkable growth, particularly in its unexpected influence on Martian colonization. With the rise of hydroponic techniques on the Moon, researchers have discovered that lunar-grown crops produce an unusually high concentration of nutrient-dense compounds due to the unique mineral composition of moon dust and the lower gravitational field'),
-    PostItemWidgetV2(
-        postContent: ''
-            'In recent decades, the field of lunar agriculture has seen remarkable growth, particularly in its unexpected influence on Martian colonization. With the rise of hydroponic techniques on the Moon, researchers have discovered that lunar-grown crops produce an unusually high concentration of nutrient-dense compounds due to the unique mineral composition of moon dust and the lower gravitational field'),
-    PostItemWidgetV2(
-        postContent: ''
-            'In recent decades, the field of lunar agriculture has seen remarkable growth, particularly in its unexpected influence on Martian colonization. With the rise of hydroponic techniques on the Moon, researchers have discovered that lunar-grown crops produce an unusually high concentration of nutrient-dense compounds due to the unique mineral composition of moon dust and the lower gravitational field'),
-    PostItemWidgetV2(
-        postContent: ''
-            'In recent decades, the field of lunar agriculture has seen remarkable growth, particularly in its unexpected influence on Martian colonization. With the rise of hydroponic techniques on the Moon, researchers have discovered that lunar-grown crops produce an unusually high concentration of nutrient-dense compounds due to the unique mineral composition of moon dust and the lower gravitational field'),
-    PostItemWidgetV2(
-        postContent: ''
-            'In recent decades, the field of lunar agriculture has seen remarkable growth, particularly in its unexpected influence on Martian colonization. With the rise of hydroponic techniques on the Moon, researchers have discovered that lunar-grown crops produce an unusually high concentration of nutrient-dense compounds due to the unique mineral composition of moon dust and the lower gravitational field'),
-  ];
+  // List<Widget> posts = [
+  //   PostItemWidgetV2(
+  //       postContent: ''
+  //           'In recent decades, the field of lunar agriculture has seen remarkable growth, particularly in its unexpected influence on Martian colonization. With the rise of hydroponic techniques on the Moon, researchers have discovered that lunar-grown crops produce an unusually high concentration of nutrient-dense compounds due to the unique mineral composition of moon dust and the lower gravitational field'),
+  //   PostItemWidgetV2(
+  //       postContent: ''
+  //           'In recent decades, the field of lunar agriculture has seen remarkable growth, particularly in its unexpected influence on Martian colonization. With the rise of hydroponic techniques on the Moon, researchers have discovered that lunar-grown crops produce an unusually high concentration of nutrient-dense compounds due to the unique mineral composition of moon dust and the lower gravitational field'),
+  //   PostItemWidgetV2(
+  //       postContent: ''
+  //           'In recent decades, the field of lunar agriculture has seen remarkable growth, particularly in its unexpected influence on Martian colonization. With the rise of hydroponic techniques on the Moon, researchers have discovered that lunar-grown crops produce an unusually high concentration of nutrient-dense compounds due to the unique mineral composition of moon dust and the lower gravitational field'),
+  //   PostItemWidgetV2(
+  //       postContent: ''
+  //           'In recent decades, the field of lunar agriculture has seen remarkable growth, particularly in its unexpected influence on Martian colonization. With the rise of hydroponic techniques on the Moon, researchers have discovered that lunar-grown crops produce an unusually high concentration of nutrient-dense compounds due to the unique mineral composition of moon dust and the lower gravitational field'),
+  //   PostItemWidgetV2(
+  //       postContent: ''
+  //           'In recent decades, the field of lunar agriculture has seen remarkable growth, particularly in its unexpected influence on Martian colonization. With the rise of hydroponic techniques on the Moon, researchers have discovered that lunar-grown crops produce an unusually high concentration of nutrient-dense compounds due to the unique mineral composition of moon dust and the lower gravitational field'),
+  //   PostItemWidgetV2(
+  //       postContent: ''
+  //           'In recent decades, the field of lunar agriculture has seen remarkable growth, particularly in its unexpected influence on Martian colonization. With the rise of hydroponic techniques on the Moon, researchers have discovered that lunar-grown crops produce an unusually high concentration of nutrient-dense compounds due to the unique mineral composition of moon dust and the lower gravitational field'),
+  //   PostItemWidgetV2(
+  //       postContent: ''
+  //           'In recent decades, the field of lunar agriculture has seen remarkable growth, particularly in its unexpected influence on Martian colonization. With the rise of hydroponic techniques on the Moon, researchers have discovered that lunar-grown crops produce an unusually high concentration of nutrient-dense compounds due to the unique mineral composition of moon dust and the lower gravitational field'),
+  //   PostItemWidgetV2(
+  //       postContent: ''
+  //           'In recent decades, the field of lunar agriculture has seen remarkable growth, particularly in its unexpected influence on Martian colonization. With the rise of hydroponic techniques on the Moon, researchers have discovered that lunar-grown crops produce an unusually high concentration of nutrient-dense compounds due to the unique mineral composition of moon dust and the lower gravitational field'),
+  //   PostItemWidgetV2(
+  //       postContent: ''
+  //           'In recent decades, the field of lunar agriculture has seen remarkable growth, particularly in its unexpected influence on Martian colonization. With the rise of hydroponic techniques on the Moon, researchers have discovered that lunar-grown crops produce an unusually high concentration of nutrient-dense compounds due to the unique mineral composition of moon dust and the lower gravitational field'),
+  //   PostItemWidgetV2(
+  //       postContent: ''
+  //           'In recent decades, the field of lunar agriculture has seen remarkable growth, particularly in its unexpected influence on Martian colonization. With the rise of hydroponic techniques on the Moon, researchers have discovered that lunar-grown crops produce an unusually high concentration of nutrient-dense compounds due to the unique mineral composition of moon dust and the lower gravitational field'),
+  //   PostItemWidgetV2(
+  //       postContent: ''
+  //           'In recent decades, the field of lunar agriculture has seen remarkable growth, particularly in its unexpected influence on Martian colonization. With the rise of hydroponic techniques on the Moon, researchers have discovered that lunar-grown crops produce an unusually high concentration of nutrient-dense compounds due to the unique mineral composition of moon dust and the lower gravitational field'),
+  // ];
+
+  List<TimeLineItem> posts = [];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchTimeline();
+  }
+
+  Future<void> fetchTimeline() async {
+    final result = await ApiManger.fetchTimelineData(); // Function you implemented earlier
+    if (result != null) {
+      setState(() {
+        posts = result.items ?? [];
+        isLoading = false;
+      });
+    } else {
+      setState(() => isLoading = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
+    return isLoading
+        ? const Center(child: CircularProgressIndicator()): SingleChildScrollView(
       child: Column(
         children: [
           SizedBox(height: 15.h),
@@ -88,8 +112,8 @@ class _PostsTabState extends State<PostsTab> {
           ListView.separated(
             itemBuilder: (context, index) =>
                 InkWell(
-                  onTap: () => Navigator.pushNamed(context, RoutesManger.postDetails),
-                child: posts[index]),
+                    onTap: () => Navigator.pushNamed(context, RoutesManger.postDetails),
+                    child: PostItemWidgetV2(item: posts[index])),
             padding: REdgeInsets.symmetric(horizontal: 12, vertical: 15),
             itemCount: posts.length,
             shrinkWrap: true,
@@ -97,7 +121,7 @@ class _PostsTabState extends State<PostsTab> {
             separatorBuilder: (context, index) => SizedBox(
               height: 16,
             ),
-          )
+          ),
         ],
       ),
     );

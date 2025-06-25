@@ -59,7 +59,7 @@ class MyApp extends StatelessWidget {
           RoutesManger.invitations:(_)=> Invitations(),
           RoutesManger.chat:(_)=> Chat(),
         },
-        initialRoute: RoutesManger.home ,
+        initialRoute: RoutesManger.login ,
       ),
     );
   }
