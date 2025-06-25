@@ -40,9 +40,6 @@ class ApiManger {
   static const String submitQuizEndPoint = '/api/Roadmap/quiz/submit';
 
 
-
-
-
   static Future<http.Response> loginUser(String email, String password) async {
     final Map<String, String> headers = {
       'Content-Type': 'application/json',
@@ -90,7 +87,8 @@ class ApiManger {
     }
   }
 
-  static Future<void> registerUser(String fullName, String email, String password, String confirmPassword) async {
+  static Future<void> registerUser(String fullName, String email,
+      String password, String confirmPassword) async {
     final Map<String, String> headers = {
       'Content-Type': 'application/json',
     };
@@ -117,7 +115,7 @@ class ApiManger {
         if (decoded is Map<String, dynamic> && decoded.containsKey('errors')) {
           final errors = List<String>.from(decoded['errors']);
           final emailTakenError = errors.firstWhere(
-            (e) => e.toLowerCase().contains('already taken'),
+                (e) => e.toLowerCase().contains('already taken'),
             orElse: () => '',
           );
 
@@ -173,7 +171,8 @@ class ApiManger {
     return response;
   }
 
-  static Future<http.Response> verifyForgotPasswordOtp(String email, String otp) async {
+  static Future<http.Response> verifyForgotPasswordOtp(String email,
+      String otp) async {
     final Map<String, String> headers = {'Content-Type': 'application/json'};
     final Map<String, String> body = {'email': email, 'otp': otp};
     final response = await post(
@@ -185,7 +184,8 @@ class ApiManger {
     return response;
   }
 
-  static Future<http.Response> resetPassword(String email, String password, String confirmPassword) async {
+  static Future<http.Response> resetPassword(String email, String password,
+      String confirmPassword) async {
     final Map<String, String> headers = {'Content-Type': 'application/json'};
     final Map<String, String> body = {
       'email': email,
@@ -210,11 +210,12 @@ class ApiManger {
     if (googleUser == null) return null;
 
     final GoogleSignInAuthentication googleAuth =
-        await googleUser.authentication;
+    await googleUser.authentication;
     return googleAuth.idToken;
   }
 
-  static Future<http.Response> externalLogin(String provider, String token) async {
+  static Future<http.Response> externalLogin(String provider,
+      String token) async {
     final String url = "$baseUrl/api/auth/external/login/$provider";
 
     final Map<String, String> headers = {'Content-Type': 'application/json'};
@@ -230,7 +231,8 @@ class ApiManger {
     return response;
   }
 
-  static Future<http.Response> updatePreferences(String preferredRole, String experienceLevel, String dailyStudyHours) async {
+  static Future<http.Response> updatePreferences(String preferredRole,
+      String experienceLevel, String dailyStudyHours) async {
     final storage = FlutterSecureStorage();
     String? token = await storage.read(key: 'access_token');
 
@@ -324,7 +326,8 @@ class ApiManger {
     }
   }
 
-  static Future<http.Response> updateLearningPointProgress(num learningPointId, num status) async {
+  static Future<http.Response> updateLearningPointProgress(num learningPointId,
+      num status) async {
     final storage = FlutterSecureStorage();
     final token = await storage.read(key: 'access_token');
 
@@ -397,12 +400,16 @@ class ApiManger {
     }
   }
 
+
+
+
+
   //----------------------------------------------------------------------------------------------------------
   //                                     *  يارب عدي الترب ده علي خير *
   //----------------------------------------------------------------------------------------------------------
 
-
   // Blogs-Get-Apis
+
   static Future<TimeLine?> fetchTimelineData({int? page, int? pageSize}) async {
     try {
       final storage = FlutterSecureStorage();
@@ -542,7 +549,8 @@ class ApiManger {
     final token = await storage.read(key: 'access_token');
     if (token == null) return null;
 
-    final uri = Uri.parse('https://intervyouquestions.runasp.net/api/Notifications/unread-count');
+    final uri = Uri.parse(
+        'https://intervyouquestions.runasp.net/api/Notifications/unread-count');
 
     final response = await http.get(
       uri,
@@ -664,7 +672,7 @@ class ApiManger {
     }
   }
 
-  static Future<SuggestionConnection?> fetchConnectionSuggestions({int? page, int? pageSize, int? minMutual,}) async {
+  static Future<SuggestionConnection?> fetchConnectionSuggestions({int? page, int? pageSize, int? minMutual}) async {
     try {
       final storage = FlutterSecureStorage();
       final token = await storage.read(key: 'access_token');
@@ -733,7 +741,7 @@ class ApiManger {
     }
   }
 
-  static Future<ConversationOtherUserId?> fetchConversationWithUser({required String otherUserId, int? page, int? pageSize,}) async {
+  static Future<ConversationOtherUserId?> fetchConversationWithUser({required String otherUserId, int? page, int? pageSize}) async {
     try {
       final storage = FlutterSecureStorage();
       final token = await storage.read(key: 'access_token');
@@ -769,7 +777,7 @@ class ApiManger {
     }
   }
 
-  static Future<Conversation?> fetchAllConversations({int? page, int? pageSize,}) async {
+  static Future<Conversation?> fetchAllConversations({int? page, int? pageSize}) async {
     try {
       final storage = FlutterSecureStorage();
       final token = await storage.read(key: 'access_token');
@@ -805,7 +813,7 @@ class ApiManger {
     }
   }
 
-  static Future<Posts?> fetchBlogPosts({int? page, int? pageSize,}) async {
+  static Future<Posts?> fetchBlogPosts({int? page, int? pageSize}) async {
     try {
       final storage = FlutterSecureStorage();
       final token = await storage.read(key: 'access_token');
@@ -873,7 +881,7 @@ class ApiManger {
     }
   }
 
-  static Future<AuthorPosts?> fetchPostsByAuthor({required String authorId, int? page, int? pageSize,}) async {
+  static Future<AuthorPosts?> fetchPostsByAuthor({required String authorId, int? page, int? pageSize}) async {
     try {
       final storage = FlutterSecureStorage();
       final token = await storage.read(key: 'access_token');
@@ -909,7 +917,7 @@ class ApiManger {
     }
   }
 
-  static Future<PostComments?> fetchCommentsForPost({required String postId, int? page, int? pageSize,}) async {
+  static Future<PostComments?> fetchCommentsForPost({required String postId, int? page, int? pageSize}) async {
     try {
       final storage = FlutterSecureStorage();
       final token = await storage.read(key: 'access_token');
@@ -944,7 +952,459 @@ class ApiManger {
       return null;
     }
   }
- // Blogs-Get-Apis
+
+// Blogs-Get-Apis
+
+
+
+// Blogs-(post - put - delete) -Apis       * ياااااااااااااااااررررررررررب *
+
+  static Future<http.Response?> createPost({required String title, required String content}) async {
+    try {
+      final storage = FlutterSecureStorage();
+      final token = await storage.read(key: 'access_token');
+      if (token == null) return null;
+
+      final uri = Uri.https(
+        'intervyouquestions.runasp.net',
+        '/api/blog/posts',
+      );
+
+      final response = await http.post(
+        uri,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'title': title,
+          'content': content,
+        }),
+      );
+
+      return response;
+    } catch (e) {
+      print('Error creating post: $e');
+      return null;
+    }
+  }
+
+  static Future<http.Response?> updatePost({required String postId, required String title, required String content}) async {
+    try {
+      final storage = FlutterSecureStorage();
+      final token = await storage.read(key: 'access_token');
+      if (token == null) return null;
+
+      final uri = Uri.https(
+        'intervyouquestions.runasp.net',
+        '/api/blog/posts/$postId',
+      );
+
+      final response = await http.put(
+        uri,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'title': title,
+          'content': content,
+        }),
+      );
+
+      return response;
+    } catch (e) {
+      print('Error updating post: $e');
+      return null;
+    }
+  }
+
+  static Future<http.Response?> deletePost(String postId) async {
+    try {
+      final storage = FlutterSecureStorage();
+      final token = await storage.read(key: 'access_token');
+      if (token == null) return null;
+
+      final uri = Uri.https(
+        'intervyouquestions.runasp.net',
+        '/api/blog/posts/$postId',
+      );
+
+      final response = await http.delete(
+        uri,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      return response;
+    } catch (e) {
+      print('Error deleting post: $e');
+      return null;
+    }
+  }
+
+  static Future<http.Response?> createCommentOnPost({required String postId, required String content, required int parentCommentId}) async {
+    try {
+      final storage = FlutterSecureStorage();
+      final token = await storage.read(key: 'access_token');
+      if (token == null) return null;
+
+      final uri = Uri.https(
+        'intervyouquestions.runasp.net',
+        '/api/blog/posts/$postId/comments',
+      );
+
+      final response = await http.post(
+        uri,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'content': content,
+          'parentCommentId': parentCommentId,
+        }),
+      );
+
+      return response;
+    } catch (e) {
+      print('Error posting comment: $e');
+      return null;
+    }
+  }
+
+  static Future<http.Response?> deleteComment(String commentId) async {
+    try {
+      final storage = FlutterSecureStorage();
+      final token = await storage.read(key: 'access_token');
+      if (token == null) return null;
+
+      final uri = Uri.https(
+        'intervyouquestions.runasp.net',
+        '/api/blog/comments/$commentId',
+      );
+
+      final response = await http.delete(
+        uri,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      return response;
+    } catch (e) {
+      print('Error deleting comment: $e');
+      return null;
+    }
+  }
+
+  static Future<http.Response?> voteOnPost({required String postId, required int type}) async {
+    try {
+      final storage = FlutterSecureStorage();
+      final token = await storage.read(key: 'access_token');
+      if (token == null) return null;
+
+      final uri = Uri.https(
+        'intervyouquestions.runasp.net',
+        '/api/blog/posts/$postId/vote',
+      );
+
+      final response = await http.post(
+        uri,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'type': type,
+        }),
+      );
+
+      return response;
+    } catch (e) {
+      print('Error voting on post: $e');
+      return null;
+    }
+  }
+
+  static Future<http.Response?> voteOnComment({required String commentId, required int type}) async {
+    try {
+      final storage = FlutterSecureStorage();
+      final token = await storage.read(key: 'access_token');
+      if (token == null) return null;
+
+      final uri = Uri.https(
+        'intervyouquestions.runasp.net',
+        '/api/blog/comments/$commentId/vote',
+      );
+
+      final response = await http.post(
+        uri,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'type': type,
+        }),
+      );
+
+      return response;
+    } catch (e) {
+      print('Error voting on comment: $e');
+      return null;
+    }
+  }
+
+  static Future<http.Response?> sendMessage({required String receiverId, required String content}) async {
+    try {
+      final storage = FlutterSecureStorage();
+      final token = await storage.read(key: 'access_token');
+      if (token == null) return null;
+
+      final uri = Uri.https(
+        'intervyouquestions.runasp.net',
+        '/api/chat/messages',
+      );
+
+      final response = await http.post(
+        uri,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'receiverId': receiverId,
+          'content': content,
+        }),
+      );
+
+      return response;
+    } catch (e) {
+      print('Error sending message: $e');
+      return null;
+    }
+  }
+
+  static Future<http.Response?> markMessageAsRead({required String otherParticipantUserId}) async {
+    try {
+      final storage = FlutterSecureStorage();
+      final token = await storage.read(key: 'access_token');
+      if (token == null) return null;
+
+      final uri = Uri.https(
+        'intervyouquestions.runasp.net',
+        '/api/chat/conversation/$otherParticipantUserId/read',
+      );
+
+      final response = await http.post(
+        uri,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      return response;
+    } catch (e) {
+      print('Error marking conversation as read: $e');
+      return null;
+    }
+  }
+
+  static Future<http.Response?> sendConnectionRequest({required String targetUserId}) async {
+    try {
+      final storage = FlutterSecureStorage();
+      final token = await storage.read(key: 'access_token');
+      if (token == null) return null;
+
+      final uri = Uri.https(
+        'intervyouquestions.runasp.net',
+        '/api/Connections/request/$targetUserId',
+      );
+
+      final response = await http.post(
+        uri,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      return response;
+    } catch (e) {
+      print('Error sending connection request: $e');
+      return null;
+    }
+  }
+
+  static Future<http.Response?> acceptConnectionRequest({required int connectionId}) async {
+    try {
+      final storage = FlutterSecureStorage();
+      final token = await storage.read(key: 'access_token');
+      if (token == null) return null;
+
+      final uri = Uri.https(
+        'intervyouquestions.runasp.net',
+        '/api/Connections/requests/$connectionId/accept',
+      );
+
+      final response = await http.post(
+        uri,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      return response;
+    } catch (e) {
+      print('Error accepting connection request: $e');
+      return null;
+    }
+  }
+
+  static Future<http.Response?> declineConnectionRequest({required int connectionId}) async {
+    try {
+      final storage = FlutterSecureStorage();
+      final token = await storage.read(key: 'access_token');
+      if (token == null) return null;
+
+      final uri = Uri.https(
+        'intervyouquestions.runasp.net',
+        '/api/Connections/requests/$connectionId/decline',
+      );
+
+      final response = await http.post(
+        uri,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      return response;
+    } catch (e) {
+      print('Error declining connection request: $e');
+      return null;
+    }
+  }
+
+  static Future<http.Response?> removeConnection({required String targetUserIdToRemove}) async {
+    try {
+      final storage = FlutterSecureStorage();
+      final token = await storage.read(key: 'access_token');
+      if (token == null) return null;
+
+      final uri = Uri.https(
+        'intervyouquestions.runasp.net',
+        '/api/Connections/$targetUserIdToRemove',
+      );
+
+      final response = await http.delete(
+        uri,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      return response;
+    } catch (e) {
+      print('Error removing connection: $e');
+      return null;
+    }
+  }
+
+  static Future<http.Response?> markNotificationAsRead({required int notificationId}) async {
+    try {
+      final storage = FlutterSecureStorage();
+      final token = await storage.read(key: 'access_token');
+      if (token == null) return null;
+
+      final uri = Uri.https(
+        'intervyouquestions.runasp.net',
+        '/api/Notifications/$notificationId/read',
+      );
+
+      final response = await http.post(
+        uri,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      return response;
+    } catch (e) {
+      print('Error marking notification as read: $e');
+      return null;
+    }
+  }
+
+  static Future<http.Response?> markAllNotificationsAsRead() async {
+    try {
+      final storage = FlutterSecureStorage();
+      final token = await storage.read(key: 'access_token');
+      if (token == null) return null;
+
+      final uri = Uri.https(
+        'intervyouquestions.runasp.net',
+        '/api/Notifications/read-all',
+      );
+
+      final response = await http.post(
+        uri,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      return response;
+    } catch (e) {
+      print('Error marking all notifications as read: $e');
+      return null;
+    }
+  }
+
+  // 2 missing endPoints ( pp - blogsImage )
+
+  static Future<http.Response?> ProfileSummary({required String summary}) async {
+    try {
+      final storage = FlutterSecureStorage();
+      final token = await storage.read(key: 'access_token');
+      if (token == null) return null;
+
+      final uri = Uri.https(
+        'intervyouquestions.runasp.net',
+        '/api/Profile/summary',
+      );
+
+      final response = await http.post(
+        uri,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'summary': summary,
+        }),
+      );
+
+      return response;
+    } catch (e) {
+      print('Error updating summary: $e');
+      return null;
+    }
+  }
+
+// Blogs-(post - put - delete) -Apis       * ياااااااااااااااااررررررررررب *
+
+
 
 
 

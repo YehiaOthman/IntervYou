@@ -5,10 +5,10 @@ class UserInfoItem {
   String? currentRoleOrHeadline;
 
   UserInfoItem({
-      this.userId, 
-      this.userName, 
-      this.profilePictureUrl, 
-      this.currentRoleOrHeadline,});
+    this.userId,
+    this.userName,
+    this.profilePictureUrl,
+    this.currentRoleOrHeadline,});
 
   UserInfoItem.fromJson(dynamic json) {
     userId = json['userId'];
