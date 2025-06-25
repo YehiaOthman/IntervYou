@@ -1,11 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:intervyou_app/data/models/Topics.dart';
-
 import '../../../../../../data/api_manager.dart';
 
 
 class LearnViewModel extends ChangeNotifier {
-  bool loading = false;
+  bool loading = true;
   List<Topics> topics =[];
   late Topics currentTopic;
   late int currentTopicIndex = 0;

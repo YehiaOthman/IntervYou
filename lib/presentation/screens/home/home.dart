@@ -6,7 +6,9 @@ import 'package:intervyou_app/core/assets_manager.dart';
 import 'package:intervyou_app/presentation/screens/home/tabs/blogs/view/blogs.dart';
 import 'package:intervyou_app/presentation/screens/home/tabs/home_tab/view/home_tab.dart';
 import 'package:intervyou_app/presentation/screens/home/tabs/learn/view/learn.dart';
+import 'package:intervyou_app/presentation/screens/home/tabs/learn/view_model/learn_provider.dart';
 import 'package:intervyou_app/presentation/screens/home/tabs/profile/profile.dart';
+import 'package:provider/provider.dart';
 
 import '../../../core/colors_manager.dart';
 
@@ -17,6 +19,7 @@ class Home extends StatefulWidget {
   State<Home> createState() => _HomeState();
 }
 
+
 class _HomeState extends State<Home> {
   int selectedIndex = 0;
   List<Widget> tabs = [
@@ -25,77 +28,89 @@ class _HomeState extends State<Home> {
     Learn(),
     Profile(),
   ];
+  late LearnViewModel learnViewModel;
+
+  @override
+  void initState() {
+    learnViewModel = LearnViewModel();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      extendBody: true,
-      backgroundColor: Colors.black,
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          color: ColorsManger.newSecondaryColor,
-          boxShadow: [
-            BoxShadow(
-              blurRadius: 20,
-              color: Colors.black.withOpacity(.1),
-            )
-          ],
-        ),
-        child: SafeArea(
-          child: Padding(
-            padding:  REdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
-            child: GNav(
-              rippleColor: Colors.white.withOpacity(0.1),
-              hoverColor: Colors.white.withOpacity(0.1),
-              gap: 8,
-              activeColor: ColorsManger.newSecondaryColor,
-              iconSize: 24,
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-              duration: Duration(milliseconds: 300),
-              tabBackgroundColor: Colors.white.withOpacity(0.1),
-              color: Colors.black,
-              textStyle: TextStyle(fontWeight: FontWeight.w500,color: Colors.white),
-              tabs: [
-                GButton(
-                  leading: SvgPicture.asset(
-                    AssetsManager.home,
-                    color: Colors.white
+    return MultiProvider(providers: [
+      ChangeNotifierProvider<LearnViewModel>(create: (context) => learnViewModel,
+      ),
+    ],
+      child: Scaffold(
+        extendBody: true,
+        backgroundColor: Colors.black,
+        bottomNavigationBar: Container(
+          decoration: BoxDecoration(
+            color: ColorsManger.newSecondaryColor,
+            boxShadow: [
+              BoxShadow(
+                blurRadius: 20,
+                color: Colors.black.withOpacity(.1),
+              )
+            ],
+          ),
+          child: SafeArea(
+            child: Padding(
+              padding:  REdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
+              child: GNav(
+                rippleColor: Colors.white.withOpacity(0.1),
+                hoverColor: Colors.white.withOpacity(0.1),
+                gap: 8,
+                activeColor: ColorsManger.newSecondaryColor,
+                iconSize: 24,
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                duration: Duration(milliseconds: 300),
+                tabBackgroundColor: Colors.white.withOpacity(0.1),
+                color: Colors.black,
+                textStyle: TextStyle(fontWeight: FontWeight.w500,color: Colors.white),
+                tabs: [
+                  GButton(
+                    leading: SvgPicture.asset(
+                      AssetsManager.home,
+                      color: Colors.white
+                    ),
+                    text: 'Home', icon: Icons.circle,
                   ),
-                  text: 'Home', icon: Icons.circle,
-                ),
-                GButton(
-                  leading: SvgPicture.asset(
-                    AssetsManager.blogs,
-                    color: Colors.white,
+                  GButton(
+                    leading: SvgPicture.asset(
+                      AssetsManager.blogs,
+                      color: Colors.white,
+                    ),
+                    text: 'Blogs', icon: Icons.circle,
                   ),
-                  text: 'Blogs', icon: Icons.circle,
-                ),
-                GButton(
-                  leading: SvgPicture.asset(
-                    AssetsManager.learn,
-                    color: Colors.white,
+                  GButton(
+                    leading: SvgPicture.asset(
+                      AssetsManager.learn,
+                      color: Colors.white,
+                    ),
+                    text: 'Learning', icon: Icons.circle,
                   ),
-                  text: 'Learning', icon: Icons.circle,
-                ),
-                GButton(
-                  leading: SvgPicture.asset(
-                    AssetsManager.profile,
-                    color:  Colors.white,
+                  GButton(
+                    leading: SvgPicture.asset(
+                      AssetsManager.profile,
+                      color:  Colors.white,
+                    ),
+                    text: 'Profile', icon: Icons.circle,
                   ),
-                  text: 'Profile', icon: Icons.circle,
-                ),
-              ],
-              selectedIndex: selectedIndex,
-              onTabChange: (index) {
-                setState(() {
-                  selectedIndex = index;
-                });
-              },
+                ],
+                selectedIndex: selectedIndex,
+                onTabChange: (index) {
+                  setState(() {
+                    selectedIndex = index;
+                  });
+                },
+              ),
             ),
           ),
         ),
+        body: tabs[selectedIndex],
       ),
-      body: tabs[selectedIndex],
     );
   }
 }
