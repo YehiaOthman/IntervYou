@@ -82,6 +82,9 @@ class ApiManger {
 
       print('User Name: $userName');
       print('User ID: $userId');
+      final storage = FlutterSecureStorage();
+      storage.write(key: 'user_name', value: userName);
+      storage.write(key: 'user_id', value: userId);
     } catch (e) {
       print("Error decoding token: $e");
     }
@@ -849,7 +852,7 @@ class ApiManger {
     }
   }
 
-  static Future<PostDetailsDm?> fetchPostDetails(String postId) async {
+  static Future<PostDetailsDm?> fetchPostDetails(num postId) async {
     try {
       final storage = FlutterSecureStorage();
       final token = await storage.read(key: 'access_token');
@@ -917,7 +920,7 @@ class ApiManger {
     }
   }
 
-  static Future<PostComments?> fetchCommentsForPost({required String postId, int? page, int? pageSize}) async {
+  static Future<PostComments?> fetchCommentsForPost({required int postId, int? page, int? pageSize}) async {
     try {
       final storage = FlutterSecureStorage();
       final token = await storage.read(key: 'access_token');
@@ -981,7 +984,6 @@ class ApiManger {
           'content': content,
         }),
       );
-
       return response;
     } catch (e) {
       print('Error creating post: $e');
@@ -1019,7 +1021,7 @@ class ApiManger {
     }
   }
 
-  static Future<http.Response?> deletePost(String postId) async {
+  static Future<http.Response?> deletePost(num postId) async {
     try {
       final storage = FlutterSecureStorage();
       final token = await storage.read(key: 'access_token');
@@ -1101,7 +1103,7 @@ class ApiManger {
     }
   }
 
-  static Future<http.Response?> voteOnPost({required String postId, required int type}) async {
+  static Future<http.Response?> voteOnPost({required num postId, required num type}) async {
     try {
       final storage = FlutterSecureStorage();
       final token = await storage.read(key: 'access_token');
@@ -1241,7 +1243,7 @@ class ApiManger {
     }
   }
 
-  static Future<http.Response?> acceptConnectionRequest({required int connectionId}) async {
+  static Future<http.Response?> acceptConnectionRequest({required num connectionId}) async {
     try {
       final storage = FlutterSecureStorage();
       final token = await storage.read(key: 'access_token');
@@ -1267,7 +1269,7 @@ class ApiManger {
     }
   }
 
-  static Future<http.Response?> declineConnectionRequest({required int connectionId}) async {
+  static Future<http.Response?> declineConnectionRequest({required num connectionId}) async {
     try {
       final storage = FlutterSecureStorage();
       final token = await storage.read(key: 'access_token');

@@ -1,54 +1,52 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
+import 'package:intervyou_app/data/api_manager.dart';
+import 'package:intervyou_app/data/blogs_models/connections/connections_items.dart';
 import '../../../../../../config/styles/light_app_style.dart';
 import '../../../../../../core/assets_manager.dart';
 import '../../../../../../core/colors_manager.dart';
 
 class PendingCardItem extends StatefulWidget {
-  const PendingCardItem({super.key});
+   PendingCardItem({super.key, required this.pendingUser});
 
   @override
   State<PendingCardItem> createState() => _PendingCardItemState();
+  ConnectionsItem pendingUser;
 }
 
 class _PendingCardItemState extends State<PendingCardItem> {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         ClipRRect(
-            child: Image.asset(AssetsManager.pp, width: 55.w, height: 55.h)),
-        SizedBox(width: 10.w),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Yehia Othman',
-              style: LightAppStyle.email.copyWith(
-                  color: Colors.black,
-                  fontSize: 17.sp,
-                  fontWeight: FontWeight.w500),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-            Text(
-              'UI/UX Designer',
-              style: LightAppStyle.email.copyWith(
-                  color: Colors.black.withOpacity(0.5),
-                  fontSize: 13.sp,
-                  fontWeight: FontWeight.w500),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ],
+            borderRadius: BorderRadius.circular(50.r),
+            child: widget.pendingUser.profilePictureUrl != null ? Image.network(
+              'https://intervyouquestions.runasp.net${widget.pendingUser.profilePictureUrl}',
+              width: 40.w.clamp(30, 50),
+              height: 40.h.clamp(30, 50),
+            )
+                :Image.asset(
+              AssetsManager.guestPp,
+              width: 40.w.clamp(30, 50),
+              height: 40.h.clamp(30, 50),
+            )
+        ),
+        SizedBox(width: 15.w),
+        Text(
+          widget.pendingUser.userName ?? '',
+          style: LightAppStyle.email.copyWith(
+              color: Colors.black,
+              fontSize: 17.sp,
+              fontWeight: FontWeight.w500),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
         ),
         Spacer(),
         InkWell(
-          onTap: () => print('Accept'),
+          onTap: () => ApiManger.acceptConnectionRequest(connectionId: widget.pendingUser.connectionId??0),
           child: Container(
             padding: REdgeInsets.all(3),
             decoration: BoxDecoration(
@@ -60,7 +58,7 @@ class _PendingCardItemState extends State<PendingCardItem> {
         ),
         SizedBox(width: 10.w),
         InkWell(
-          onTap: () => print('Remove'),
+          onTap: () => ApiManger.declineConnectionRequest(connectionId: widget.pendingUser.connectionId??0),
           child: Container(
             padding: REdgeInsets.all(3),
             decoration: BoxDecoration(

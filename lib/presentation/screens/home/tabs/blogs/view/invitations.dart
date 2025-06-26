@@ -96,8 +96,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intervyou_app/data/blogs_models/connections/connections_items.dart';
 import 'package:intervyou_app/presentation/screens/home/tabs/blogs/view/pending.dart';
 import 'package:intervyou_app/presentation/screens/home/tabs/blogs/view/sent.dart';
+import 'package:intervyou_app/presentation/screens/home/tabs/blogs/view_model/blogs_viewmodel.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../../../config/styles/light_app_style.dart';
 import '../../../../../../core/colors_manager.dart';
@@ -111,6 +114,17 @@ class Invitations extends StatefulWidget {
 }
 
 class _InvitationsState extends State<Invitations> {
+  late BlogsViewModel viewModel;
+  late List<ConnectionsItem> pendingConnections = [];
+  late List<ConnectionsItem> sentConnections = [];
+
+  @override
+  void didChangeDependencies() {
+    viewModel = ModalRoute.of(context)?.settings.arguments as BlogsViewModel;
+    viewModel.fetchSentConnections();
+    viewModel.fetchPendingConnections();
+    super.didChangeDependencies();
+  }
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -155,12 +169,20 @@ class _InvitationsState extends State<Invitations> {
             ],
           ),
         ),
-        body:  TabBarView(
-          children: [
-            Pending(),
-            Sent(),
-          ],
-        ),
+        body:  ChangeNotifierProvider.value( value: viewModel,
+        child: Consumer<BlogsViewModel>(builder: (context, value, child) {
+          if(viewModel.pendingConnectionsLoading || viewModel.sentConnectionsLoading) return const Center(child: CircularProgressIndicator());
+          else {
+            pendingConnections = viewModel.pendingConnections;
+            sentConnections = viewModel.sentConnections;
+          return TabBarView(
+            children: [
+              Pending(pendingConnections: pendingConnections,),
+              Sent(sentConnections: sentConnections,),
+            ],
+          );
+        }},),
+        )
       ),
     );
   }

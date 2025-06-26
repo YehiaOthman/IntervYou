@@ -1,17 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
+import 'package:intervyou_app/data/blogs_models/post/Comments.dart';
+import '../../../../../../config/handler_functions.dart';
 import '../../../../../../config/styles/light_app_style.dart';
 import '../../../../../../core/assets_manager.dart';
 import '../../../../../../core/colors_manager.dart';
 
 class PostReplyItem extends StatefulWidget {
-   PostReplyItem({super.key, required this.postContent});
+   PostReplyItem({super.key, required this.comment});
 
   @override
   State<PostReplyItem> createState() => _PostReplyItemState();
-  String postContent;
+  Comments comment;
 }
 
 class _PostReplyItemState extends State<PostReplyItem> {
@@ -40,19 +41,24 @@ class _PostReplyItemState extends State<PostReplyItem> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 ClipRRect(
-                  borderRadius: BorderRadius.circular(50.r),
-                  child: Image.asset(
-                    AssetsManager.pp,
-                    width: 40.w.clamp(30, 50),
-                    height: 40.h.clamp(30, 50),
-                  ),
+                    borderRadius: BorderRadius.circular(50.r),
+                    child: widget.comment.author?.profilePictureUrl != null ? Image.network(
+                      'https://intervyouquestions.runasp.net${widget.comment.author?.profilePictureUrl}',
+                      width: 40.w.clamp(30, 50),
+                      height: 40.h.clamp(30, 50),
+                    )
+                        :Image.asset(
+                      AssetsManager.guestPp,
+                      width: 40.w.clamp(30, 50),
+                      height: 40.h.clamp(30, 50),
+                    )
                 ),
                 SizedBox(width: 10.w),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Yehia Othman',
+                      widget.comment.author?.userName ?? '',
                       style: LightAppStyle.email.copyWith(
                           fontSize: 15.sp,
                           color: Colors.black,
@@ -61,7 +67,7 @@ class _PostReplyItemState extends State<PostReplyItem> {
                       overflow: TextOverflow.ellipsis,
                     ),
                     Text(
-                      '9:12 PM',
+                      '${HandlerFunctions.formatSmartDate(widget.comment.createdAt ?? '')}',
                       style: LightAppStyle.email.copyWith(
                         color: Colors.black,
                         fontSize: 11.sp,
@@ -144,7 +150,7 @@ class _PostReplyItemState extends State<PostReplyItem> {
             ),
             SizedBox(height: 10.h),
             Text(
-              widget.postContent,
+              widget.comment.content ??'no comments',
               style: LightAppStyle.email.copyWith(
                 color: Colors.black,
                 fontSize: 16.sp,

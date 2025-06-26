@@ -5,7 +5,8 @@ import 'package:intervyou_app/config/styles/light_app_style.dart';
 import 'package:intervyou_app/core/assets_manager.dart';
 import 'package:intervyou_app/core/colors_manager.dart';
 
-Widget buildCardItem() {
+Widget buildCardItem(String subTopicName, String subTopicDescription, int finishedTasks, int totalTasks) {
+  int taskProgress = ((finishedTasks / totalTasks) * 100).toInt() ;
   return SizedBox(
     width: 200.w,
     child: Card(
@@ -14,6 +15,7 @@ Widget buildCardItem() {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
+            padding: REdgeInsets.only(left: 12.w, right: 12.w),
             height: 55.h,
             width: double.infinity,
             decoration: BoxDecoration(
@@ -25,58 +27,63 @@ Widget buildCardItem() {
             ),
             alignment: Alignment.center,
             child: Text(
-              'Problem Solving',
+              subTopicName,
               style: LightAppStyle.email.copyWith(
-                fontSize: 16.sp,
+                fontSize: 14.sp,
                 fontWeight: FontWeight.w600,
               ),
+              textAlign: TextAlign.center,
             ),
           ),
-          Padding(
-            padding: REdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
+          Spacer(),
+          Center(
             child: Text(
-              'Problem-solving is a fundamental skill in programming that involves identifying a challenge...',
+              subTopicDescription,
               style: LightAppStyle.email.copyWith(
                 fontSize: 12.sp,
                 fontWeight: FontWeight.w500,
                 color: Colors.black,
               ),
-              textAlign: TextAlign.start,
+              textAlign: TextAlign.center,
               maxLines: 3,
+              textWidthBasis: TextWidthBasis.longestLine,
               overflow: TextOverflow.ellipsis,
             ),
           ),
+          Spacer(),
           Padding(
-            padding: REdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+            padding: REdgeInsets.only(left: 12.w, right: 12.w),
             child: Row(
               children: [
                 Text(
-                  'Topic 7',
+                  'Topic ${finishedTasks}',
                   style: TextStyle(
                     color: Colors.grey,
-                    fontSize: 12.sp,
+                    fontSize: 14.sp,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 Text(
-                  '/15',
+                  '/${totalTasks}',
                   style: TextStyle(
                     color: Colors.grey,
-                    fontSize: 12.sp,
+                    fontSize: 14.sp,
                   ),
                 ),
                 Spacer(),
                 Text(
-                  '100%',
+                  '$taskProgress%',
                   style: TextStyle(
                     color: ColorsManger.secondaryColor,
                     fontWeight: FontWeight.w600,
-                    fontSize: 13.sp,
+                    fontSize: 15.sp,
                   ),
                 ),
               ],
             ),
           ),
+          Spacer()
+
         ],
       ),
     ),

@@ -17,6 +17,7 @@ import '../../../../../../data/blogs_models/user_info_item.dart';
 
 class BlogsViewModel extends ChangeNotifier {
 
+
   // Blog Posts State
   bool postsLoading = false;
   bool postsLoadingMore = false;
@@ -193,7 +194,7 @@ class BlogsViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> fetchPostDetails(String postId) async {
+  Future<void> fetchPostDetails(num postId) async {
     postDetailsLoading = true;
     postDetailsError = null;
     notifyListeners();
@@ -259,7 +260,7 @@ class BlogsViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> fetchCommentsForPost(String postId) async {
+  Future<void> fetchCommentsForPost(int postId) async {
     commentsLoading = true;
     commentsError = null;
     notifyListeners();
@@ -284,7 +285,7 @@ class BlogsViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> loadMoreCommentsForPost(String postId) async {
+  Future<void> loadMoreCommentsForPost(int postId) async {
     if (commentsLoadingMore || !_commentsHasNextPage) return;
 
     commentsLoadingMore = true;

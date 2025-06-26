@@ -5,26 +5,30 @@ import 'package:intervyou_app/presentation/screens/home/tabs/blogs/widgets/pendi
 
 import '../../../../../../core/colors_manager.dart';
 import '../../../../../../core/routes_manger.dart';
+import '../../../../../../data/blogs_models/connections/connections_items.dart';
 
 class Pending extends StatefulWidget {
-  const Pending({super.key});
+   Pending({super.key, required this.pendingConnections});
 
   @override
   State<Pending> createState() => _PendingState();
+  List<ConnectionsItem> pendingConnections = [];
 }
 
 class _PendingState extends State<Pending> {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
+        if(widget.pendingConnections.isEmpty)
+          Center(child: Text('No Pending Connections',style: TextStyle(color: ColorsManger.newSecondaryColor),),)
+        else
         Expanded(
           child: ListView.separated(
-            itemBuilder: (context, index) => InkWell(
-                onTap: () => Navigator.pushNamed(context, RoutesManger.userInfoProfile),
-                child: PendingCardItem()),
+            itemBuilder: (context, index) => PendingCardItem(pendingUser: widget.pendingConnections[index],),
             padding: REdgeInsets.symmetric(horizontal: 12, vertical: 15),
-            itemCount: 20,
+            itemCount: widget.pendingConnections.length,
             separatorBuilder: (context, index) {
               return Column(
                 children: [

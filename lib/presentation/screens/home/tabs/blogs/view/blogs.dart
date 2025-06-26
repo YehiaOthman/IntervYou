@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intervyou_app/config/styles/light_app_style.dart';
 import 'package:intervyou_app/core/colors_manager.dart';
 import 'package:intervyou_app/presentation/screens/home/tabs/blogs/view/chat_tab.dart';
 import 'package:intervyou_app/presentation/screens/home/tabs/blogs/view/netwrok_tab.dart';
 import 'package:intervyou_app/presentation/screens/home/tabs/blogs/view/posts_tab.dart';
+import 'package:intervyou_app/presentation/screens/home/tabs/blogs/view_model/blogs_viewmodel.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../../../core/assets_manager.dart';
 import '../../../../../../core/routes_manger.dart';
@@ -56,7 +59,7 @@ class _BlogsState extends State<Blogs> {
                         child: CircleAvatar(
                           radius: 20,
                           backgroundImage: AssetImage(
-                            AssetsManager.pp,
+                            AssetsManager.guestPp,
                           ),
                         ),
                       ),

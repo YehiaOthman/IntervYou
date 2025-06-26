@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intervyou_app/core/colors_manager.dart';
+import 'package:intervyou_app/data/api_manager.dart';
 import 'package:intervyou_app/presentation/screens/home/tabs/blogs/view/user_profile.dart';
 
 import '../../../../../../config/styles/light_app_style.dart';
@@ -14,6 +15,8 @@ class AddPost extends StatefulWidget {
 }
 
 class _AddPostState extends State<AddPost> {
+   late  TextEditingController titleController = TextEditingController();
+   late TextEditingController contentController= TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,6 +53,7 @@ class _AddPostState extends State<AddPost> {
             TextField(
               maxLines: 2,
               minLines: 1,
+              controller:titleController,
               style: LightAppStyle.email.copyWith(
                   color: Colors.black,
                   fontSize: 15.sp
@@ -87,6 +91,7 @@ class _AddPostState extends State<AddPost> {
             )),
             SizedBox(height: 10.h),
             TextField(
+              controller: contentController,
               maxLines: 10,
               minLines: 10,
               style: LightAppStyle.email.copyWith(
@@ -119,7 +124,46 @@ class _AddPostState extends State<AddPost> {
 
               ),),
             SizedBox(height: 30.h),
-            ElevatedButton(onPressed:() => print("posted") ,
+            ElevatedButton(
+                onPressed: () async {
+                  final title = titleController.text.trim();
+                  final content = contentController.text.trim();
+
+                  if (title.isEmpty || content.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Title and content cannot be empty")),
+                    );
+                    return;
+                  }
+
+                  if (content.length < 50) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Content must be at least 50 characters")),
+                    );
+                    return;
+                  }
+
+                  final response = await ApiManger.createPost(title: title, content: content);
+
+                  if (response == null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Something went wrong. Try again.")),
+                    );
+                    return;
+                  }
+
+                  if (response.statusCode == 201 || response.statusCode == 200) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Post created successfully!")),
+                    );
+                    Navigator.pop(context);
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Failed to create post.")),
+                    );
+                  }
+                }
+                ,
                 child: Padding(
                   padding:  REdgeInsets.symmetric(vertical: 12,),
                   child: Text('Post', style: LightAppStyle.email.copyWith(

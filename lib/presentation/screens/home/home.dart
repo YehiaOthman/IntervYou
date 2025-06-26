@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:intervyou_app/core/assets_manager.dart';
 import 'package:intervyou_app/presentation/screens/home/tabs/blogs/view/blogs.dart';
+import 'package:intervyou_app/presentation/screens/home/tabs/blogs/view_model/blogs_viewmodel.dart';
 import 'package:intervyou_app/presentation/screens/home/tabs/home_tab/view/home_tab.dart';
 import 'package:intervyou_app/presentation/screens/home/tabs/learn/view/learn.dart';
 import 'package:intervyou_app/presentation/screens/home/tabs/learn/view_model/learn_provider.dart';
@@ -29,18 +30,20 @@ class _HomeState extends State<Home> {
     Profile(),
   ];
   late LearnViewModel learnViewModel;
+  late BlogsViewModel blogsViewModel;
 
   @override
   void initState() {
     learnViewModel = LearnViewModel();
+    blogsViewModel = BlogsViewModel();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(providers: [
-      ChangeNotifierProvider<LearnViewModel>(create: (context) => learnViewModel,
-      ),
+      ChangeNotifierProvider<LearnViewModel>(create: (context) => learnViewModel,),
+      ChangeNotifierProvider<BlogsViewModel>(create: (context) => blogsViewModel,)
     ],
       child: Scaffold(
         extendBody: true,

@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intervyou_app/core/colors_manager.dart';
+import 'package:intervyou_app/data/blogs_models/post/Comments.dart';
+import 'package:intervyou_app/data/blogs_models/post/PostDetailsDm.dart';
+import 'package:intervyou_app/presentation/screens/home/tabs/blogs/view/posts_tab.dart';
+import 'package:intervyou_app/presentation/screens/home/tabs/blogs/view_model/blogs_viewmodel.dart';
+import 'package:intervyou_app/presentation/screens/home/tabs/blogs/widgets/post_details_item.dart';
 import 'package:intervyou_app/presentation/screens/home/tabs/blogs/widgets/post_reply_item.dart';
-import 'package:intervyou_app/presentation/screens/home/tabs/blogs/widgets/post_tiem_widget_v2.dart';
+import 'package:provider/provider.dart';
+
 
 import '../../../../../../config/styles/light_app_style.dart';
 
@@ -13,51 +19,76 @@ class PostDetails extends StatefulWidget {
   State<PostDetails> createState() => _PostDetailsState();
 }
 
+
+
 class _PostDetailsState extends State<PostDetails> {
+  late ArgumentsModel arguments;
+  late BlogsViewModel viewModel;
+
+
+  @override
+  void didChangeDependencies() {
+    arguments = ModalRoute.of(context)?.settings.arguments as ArgumentsModel;
+    viewModel = arguments.viewModel;
+    viewModel.fetchPostDetails(arguments.id);
+    super.didChangeDependencies();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-        appBar: AppBar(
-          backgroundColor: ColorsManger.newSecondaryColor,
-          title: Text('Post Details',
-              style: LightAppStyle.email.copyWith(
-                  color: Colors.white,
-                  fontSize: 20.sp,
-                  fontWeight: FontWeight.w600
-          )),
-          iconTheme: IconThemeData(color: Colors.white),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(30.r),
-              bottomRight: Radius.circular(30.r),
-            ),
-          ),
-          toolbarHeight: 75.h,
-
-        ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: REdgeInsets.symmetric(horizontal: 12, vertical: 15),
-          child: Column(
-            children: [
-              SizedBox(height: 15.h),
-              Text('Replies',
-                  style: LightAppStyle.email.copyWith(
-                      color: ColorsManger.newSecondaryColor,
-                      fontSize: 20.sp,
-                      fontWeight: FontWeight.bold
-              )),
-              ListView.separated(itemBuilder:(context, index) =>  PostReplyItem(postContent: 'yes'),
-                  separatorBuilder: (context, index) => SizedBox(height: 15.h),
-                  shrinkWrap: true,
-                  padding: EdgeInsets.only(top: 15),
-                  physics: NeverScrollableScrollPhysics(),
-                  itemCount: 10)
-            ],
+      appBar: AppBar(
+        backgroundColor: ColorsManger.newSecondaryColor,
+        title: Text('Post Details',
+            style: LightAppStyle.email.copyWith(
+                color: Colors.white,
+                fontSize: 20.sp,
+                fontWeight: FontWeight.w600)),
+        iconTheme: IconThemeData(color: Colors.white),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(30.r),
+            bottomRight: Radius.circular(30.r),
           ),
         ),
+        toolbarHeight: 75.h,
       ),
+      body: ChangeNotifierProvider.value(value: viewModel,
+          child: Consumer<BlogsViewModel>(builder: (context, value, child) {
+            if(viewModel.postDetailsLoading) return const Center(child: CircularProgressIndicator());
+            else {
+              PostDetailsDm post = viewModel.postDetails!;
+              List<Comments> comments = viewModel.postDetails?.comments ??[];
+
+              return SingleChildScrollView(
+                child: Padding(
+                  padding: REdgeInsets.symmetric(horizontal: 12, vertical: 15),
+                  child: Column(
+                    children: [
+                      PostDetailsItem(post: post,),
+                      SizedBox(height: 15.h),
+                      Text('Replies',
+                          style: LightAppStyle.email.copyWith(
+                              color: ColorsManger.newSecondaryColor,
+                              fontSize: 20.sp,
+                              fontWeight: FontWeight.bold)),
+                      ListView.separated(
+                          itemBuilder: (context, index) =>
+                              PostReplyItem(comment: comments[index]),
+                          separatorBuilder: (context, index) => SizedBox(height: 15.h),
+                          shrinkWrap: true,
+                          padding: EdgeInsets.only(top: 15),
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: comments.length)
+                    ],
+                  ),
+                ),
+              );
+            }
+
+          },),
+
+          ),
     );
   }
 }

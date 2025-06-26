@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intervyou_app/config/handler_functions.dart';
+import 'package:intervyou_app/data/api_manager.dart';
 
 import '../../../../../../config/styles/light_app_style.dart';
 import '../../../../../../core/assets_manager.dart';
@@ -45,11 +46,16 @@ class _PostItemWidgetV2State extends State<PostItemWidgetV2> {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(50.r),
-                  child: Image.network(
+                  child: widget.item.sourceUserProfilePictureUrl != null ? Image.network(
                     'https://intervyouquestions.runasp.net${widget.item.sourceUserProfilePictureUrl}',
                     width: 40.w.clamp(30, 50),
                     height: 40.h.clamp(30, 50),
-                  ),
+                  )
+                      :Image.asset(
+                    AssetsManager.guestPp,
+                    width: 40.w.clamp(30, 50),
+                    height: 40.h.clamp(30, 50),
+                  )
                 ),
                 SizedBox(width: 10.w),
                 Column(
@@ -99,7 +105,6 @@ class _PostItemWidgetV2State extends State<PostItemWidgetV2> {
                     if (value == 1) {
                       print("Report clicked");
                     } else if (value == 2) {
-                      print("Delete clicked");
                     }
                   },
                   itemBuilder: (context) => [

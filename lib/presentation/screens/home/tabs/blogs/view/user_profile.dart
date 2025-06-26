@@ -132,26 +132,26 @@ class _UserProfileState extends State<UserProfile> {
                           color: Colors.black,
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w600)),
-                  ListView.separated(
-                    itemBuilder: (context, index) => BlogsActivityCardItem(),
-                    itemCount: 10,
-                    padding: REdgeInsets.only(top: 10),
-                    shrinkWrap: true,
-                    physics:  NeverScrollableScrollPhysics(),
-                    separatorBuilder: (context, index) {
-                      return Column(
-                        children: [
-                          SizedBox(height: 15.h),
-                          Container(
-                            width: double.infinity,
-                            height: 1.h,
-                            color: ColorsManger.newSecondaryColor.withOpacity(0.2),
-                          ),
-                          SizedBox(height: 15.h),
-                        ],
-                      );
-                    },
-                  )
+                  // ListView.separated(
+                  //   itemBuilder: (context, index) => BlogsActivityCardItem(),
+                  //   itemCount: 10,
+                  //   padding: REdgeInsets.only(top: 10),
+                  //   shrinkWrap: true,
+                  //   physics:  NeverScrollableScrollPhysics(),
+                  //   separatorBuilder: (context, index) {
+                  //     return Column(
+                  //       children: [
+                  //         SizedBox(height: 15.h),
+                  //         Container(
+                  //           width: double.infinity,
+                  //           height: 1.h,
+                  //           color: ColorsManger.newSecondaryColor.withOpacity(0.2),
+                  //         ),
+                  //         SizedBox(height: 15.h),
+                  //       ],
+                  //     );
+                  //   },
+                  // )
                 ],
               )
             ],
