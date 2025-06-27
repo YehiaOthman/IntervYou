@@ -142,7 +142,7 @@ Widget buildDailyQuizTaskItem() {
   );
 }
 
-Widget homeHeader() {
+Widget homeHeader(String name) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.start,
     children: [
@@ -164,7 +164,7 @@ Widget homeHeader() {
             ),
           ),
           Text(
-            'Yehia Mohamed Othman',
+            name,
             style: GoogleFonts.poppins(
               color: Colors.white,
               fontSize: 15.sp,

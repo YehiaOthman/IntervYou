@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intervyou_app/config/styles/light_app_style.dart';
 import 'package:intervyou_app/presentation/screens/home/tabs/home_tab/widgets/widgets.dart';
 import 'package:intervyou_app/presentation/screens/home/tabs/learn/view_model/learn_provider.dart';
@@ -34,6 +35,8 @@ class _HomeTabState extends State<HomeTab> {
     int count = subTopics[index].learningPoints!.length;
     return count;
   }
+
+
 
   @override
   void didChangeDependencies() {
@@ -76,7 +79,7 @@ class _HomeTabState extends State<HomeTab> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           SizedBox(height: 50.h),
-                          homeHeader(),
+                          homeHeader('yehia'),
                           SizedBox(height: 40.h),
                           Text(
                             'Continue Your',

@@ -6,6 +6,7 @@ import '../../../../../../config/handler_functions.dart';
 import '../../../../../../config/styles/light_app_style.dart';
 import '../../../../../../core/assets_manager.dart';
 import '../../../../../../core/colors_manager.dart';
+import '../../../../../../data/api_manager.dart';
 
 class PostReplyItem extends StatefulWidget {
    PostReplyItem({super.key, required this.comment});
@@ -16,10 +17,14 @@ class PostReplyItem extends StatefulWidget {
 }
 
 class _PostReplyItemState extends State<PostReplyItem> {
-  bool isVotedUp = false;
-  bool isVotedDown = false;
+  num currentVote = 0;
   int votes = 50;
-  int comments = 50;
+
+  @override
+  void initState() {
+    super.initState();
+    currentVote = widget.comment.currentUserVote ?? 0;
+  }
   @override
   Widget build(BuildContext context) {
     return IntrinsicHeight(
@@ -169,32 +174,42 @@ class _PostReplyItemState extends State<PostReplyItem> {
               children: [
                 Spacer(),
                 InkWell(
-                  onTap: toggleUpVote,
+                  onTap: () => handleVote(widget.comment.id??0,1,),
                   child: Container(
-                    padding: REdgeInsets.symmetric(horizontal: 15, vertical: 8),
+                    padding:
+                    REdgeInsets.symmetric(horizontal: 15, vertical: 8),
                     decoration: BoxDecoration(
-                      color: isVotedUp? ColorsManger.newSecondaryColor.withOpacity(0.5) : ColorsManger.newSecondaryColor.withOpacity(0.13),
+                      color: currentVote == 1
+                          ? ColorsManger.newSecondaryColor.withOpacity(0.5)
+                          : ColorsManger.newSecondaryColor.withOpacity(0.13),
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(25.r),
                         bottomLeft: Radius.circular(25.r),
                       ),
                     ),
-                    child: Icon(Icons.arrow_upward, color: ColorsManger.newSecondaryColor.withOpacity(0.8),size: 22,),
+                    child: Icon(Icons.arrow_upward,
+                        color: ColorsManger.newSecondaryColor.withOpacity(0.8),
+                        size: 22),
                   ),
                 ),
                 SizedBox(width: 2.w),
                 InkWell(
-                  onTap: toggleDownVote,
+                  onTap: () => handleVote(widget.comment.id??0,-1),
                   child: Container(
-                    padding: REdgeInsets.symmetric(horizontal: 15, vertical: 8),
+                    padding:
+                    REdgeInsets.symmetric(horizontal: 15, vertical: 8),
                     decoration: BoxDecoration(
-                      color: isVotedDown? ColorsManger.newSecondaryColor.withOpacity(0.5) : ColorsManger.newSecondaryColor.withOpacity(0.13),
+                      color: currentVote == -1
+                          ? ColorsManger.newSecondaryColor.withOpacity(0.5)
+                          : ColorsManger.newSecondaryColor.withOpacity(0.13),
                       borderRadius: BorderRadius.only(
                         topRight: Radius.circular(25.r),
                         bottomRight: Radius.circular(25.r),
                       ),
                     ),
-                    child: Icon(Icons.arrow_downward, color: ColorsManger.newSecondaryColor.withOpacity(0.8),size: 22,),
+                    child: Icon(Icons.arrow_downward,
+                        color: ColorsManger.newSecondaryColor.withOpacity(0.8),
+                        size: 22),
                   ),
                 ),
 
@@ -207,35 +222,11 @@ class _PostReplyItemState extends State<PostReplyItem> {
     );
   }
 
-  void toggleUpVote() {
+  void handleVote(num commentId,num voteType,) async {
+    num newVote = currentVote == voteType ? 0 : voteType;
     setState(() {
-      if (isVotedUp) {
-        votes--;
-        isVotedUp = false;
-      } else {
-        if (isVotedDown) {
-          votes++;
-          isVotedDown = false;
-        }
-        votes++;
-        isVotedUp = true;
-      }
+      currentVote = newVote;
     });
-  }
-
-  void toggleDownVote() {
-    setState(() {
-      if (isVotedDown) {
-        votes++;
-        isVotedDown = false;
-      } else {
-        if (isVotedUp) {
-          votes--;
-          isVotedUp = false;
-        }
-        votes--;
-        isVotedDown = true;
-      }
-    });
+    await ApiManger.voteOnComment(commentId:commentId , type: voteType);
   }
 }

@@ -19,11 +19,14 @@ class PostItemWidgetV2 extends StatefulWidget {
 }
 
 class _PostItemWidgetV2State extends State<PostItemWidgetV2> {
-  bool isVotedUp = false;
-  bool isVotedDown = false;
+  num currentVote = 0;
   int votes = 50;
-  int comments = 50;
 
+  @override
+  void initState() {
+    super.initState();
+    currentVote = widget.item.blogPostCurrentUserVote ?? 0;
+  }
   @override
   Widget build(BuildContext context) {
     return IntrinsicHeight(
@@ -176,32 +179,42 @@ class _PostItemWidgetV2State extends State<PostItemWidgetV2> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 InkWell(
-                  onTap: toggleUpVote,
+                  onTap: () => handleVote(widget.item.sourceItemId ??0,1,),
                   child: Container(
-                    padding: REdgeInsets.symmetric(horizontal: 15, vertical: 8),
+                    padding:
+                    REdgeInsets.symmetric(horizontal: 15, vertical: 8),
                     decoration: BoxDecoration(
-                      color: isVotedUp? ColorsManger.newSecondaryColor.withOpacity(0.5) : ColorsManger.newSecondaryColor.withOpacity(0.13),
+                      color: currentVote == 1
+                          ? ColorsManger.newSecondaryColor.withOpacity(0.5)
+                          : ColorsManger.newSecondaryColor.withOpacity(0.13),
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(25.r),
                         bottomLeft: Radius.circular(25.r),
                       ),
                     ),
-                    child: Icon(Icons.arrow_upward, color: ColorsManger.newSecondaryColor.withOpacity(0.8),size: 22,),
+                    child: Icon(Icons.arrow_upward,
+                        color: ColorsManger.newSecondaryColor.withOpacity(0.8),
+                        size: 22),
                   ),
                 ),
                 SizedBox(width: 2.w),
                 InkWell(
-                  onTap: toggleDownVote,
+                  onTap: () => handleVote(widget.item.sourceItemId??0,-1),
                   child: Container(
-                    padding: REdgeInsets.symmetric(horizontal: 15, vertical: 8),
+                    padding:
+                    REdgeInsets.symmetric(horizontal: 15, vertical: 8),
                     decoration: BoxDecoration(
-                      color: isVotedDown? ColorsManger.newSecondaryColor.withOpacity(0.5) : ColorsManger.newSecondaryColor.withOpacity(0.13),
+                      color: currentVote == -1
+                          ? ColorsManger.newSecondaryColor.withOpacity(0.5)
+                          : ColorsManger.newSecondaryColor.withOpacity(0.13),
                       borderRadius: BorderRadius.only(
                         topRight: Radius.circular(25.r),
                         bottomRight: Radius.circular(25.r),
                       ),
                     ),
-                    child: Icon(Icons.arrow_downward, color: ColorsManger.newSecondaryColor.withOpacity(0.8),size: 22,),
+                    child: Icon(Icons.arrow_downward,
+                        color: ColorsManger.newSecondaryColor.withOpacity(0.8),
+                        size: 22),
                   ),
                 ),
                 SizedBox(width: 10.w),
@@ -244,35 +257,11 @@ class _PostItemWidgetV2State extends State<PostItemWidgetV2> {
     );
   }
 
-  void toggleUpVote() {
+  void handleVote(num postId,num voteType,) async {
+    num newVote = currentVote == voteType ? 0 : voteType;
     setState(() {
-      if (isVotedUp) {
-        votes--;
-        isVotedUp = false;
-      } else {
-        if (isVotedDown) {
-          votes++;
-          isVotedDown = false;
-        }
-        votes++;
-        isVotedUp = true;
-      }
+      currentVote = newVote;
     });
-  }
-
-  void toggleDownVote() {
-    setState(() {
-      if (isVotedDown) {
-        votes++;
-        isVotedDown = false;
-      } else {
-        if (isVotedUp) {
-          votes--;
-          isVotedUp = false;
-        }
-        votes--;
-        isVotedDown = true;
-      }
-    });
+    await ApiManger.voteOnPost(postId: postId, type: newVote);
   }
 }

@@ -20,6 +20,7 @@ class Blogs extends StatefulWidget {
 }
 
 class _BlogsState extends State<Blogs> {
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -79,7 +80,7 @@ class _BlogsState extends State<Blogs> {
                       ),
                     ),
                     InkWell(
-                      onTap: () => Navigator.pushNamed(context, RoutesManger.addPost),
+                      onTap: () => Navigator.pushNamed(context, RoutesManger.addPost,),
                       child: Container(
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,

@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intervyou_app/data/blogs_models/chat/conversation_item.dart';
@@ -6,7 +5,7 @@ import 'package:intervyou_app/presentation/screens/home/tabs/blogs/view/netwrok_
 import 'package:intervyou_app/presentation/screens/home/tabs/blogs/view_model/blogs_viewmodel.dart';
 import 'package:intervyou_app/presentation/screens/home/tabs/blogs/widgets/chat_user_item.dart';
 import 'package:provider/provider.dart';
-
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../../../../../../config/styles/light_app_style.dart';
 import '../../../../../../core/colors_manager.dart';
 import '../../../../../../core/routes_manger.dart';
@@ -20,25 +19,38 @@ class ChatTab extends StatefulWidget {
 
 class _ChatTabState extends State<ChatTab> {
   late BlogsViewModel viewModel;
-  late List<ConversationsItem> conversations = [];
 
   @override
   void didChangeDependencies() {
-    viewModel = Provider.of<BlogsViewModel>(context, listen: false);
-    Future.microtask(() {
-        viewModel.fetchAllConversations();
-      },
-    );
     super.didChangeDependencies();
+    viewModel = Provider.of<BlogsViewModel>(context, listen: false);
+    _initializeAndFetch();
+  }
+
+  Future<void> _initializeAndFetch() async {
+    const storage = FlutterSecureStorage();
+    final userId = await storage.read(key: 'user_id');
+    final token = await storage.read(key: 'access_token');
+
+    //logayaaaaaa
+    print("🔑🔑🔑 USING AUTH TOKEN FOR SIGNALR: $token 🔑🔑🔑");
+
+    if (userId != null && token != null && mounted) {
+      viewModel.currentUserId = userId;
+      viewModel.initializeSignalRConnection(token);
+      viewModel.fetchAllConversations();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<BlogsViewModel>(builder:(context, value, child) {
+    final vmId = Provider.of<BlogsViewModel>(context, listen: false).instanceId;
+    print("🔵🔵🔵 ChatTab is building. It sees ViewModel ID: $vmId 🔵🔵🔵");
+    return Consumer<BlogsViewModel>(builder: (context, value, child) {
+      print("🔄 Consumer in ChatTab REBUILT. It sees ViewModel ID: ${viewModel.instanceId} 🔄");
       if (value.allConversationsLoading) {
-        return Center(child: CircularProgressIndicator());
+        return const Center(child: CircularProgressIndicator());
       }
-      conversations = viewModel.allConversations;
       return SingleChildScrollView(
         child: Column(
           children: [
@@ -49,57 +61,35 @@ class _ChatTabState extends State<ChatTab> {
                 decoration: InputDecoration(
                     fillColor: Colors.grey.withOpacity(0.2),
                     filled: true,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(25),
-                        borderSide: BorderSide(color: Colors.transparent)),
-                    disabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(25),
-                      borderSide: BorderSide(color: Colors.transparent),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(25),
-                      borderSide: BorderSide(color: Colors.transparent),
-                    ),
-                    prefixIcon: Icon(
-                      Icons.search,
-                      size: 30.sp,
-                      color: Colors.black.withOpacity(0.5),
-                    ),
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(25), borderSide: const BorderSide(color: Colors.transparent)),
+                    enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(25), borderSide: const BorderSide(color: Colors.transparent)),
+                    prefixIcon: Icon(Icons.search, size: 30.sp, color: Colors.black.withOpacity(0.5)),
                     hintText: 'Search...',
-                    hintStyle: LightAppStyle.email.copyWith(
-                        color: Colors.black.withOpacity(0.5),
-                        fontWeight: FontWeight.w400,
-                        fontSize: 16.sp)),
+                    hintStyle: LightAppStyle.email.copyWith(color: Colors.black.withOpacity(0.5), fontWeight: FontWeight.w400, fontSize: 16.sp)),
               ),
             ),
             ListView.separated(
               itemBuilder: (context, index) => InkWell(
                   onTap: () {
-                    UserArgumentsModel argumentsModel = UserArgumentsModel(conversations[index].otherUserId ?? "", viewModel);
-                    Navigator.pushNamed(context, RoutesManger.chat,arguments: argumentsModel);
+                    UserArgumentsModel argumentsModel = UserArgumentsModel(value.allConversations[index].otherUserId ?? "", viewModel);
+                    Navigator.pushNamed(context, RoutesManger.chat, arguments: argumentsModel);
                   },
-                  child: ChatUserItem(conversations: conversations[index],)),
+                  child: ChatUserItem(conversations: value.allConversations[index])),
               padding: REdgeInsets.symmetric(horizontal: 12, vertical: 15),
-              itemCount: conversations.length,
+              itemCount: value.allConversations.length,
               shrinkWrap: true,
-              physics:  NeverScrollableScrollPhysics(),
+              physics: const NeverScrollableScrollPhysics(),
               separatorBuilder: (context, index) {
-                return Column(
-                  children: [
-                    SizedBox(height: 15.h),
-                    Container(
-                      width: double.infinity,
-                      height: 1.h,
-                      color: ColorsManger.newSecondaryColor.withOpacity(0.2),
-                    ),
-                    SizedBox(height: 15.h),
-                  ],
-                );
+                return Column(children: [
+                  SizedBox(height: 15.h),
+                  Container(width: double.infinity, height: 1.h, color: ColorsManger.newSecondaryColor.withOpacity(0.2)),
+                  SizedBox(height: 15.h),
+                ]);
               },
             )
           ],
         ),
       );
-    }, );
+    });
   }
 }

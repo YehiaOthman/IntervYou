@@ -43,7 +43,10 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return MultiProvider(providers: [
       ChangeNotifierProvider<LearnViewModel>(create: (context) => learnViewModel,),
-      ChangeNotifierProvider<BlogsViewModel>(create: (context) => blogsViewModel,)
+      ChangeNotifierProvider<BlogsViewModel>(create: (context) {
+        print("🔧 Home's MultiProvider is CREATING BlogsViewModel.");
+        return blogsViewModel;
+      },)
     ],
       child: Scaffold(
         extendBody: true,

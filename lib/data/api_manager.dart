@@ -1132,7 +1132,7 @@ class ApiManger {
     }
   }
 
-  static Future<http.Response?> voteOnComment({required String commentId, required int type}) async {
+  static Future<http.Response?> voteOnComment({required num commentId, required num type}) async {
     try {
       final storage = FlutterSecureStorage();
       final token = await storage.read(key: 'access_token');

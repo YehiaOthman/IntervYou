@@ -1,4 +1,6 @@
 import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
+import 'package:signalr_core/signalr_core.dart';
 import 'package:intervyou_app/data/api_manager.dart';
 import '../../../../../../data/blogs_models/Pagination.dart';
 import '../../../../../../data/blogs_models/chat/conversation_item.dart';
@@ -14,53 +16,56 @@ import '../../../../../../data/blogs_models/profile/Profile_dm.dart';
 import '../../../../../../data/blogs_models/timeline/time_line_item.dart';
 import '../../../../../../data/blogs_models/user_info_item.dart';
 
-
 class BlogsViewModel extends ChangeNotifier {
+  HubConnection? _hubConnection;
+  String? currentUserId;
+  String? currentOpenChatUserId;
 
+  final String instanceId =
+      DateTime.now().microsecondsSinceEpoch.toString().substring(5);
 
-  // Blog Posts State
+  BlogsViewModel() {
+    print("✅✅✅ BlogsViewModel CREATED! ID: $instanceId ✅✅✅");
+  }
+
+  @override
+  void notifyListeners() {
+    print(
+        "🔔🔔🔔 ViewModel ID: $instanceId is calling notifyListeners()! 🔔🔔🔔");
+    super.notifyListeners();
+  }
+
+  // All other state variables...
   bool postsLoading = false;
   bool postsLoadingMore = false;
   String? postsError;
   List<PostsItem> posts = [];
   int _postsPage = 1;
   bool _postsHasNextPage = true;
-
-  // Post Details State
   bool postDetailsLoading = false;
   String? postDetailsError;
   PostDetailsDm? postDetails;
-
-  // Author Posts State
   bool authorPostsLoading = false;
   bool authorPostsLoadingMore = false;
   String? authorPostsError;
   List<PostsItem> authorPosts = [];
   int _authorPostsPage = 1;
   bool _authorPostsHasNextPage = true;
-
-  // Post Comments State
   bool commentsLoading = false;
   bool commentsLoadingMore = false;
   String? commentsError;
   List<Comments> postComments = [];
   int _commentsPage = 1;
   bool _commentsHasNextPage = true;
-
-  // Timeline State
   bool timelineLoading = false;
   bool timelineLoadingMore = false;
   String? timelineError;
   List<TimeLineItem> timelineItems = [];
   int _timelinePage = 1;
   bool _timelineHasNextPage = true;
-
-  // Profile State
   bool profileLoading = false;
   String? profileError;
   ProfileDataModel? userProfile;
-
-  // Search State
   bool searchLoading = false;
   bool searchLoadingMore = false;
   String? searchError;
@@ -68,66 +73,48 @@ class BlogsViewModel extends ChangeNotifier {
   String _searchQuery = "";
   int _searchPage = 1;
   bool _searchHasNextPage = true;
-
-  // Notifications State
   bool notificationsLoading = false;
   bool notificationsLoadingMore = false;
   String? notificationsError;
   List<NotificationsItem> notifications = [];
   int _notificationsPage = 1;
   bool _notificationsHasNextPage = true;
-
-  // Unread Notifications Count State
   bool unreadCountLoading = false;
   String? unreadCountError;
   UnReadCountNotifications? unreadNotificationCount;
-
-  // Connections State
   bool connectionsLoading = false;
   bool connectionsLoadingMore = false;
   String? connectionsError;
   List<UserInfoItem> connections = [];
   int _connectionsPage = 1;
   bool _connectionsHasNextPage = true;
-
-  // Pending Connections State
   bool pendingConnectionsLoading = false;
   bool pendingConnectionsLoadingMore = false;
   String? pendingConnectionsError;
   List<ConnectionsItem> pendingConnections = [];
   int _pendingConnectionsPage = 1;
   bool _pendingConnectionsHasNextPage = true;
-
-  // Sent Connections State
   bool sentConnectionsLoading = false;
   bool sentConnectionsLoadingMore = false;
   String? sentConnectionsError;
   List<ConnectionsItem> sentConnections = [];
   int _sentConnectionsPage = 1;
   bool _sentConnectionsHasNextPage = true;
-
-  // Suggestion Connections State
   bool suggestionConnectionsLoading = false;
   bool suggestionConnectionsLoadingMore = false;
   String? suggestionConnectionsError;
   List<UserInfoItem> suggestionConnections = [];
   int _suggestionConnectionsPage = 1;
   bool _suggestionConnectionsHasNextPage = true;
-
-  // Connection Status State
   bool connectionStatusLoading = false;
   String? connectionStatusError;
   ConnectionStatus? connectionStatus;
-
-  // Conversation with User State
   bool conversationLoading = false;
   bool conversationLoadingMore = false;
   String? conversationError;
   List<ConversationOtherUserIdItem> conversationMessages = [];
   int _conversationPage = 1;
   bool _conversationHasNextPage = true;
-
-  // All Conversations State
   bool allConversationsLoading = false;
   bool allConversationsLoadingMore = false;
   String? allConversationsError;
@@ -138,26 +125,251 @@ class BlogsViewModel extends ChangeNotifier {
   static const int _pageSize = 20;
 
   bool _checkHasNextPage(Pagination? pagination) {
-    if (pagination == null || pagination.page == null || pagination.pages == null) {
+    if (pagination == null ||
+        pagination.page == null ||
+        pagination.pages == null) {
       return false;
     }
     return pagination.page! < pagination.pages!;
   }
 
-  // --- Blog Methods ---
+
+
+  void initializeSignalRConnection(String accessToken) {
+    if (_hubConnection != null &&
+        _hubConnection?.state != HubConnectionState.disconnected) {
+      print(
+          "🔌 SignalR connection for ViewModel ID: $instanceId already exists and is not disconnected. Skipping initialization.");
+      return;
+    }
+
+    print("🔌 Initializing SignalR for ViewModel ID: $instanceId...");
+    const hubUrl = "https://intervyouquestions.runasp.net/chathub";
+
+    _hubConnection = HubConnectionBuilder()
+        .withUrl(hubUrl,
+            HttpConnectionOptions(accessTokenFactory: () async => accessToken))
+        .withAutomaticReconnect()
+        .build();
+
+    _hubConnection?.onclose((error) => print(
+        "❌ SignalR Connection for ID: $instanceId Closed. Error: $error"));
+
+    _hubConnection?.onreconnecting((error) => print(
+        "🔄 SignalR Connection for ID: $instanceId is Reconnecting... Error: $error"));
+
+    _hubConnection?.onreconnected((connectionId) => print(
+        "🎉 SignalR Connection for ID: $instanceId has Reconnected! New Connection ID: $connectionId"));
+
+    _hubConnection?.on('ReceiveMessage', (arguments) {
+      print("📬 ViewModel ID: $instanceId received a SignalR message!");
+      if (arguments != null && arguments.isNotEmpty) {
+        try {
+          final newMessageData = arguments[0] as Map<String, dynamic>;
+          final newMessage =
+              ConversationOtherUserIdItem.fromJson(newMessageData);
+
+          final messageSenderId = newMessage.senderId;
+          if (messageSenderId == currentUserId)
+            return;
+
+          bool needsUIRefresh = false;
+
+
+          int convoIndex = allConversations
+              .indexWhere((c) => c.otherUserId == messageSenderId);
+          if (convoIndex != -1) {
+            final conversation = allConversations[convoIndex];
+            conversation.lastMessageSnippet = newMessage.content;
+            conversation.lastMessageAt = newMessage.sentAt;
+            if (messageSenderId != currentOpenChatUserId) {
+              conversation.unreadMessagesCount =
+                  (conversation.unreadMessagesCount ?? 0) + 1;
+            }
+            allConversations.removeAt(convoIndex);
+            allConversations.insert(0, conversation);
+            needsUIRefresh = true;
+          } else {
+            fetchAllConversations();
+          }
+
+
+          if (messageSenderId == currentOpenChatUserId) {
+            conversationMessages.add(newMessage);
+            needsUIRefresh = true;
+          }
+
+          if (needsUIRefresh) {
+            print(
+                "🔄 ViewModel ID: $instanceId is notifying listeners due to a new message.");
+            notifyListeners();
+          }
+        } catch (e) {
+          if (kDebugMode) {
+            print('Error processing received message: $e');
+          }
+        }
+      }
+    });
+
+    startSignalRConnection();
+  }
+
+  Future<void> startSignalRConnection() async {
+    if (_hubConnection?.state == HubConnectionState.disconnected) {
+      try {
+        await _hubConnection?.start();
+        print(
+            "🎉🎉🎉 SignalR Connection for ID: $instanceId started successfully! 🎉🎉🎉");
+      } catch (e) {
+        print(
+            "❌❌❌ FATAL: Error starting SignalR connection for ID: $instanceId. Error: $e ❌❌❌");
+      }
+    } else {
+      print(
+          "ℹ️ SignalR connection for ID: $instanceId was already running. State: ${_hubConnection?.state}");
+    }
+  }
+
+  Future<void> stopSignalRConnection() async {
+    print("🔌 Stopping SignalR connection for ID: $instanceId.");
+    await _hubConnection?.stop();
+  }
+
+  @override
+  void dispose() {
+    stopSignalRConnection();
+    super.dispose();
+  }
+
+
+
+  Future<void> sendMessage(String text, String receiverId) async {
+
+    try {
+      final optimisticMessage = ConversationOtherUserIdItem(
+        content: text,
+        senderId: currentUserId,
+        sentAt: DateTime.now().toIso8601String(),
+      );
+
+      conversationMessages.add(optimisticMessage);
+
+      int convoIndex =
+          allConversations.indexWhere((c) => c.otherUserId == receiverId);
+      if (convoIndex != -1) {
+        final conversation = allConversations[convoIndex];
+        conversation.lastMessageSnippet = text;
+        conversation.lastMessageAt = optimisticMessage.sentAt;
+        allConversations.removeAt(convoIndex);
+        allConversations.insert(0, conversation);
+      }
+
+      print(
+          "🔄 ViewModel ID: $instanceId is notifying listeners due to a sent message.");
+      notifyListeners();
+
+      final response =
+          await ApiManger.sendMessage(receiverId: receiverId, content: text);
+
+      if (response == null ||
+          response.statusCode < 200 ||
+          response.statusCode >= 300) {
+        if (kDebugMode) {
+          print(
+              "Failed to send message. Reverting UI. Status: ${response?.statusCode}");
+        }
+        conversationMessages.remove(optimisticMessage);
+        fetchAllConversations();
+        notifyListeners();
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print("Error sending message via HTTP: $e");
+      }
+    }
+  }
+
+  Future<void> markConversationAsRead(String otherParticipantUserId) async {
+    try {
+      await ApiManger.markMessageAsRead(
+          otherParticipantUserId: otherParticipantUserId);
+      final conversation = allConversations.firstWhere(
+          (c) => c.otherUserId == otherParticipantUserId,
+          orElse: () => ConversationsItem());
+      conversation.unreadMessagesCount = 0;
+      notifyListeners();
+    } catch (e) {
+      if (kDebugMode) {
+        print("Error marking conversation as read: $e");
+      }
+    }
+  }
+
+  Future<void> fetchConversationWithUser(String otherUserId) async {
+    currentOpenChatUserId = otherUserId;
+    conversationLoading = true;
+    conversationError = null;
+    conversationMessages.clear();
+    notifyListeners();
+    _conversationPage = 1;
+    try {
+      final response = await ApiManger.fetchConversationWithUser(
+          otherUserId: otherUserId,
+          page: _conversationPage,
+          pageSize: _pageSize);
+      if (response != null && response.items != null) {
+        response.items!.sort((a, b) =>
+            DateTime.parse(a.sentAt!).compareTo(DateTime.parse(b.sentAt!)));
+        conversationMessages.addAll(response.items!);
+        _conversationHasNextPage = _checkHasNextPage(response.pagination);
+      } else {
+        _conversationHasNextPage = false;
+      }
+      await markConversationAsRead(otherUserId);
+    } catch (e) {
+      conversationError = "Failed to load conversation.";
+    } finally {
+      conversationLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> fetchAllConversations() async {
+    allConversationsLoading = true;
+    allConversationsError = null;
+    notifyListeners();
+    _allConversationsPage = 1;
+    try {
+      final response = await ApiManger.fetchAllConversations(
+          page: _allConversationsPage, pageSize: _pageSize);
+      if (response != null && response.items != null) {
+        allConversations.clear();
+        allConversations.addAll(response.items!);
+        _allConversationsHasNextPage = _checkHasNextPage(response.pagination);
+      } else {
+        allConversations.clear();
+        _allConversationsHasNextPage = false;
+      }
+    } catch (e) {
+      allConversationsError = "Failed to load conversations.";
+    } finally {
+      allConversationsLoading = false;
+      notifyListeners();
+    }
+  }
 
   Future<void> fetchBlogPosts() async {
     postsLoading = true;
     postsError = null;
     notifyListeners();
-
     _postsPage = 1;
-
     try {
-      final response = await ApiManger.fetchBlogPosts(page: _postsPage, pageSize: _pageSize);
-      if (response?.items != null) {
+      final response =
+          await ApiManger.fetchBlogPosts(page: _postsPage, pageSize: _pageSize);
+      if (response != null && response.items != null) {
         posts.clear();
-        posts.addAll(response!.items!);
+        posts.addAll(response.items!);
         _postsHasNextPage = _checkHasNextPage(response.pagination);
       } else {
         posts.clear();
@@ -173,14 +385,15 @@ class BlogsViewModel extends ChangeNotifier {
 
   Future<void> loadMoreBlogPosts() async {
     if (postsLoadingMore || !_postsHasNextPage) return;
-
     postsLoadingMore = true;
     notifyListeners();
     _postsPage++;
-
     try {
-      final response = await ApiManger.fetchBlogPosts(page: _postsPage, pageSize: _pageSize);
-      if (response?.items != null && response!.items!.isNotEmpty) {
+      final response =
+          await ApiManger.fetchBlogPosts(page: _postsPage, pageSize: _pageSize);
+      if (response != null &&
+          response.items != null &&
+          response.items!.isNotEmpty) {
         posts.addAll(response.items!);
         _postsHasNextPage = _checkHasNextPage(response.pagination);
       } else {
@@ -198,7 +411,6 @@ class BlogsViewModel extends ChangeNotifier {
     postDetailsLoading = true;
     postDetailsError = null;
     notifyListeners();
-
     try {
       postDetails = await ApiManger.fetchPostDetails(postId);
       if (postDetails == null) {
@@ -216,14 +428,13 @@ class BlogsViewModel extends ChangeNotifier {
     authorPostsLoading = true;
     authorPostsError = null;
     notifyListeners();
-
     _authorPostsPage = 1;
-
     try {
-      final response = await ApiManger.fetchPostsByAuthor(authorId: authorId, page: _authorPostsPage, pageSize: _pageSize);
-      if (response?.items != null) {
+      final response = await ApiManger.fetchPostsByAuthor(
+          authorId: authorId, page: _authorPostsPage, pageSize: _pageSize);
+      if (response != null && response.items != null) {
         authorPosts.clear();
-        authorPosts.addAll(response!.items!);
+        authorPosts.addAll(response.items!);
         _authorPostsHasNextPage = _checkHasNextPage(response.pagination);
       } else {
         authorPosts.clear();
@@ -239,14 +450,15 @@ class BlogsViewModel extends ChangeNotifier {
 
   Future<void> loadMorePostsByAuthor(String authorId) async {
     if (authorPostsLoadingMore || !_authorPostsHasNextPage) return;
-
     authorPostsLoadingMore = true;
     notifyListeners();
     _authorPostsPage++;
-
     try {
-      final response = await ApiManger.fetchPostsByAuthor(authorId: authorId, page: _authorPostsPage, pageSize: _pageSize);
-      if (response?.items != null && response!.items!.isNotEmpty) {
+      final response = await ApiManger.fetchPostsByAuthor(
+          authorId: authorId, page: _authorPostsPage, pageSize: _pageSize);
+      if (response != null &&
+          response.items != null &&
+          response.items!.isNotEmpty) {
         authorPosts.addAll(response.items!);
         _authorPostsHasNextPage = _checkHasNextPage(response.pagination);
       } else {
@@ -264,14 +476,13 @@ class BlogsViewModel extends ChangeNotifier {
     commentsLoading = true;
     commentsError = null;
     notifyListeners();
-
     _commentsPage = 1;
-
     try {
-      final response = await ApiManger.fetchCommentsForPost(postId: postId, page: _commentsPage, pageSize: _pageSize);
-      if (response?.items != null) {
+      final response = await ApiManger.fetchCommentsForPost(
+          postId: postId, page: _commentsPage, pageSize: _pageSize);
+      if (response != null && response.items != null) {
         postComments.clear();
-        postComments.addAll(response!.items!);
+        postComments.addAll(response.items!);
         _commentsHasNextPage = _checkHasNextPage(response.pagination);
       } else {
         postComments.clear();
@@ -287,14 +498,15 @@ class BlogsViewModel extends ChangeNotifier {
 
   Future<void> loadMoreCommentsForPost(int postId) async {
     if (commentsLoadingMore || !_commentsHasNextPage) return;
-
     commentsLoadingMore = true;
     notifyListeners();
     _commentsPage++;
-
     try {
-      final response = await ApiManger.fetchCommentsForPost(postId: postId, page: _commentsPage, pageSize: _pageSize);
-      if (response?.items != null && response!.items!.isNotEmpty) {
+      final response = await ApiManger.fetchCommentsForPost(
+          postId: postId, page: _commentsPage, pageSize: _pageSize);
+      if (response != null &&
+          response.items != null &&
+          response.items!.isNotEmpty) {
         postComments.addAll(response.items!);
         _commentsHasNextPage = _checkHasNextPage(response.pagination);
       } else {
@@ -308,20 +520,17 @@ class BlogsViewModel extends ChangeNotifier {
     }
   }
 
-  // --- Timeline, Profile, Search Methods ---
-
   Future<void> fetchTimeline() async {
     timelineLoading = true;
     timelineError = null;
     notifyListeners();
-
     _timelinePage = 1;
-
     try {
-      final response = await ApiManger.fetchTimelineData(page: _timelinePage, pageSize: _pageSize);
-      if (response?.items != null) {
+      final response = await ApiManger.fetchTimelineData(
+          page: _timelinePage, pageSize: _pageSize);
+      if (response != null && response.items != null) {
         timelineItems.clear();
-        timelineItems.addAll(response!.items!);
+        timelineItems.addAll(response.items!);
         _timelineHasNextPage = _checkHasNextPage(response.pagination);
       } else {
         timelineItems.clear();
@@ -337,14 +546,15 @@ class BlogsViewModel extends ChangeNotifier {
 
   Future<void> loadMoreTimelineItems() async {
     if (timelineLoadingMore || !_timelineHasNextPage) return;
-
     timelineLoadingMore = true;
     notifyListeners();
     _timelinePage++;
-
     try {
-      final response = await ApiManger.fetchTimelineData(page: _timelinePage, pageSize: _pageSize);
-      if (response?.items != null && response!.items!.isNotEmpty) {
+      final response = await ApiManger.fetchTimelineData(
+          page: _timelinePage, pageSize: _pageSize);
+      if (response != null &&
+          response.items != null &&
+          response.items!.isNotEmpty) {
         timelineItems.addAll(response.items!);
         _timelineHasNextPage = _checkHasNextPage(response.pagination);
       } else {
@@ -362,7 +572,6 @@ class BlogsViewModel extends ChangeNotifier {
     profileLoading = true;
     profileError = null;
     notifyListeners();
-
     try {
       userProfile = await ApiManger.fetchUserProfile(userId);
       if (userProfile == null) {
@@ -383,18 +592,17 @@ class BlogsViewModel extends ChangeNotifier {
       notifyListeners();
       return;
     }
-
     searchLoading = true;
     searchError = null;
     _searchQuery = query;
     _searchPage = 1;
     notifyListeners();
-
     try {
-      final response = await ApiManger.fetchSearchProfiles(query: _searchQuery, page: _searchPage, pageSize: _pageSize);
-      if (response?.items != null) {
+      final response = await ApiManger.fetchSearchProfiles(
+          query: _searchQuery, page: _searchPage, pageSize: _pageSize);
+      if (response != null && response.items != null) {
         searchResults.clear();
-        searchResults.addAll(response!.items!);
+        searchResults.addAll(response.items!);
         _searchHasNextPage = _checkHasNextPage(response.pagination);
       } else {
         searchResults.clear();
@@ -409,15 +617,17 @@ class BlogsViewModel extends ChangeNotifier {
   }
 
   Future<void> loadMoreSearchResults() async {
-    if (searchLoadingMore || !_searchHasNextPage || _searchQuery.isEmpty) return;
-
+    if (searchLoadingMore || !_searchHasNextPage || _searchQuery.isEmpty)
+      return;
     searchLoadingMore = true;
     notifyListeners();
     _searchPage++;
-
     try {
-      final response = await ApiManger.fetchSearchProfiles(query: _searchQuery, page: _searchPage, pageSize: _pageSize);
-      if (response?.items != null && response!.items!.isNotEmpty) {
+      final response = await ApiManger.fetchSearchProfiles(
+          query: _searchQuery, page: _searchPage, pageSize: _pageSize);
+      if (response != null &&
+          response.items != null &&
+          response.items!.isNotEmpty) {
         searchResults.addAll(response.items!);
         _searchHasNextPage = _checkHasNextPage(response.pagination);
       } else {
@@ -431,20 +641,19 @@ class BlogsViewModel extends ChangeNotifier {
     }
   }
 
-  // --- Notification Methods ---
-
   Future<void> fetchNotifications({bool unreadOnly = false}) async {
     notificationsLoading = true;
     notificationsError = null;
     notifyListeners();
-
     _notificationsPage = 1;
-
     try {
-      final response = await ApiManger.fetchNotifications(page: _notificationsPage, pageSize: _pageSize, unreadOnly: unreadOnly);
-      if (response?.items != null) {
+      final response = await ApiManger.fetchNotifications(
+          page: _notificationsPage,
+          pageSize: _pageSize,
+          unreadOnly: unreadOnly);
+      if (response != null && response.items != null) {
         notifications.clear();
-        notifications.addAll(response!.items!);
+        notifications.addAll(response.items!);
         _notificationsHasNextPage = _checkHasNextPage(response.pagination);
       } else {
         notifications.clear();
@@ -460,14 +669,17 @@ class BlogsViewModel extends ChangeNotifier {
 
   Future<void> loadMoreNotifications({bool unreadOnly = false}) async {
     if (notificationsLoadingMore || !_notificationsHasNextPage) return;
-
     notificationsLoadingMore = true;
     notifyListeners();
     _notificationsPage++;
-
     try {
-      final response = await ApiManger.fetchNotifications(page: _notificationsPage, pageSize: _pageSize, unreadOnly: unreadOnly);
-      if (response?.items != null && response!.items!.isNotEmpty) {
+      final response = await ApiManger.fetchNotifications(
+          page: _notificationsPage,
+          pageSize: _pageSize,
+          unreadOnly: unreadOnly);
+      if (response != null &&
+          response.items != null &&
+          response.items!.isNotEmpty) {
         notifications.addAll(response.items!);
         _notificationsHasNextPage = _checkHasNextPage(response.pagination);
       } else {
@@ -485,7 +697,6 @@ class BlogsViewModel extends ChangeNotifier {
     unreadCountLoading = true;
     unreadCountError = null;
     notifyListeners();
-
     try {
       unreadNotificationCount = await ApiManger.fetchUnreadNotificationCount();
     } catch (e) {
@@ -496,20 +707,17 @@ class BlogsViewModel extends ChangeNotifier {
     }
   }
 
-  // --- Connection Methods ---
-
   Future<void> fetchPendingConnections() async {
     pendingConnectionsLoading = true;
     pendingConnectionsError = null;
     notifyListeners();
-
     _pendingConnectionsPage = 1;
-
     try {
-      final response = await ApiManger.fetchPendingConnections(page: _pendingConnectionsPage, pageSize: _pageSize);
-      if (response?.items != null) {
+      final response = await ApiManger.fetchPendingConnections(
+          page: _pendingConnectionsPage, pageSize: _pageSize);
+      if (response != null && response.items != null) {
         pendingConnections.clear();
-        pendingConnections.addAll(response!.items!);
+        pendingConnections.addAll(response.items!);
         _pendingConnectionsHasNextPage = _checkHasNextPage(response.pagination);
       } else {
         pendingConnections.clear();
@@ -527,14 +735,13 @@ class BlogsViewModel extends ChangeNotifier {
     sentConnectionsLoading = true;
     sentConnectionsError = null;
     notifyListeners();
-
     _sentConnectionsPage = 1;
-
     try {
-      final response = await ApiManger.fetchSentConnections(page: _sentConnectionsPage, pageSize: _pageSize);
-      if (response?.items != null) {
+      final response = await ApiManger.fetchSentConnections(
+          page: _sentConnectionsPage, pageSize: _pageSize);
+      if (response != null && response.items != null) {
         sentConnections.clear();
-        sentConnections.addAll(response!.items!);
+        sentConnections.addAll(response.items!);
         _sentConnectionsHasNextPage = _checkHasNextPage(response.pagination);
       } else {
         sentConnections.clear();
@@ -552,14 +759,13 @@ class BlogsViewModel extends ChangeNotifier {
     connectionsLoading = true;
     connectionsError = null;
     notifyListeners();
-
     _connectionsPage = 1;
-
     try {
-      final response = await ApiManger.fetchConnections(page: _connectionsPage, pageSize: _pageSize);
-      if (response?.items != null) {
+      final response = await ApiManger.fetchConnections(
+          page: _connectionsPage, pageSize: _pageSize);
+      if (response != null && response.items != null) {
         connections.clear();
-        connections.addAll(response!.items!);
+        connections.addAll(response.items!);
         _connectionsHasNextPage = _checkHasNextPage(response.pagination);
       } else {
         connections.clear();
@@ -577,15 +783,15 @@ class BlogsViewModel extends ChangeNotifier {
     suggestionConnectionsLoading = true;
     suggestionConnectionsError = null;
     notifyListeners();
-
     _suggestionConnectionsPage = 1;
-
     try {
-      final response = await ApiManger.fetchConnectionSuggestions(page: _suggestionConnectionsPage, pageSize: _pageSize);
-      if (response?.items != null) {
+      final response = await ApiManger.fetchConnectionSuggestions(
+          page: _suggestionConnectionsPage, pageSize: _pageSize);
+      if (response != null && response.items != null) {
         suggestionConnections.clear();
-        suggestionConnections.addAll(response!.items!);
-        _suggestionConnectionsHasNextPage = _checkHasNextPage(response.pagination);
+        suggestionConnections.addAll(response.items!);
+        _suggestionConnectionsHasNextPage =
+            _checkHasNextPage(response.pagination);
       } else {
         suggestionConnections.clear();
         _suggestionConnectionsHasNextPage = false;
@@ -602,65 +808,12 @@ class BlogsViewModel extends ChangeNotifier {
     connectionStatusLoading = true;
     connectionStatusError = null;
     notifyListeners();
-
     try {
       connectionStatus = await ApiManger.fetchConnectionStatus(targetUserId);
     } catch (e) {
       connectionStatusError = "Failed to load connection status.";
     } finally {
       connectionStatusLoading = false;
-      notifyListeners();
-    }
-  }
-
-  // --- Chat Methods ---
-
-  Future<void> fetchConversationWithUser(String otherUserId) async {
-    conversationLoading = true;
-    conversationError = null;
-    notifyListeners();
-
-    _conversationPage = 1;
-
-    try {
-      final response = await ApiManger.fetchConversationWithUser(otherUserId: otherUserId, page: _conversationPage, pageSize: _pageSize);
-      if (response?.items != null) {
-        conversationMessages.clear();
-        conversationMessages.addAll(response!.items!);
-        _conversationHasNextPage = _checkHasNextPage(response.pagination);
-      } else {
-        conversationMessages.clear();
-        _conversationHasNextPage = false;
-      }
-    } catch (e) {
-      conversationError = "Failed to load conversation.";
-    } finally {
-      conversationLoading = false;
-      notifyListeners();
-    }
-  }
-
-  Future<void> fetchAllConversations() async {
-    allConversationsLoading = true;
-    allConversationsError = null;
-    notifyListeners();
-
-    _allConversationsPage = 1;
-
-    try {
-      final response = await ApiManger.fetchAllConversations(page: _allConversationsPage, pageSize: _pageSize);
-      if (response?.items != null) {
-        allConversations.clear();
-        allConversations.addAll(response!.items!);
-        _allConversationsHasNextPage = _checkHasNextPage(response.pagination);
-      } else {
-        allConversations.clear();
-        _allConversationsHasNextPage = false;
-      }
-    } catch (e) {
-      allConversationsError = "Failed to load conversations.";
-    } finally {
-      allConversationsLoading = false;
       notifyListeners();
     }
   }

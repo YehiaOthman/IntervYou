@@ -17,6 +17,7 @@ class AddPost extends StatefulWidget {
 class _AddPostState extends State<AddPost> {
    late  TextEditingController titleController = TextEditingController();
    late TextEditingController contentController= TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

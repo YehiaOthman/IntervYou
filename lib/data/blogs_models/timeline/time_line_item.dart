@@ -12,6 +12,7 @@ class TimeLineItem {
   num? blogPostUpvotes;
   num? blogPostDownvotes;
   num? blogPostCommentCount;
+  num? blogPostCurrentUserVote;
   String? connectedWithUserId;
   String? connectedWithUserName;
   String? connectedWithProfilePictureUrl;
@@ -31,6 +32,7 @@ class TimeLineItem {
     this.blogPostUpvotes,
     this.blogPostDownvotes,
     this.blogPostCommentCount,
+    this.blogPostCurrentUserVote,
     this.connectedWithUserId,
     this.connectedWithUserName,
     this.connectedWithProfilePictureUrl,
@@ -51,6 +53,7 @@ class TimeLineItem {
     blogPostUpvotes = json['blogPostUpvotes'];
     blogPostDownvotes = json['blogPostDownvotes'];
     blogPostCommentCount = json['blogPostCommentCount'];
+    blogPostCurrentUserVote = json['blogPostCurrentUserVote'];
     connectedWithUserId = json['connectedWithUserId'];
     connectedWithUserName = json['connectedWithUserName'];
     connectedWithProfilePictureUrl = json['connectedWithProfilePictureUrl'];
@@ -72,6 +75,7 @@ class TimeLineItem {
     map['blogPostUpvotes'] = blogPostUpvotes;
     map['blogPostDownvotes'] = blogPostDownvotes;
     map['blogPostCommentCount'] = blogPostCommentCount;
+    map['blogPostCurrentUserVote'] = blogPostCurrentUserVote;
     map['connectedWithUserId'] = connectedWithUserId;
     map['connectedWithUserName'] = connectedWithUserName;
     map['connectedWithProfilePictureUrl'] = connectedWithProfilePictureUrl;
