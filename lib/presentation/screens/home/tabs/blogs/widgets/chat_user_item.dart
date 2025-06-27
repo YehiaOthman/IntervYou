@@ -53,14 +53,18 @@ class _ChatUserItemState extends State<ChatUserItem> {
                 Icon(Icons.circle, color: ColorsManger.newSecondaryColor, size: 10.sp),
                 SizedBox(width: 5.w),
                 Text(
-                  widget.conversations.lastMessageSnippet ?? '',
+                  (widget.conversations.lastMessageSnippet ?? '').length > 15
+                      ? '${widget.conversations.lastMessageSnippet!.substring(0, 15)}...'
+                      : widget.conversations.lastMessageSnippet ?? '',
                   style: LightAppStyle.email.copyWith(
-                      color: Colors.black.withOpacity(0.5),
-                      fontSize: 13.sp,
-                      fontWeight: FontWeight.w500),
+                    color: Colors.black.withOpacity(0.5),
+                    fontSize: 13.sp,
+                    fontWeight: FontWeight.w500,
+                  ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
+
 
               ],
             ),

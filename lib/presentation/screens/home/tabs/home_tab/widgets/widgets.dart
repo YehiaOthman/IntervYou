@@ -5,8 +5,9 @@ import 'package:intervyou_app/config/styles/light_app_style.dart';
 import 'package:intervyou_app/core/assets_manager.dart';
 import 'package:intervyou_app/core/colors_manager.dart';
 
-Widget buildCardItem(String subTopicName, String subTopicDescription, int finishedTasks, int totalTasks) {
-  int taskProgress = ((finishedTasks / totalTasks) * 100).toInt() ;
+Widget buildCardItem(String subTopicName, String subTopicDescription,
+    int finishedTasks, int totalTasks) {
+  int taskProgress = ((finishedTasks / totalTasks) * 100).toInt();
   return SizedBox(
     width: 200.w,
     child: Card(
@@ -83,7 +84,6 @@ Widget buildCardItem(String subTopicName, String subTopicDescription, int finish
             ),
           ),
           Spacer()
-
         ],
       ),
     ),
@@ -142,15 +142,15 @@ Widget buildDailyQuizTaskItem() {
   );
 }
 
-Widget homeHeader(String name) {
+Widget homeHeader(String name, String? imageUrl) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.start,
     children: [
       CircleAvatar(
         radius: 23.r,
-        backgroundImage: AssetImage(
-          AssetsManager.pp,
-        ),
+        backgroundImage: imageUrl != null
+            ? NetworkImage("https://intervyouquestions.runasp.net$imageUrl")
+            : AssetImage(AssetsManager.guestPp) as ImageProvider,
       ),
       SizedBox(width: 10.w),
       Column(

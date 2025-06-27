@@ -90,8 +90,7 @@ class ApiManger {
     }
   }
 
-  static Future<void> registerUser(String fullName, String email,
-      String password, String confirmPassword) async {
+  static Future<void> registerUser(String fullName, String email, String password, String confirmPassword) async {
     final Map<String, String> headers = {
       'Content-Type': 'application/json',
     };
@@ -234,8 +233,7 @@ class ApiManger {
     return response;
   }
 
-  static Future<http.Response> updatePreferences(String preferredRole,
-      String experienceLevel, String dailyStudyHours) async {
+  static Future<http.Response> updatePreferences(String preferredRole, String experienceLevel, String dailyStudyHours) async {
     final storage = FlutterSecureStorage();
     String? token = await storage.read(key: 'access_token');
 

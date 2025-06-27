@@ -289,8 +289,8 @@ class HandlerFunctions {
 
     if (response.statusCode == 200) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Preferences updated successfully')),
-      );
+        const SnackBar(content: Text('Preferences updated successfully')),);
+      Navigator.pushNamed(context, RoutesManger.home);
     } else if (response.statusCode == 400) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to update preferences: $message')),
