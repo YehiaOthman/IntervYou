@@ -1079,7 +1079,7 @@ class ApiManger {
     }
   }
 
-  static Future<http.Response?> createCommentOnPost({required String postId, required String content, required int parentCommentId}) async {
+  static Future<http.Response?> createCommentOnPost({required num postId, required String content}) async {
     try {
       final storage = FlutterSecureStorage();
       final token = await storage.read(key: 'access_token');
@@ -1098,7 +1098,7 @@ class ApiManger {
         },
         body: jsonEncode({
           'content': content,
-          'parentCommentId': parentCommentId,
+          'parentCommentId': null,
         }),
       );
 

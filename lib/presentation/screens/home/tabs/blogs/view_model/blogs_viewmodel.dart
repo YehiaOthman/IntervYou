@@ -859,4 +859,35 @@ class BlogsViewModel extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  Future<bool> createCommentOnPost({required num postId, required String content}) async {
+    try {
+      // ACT: Call the updated API function which handles parentCommentId correctly.
+      final response = await ApiManger.createCommentOnPost(
+        postId: postId,
+        content: content,
+      );
+
+      if (response != null && response.statusCode >= 200 && response.statusCode < 300) {
+        // REFRESH: The comment was posted successfully.
+        int postIndex = timelineItems.indexWhere((p) => p.sourceItemId == postId);
+        if (postIndex != -1) {
+          timelineItems[postIndex].blogPostCommentCount = (timelineItems[postIndex].blogPostCommentCount ?? 0) + 1;
+          notifyListeners();
+        } else {
+          // Fallback if the post isn't in the current list for some reason.
+          fetchTimeline();
+        }
+        return true; // Indicate success
+      } else {
+        // Handle failure
+        debugPrint("Failed to create comment. Status: ${response?.statusCode}");
+        return false; // Indicate failure
+      }
+    } catch (e) {
+      debugPrint("Error creating comment: $e");
+      return false; // Indicate failure
+    }
+  }
+
 }
