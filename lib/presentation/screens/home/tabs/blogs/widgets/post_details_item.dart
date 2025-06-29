@@ -145,6 +145,16 @@ class _PostDetailsItemState extends State<PostDetailsItem> {
                         size: 22),
                   ),
                 ),
+                SizedBox(width: 10.w),
+                if(widget.post.currentUserVote != null)Container(
+                  padding: REdgeInsets.symmetric(horizontal: 15, vertical: 8),
+                  decoration: BoxDecoration(
+                      color: ColorsManger.newSecondaryColor.withOpacity(0.13),
+                      shape: BoxShape.circle
+                  ),
+                  child: Text('${widget.post.currentUserVote}',
+                    style: LightAppStyle.email.copyWith(color: Colors.black.withOpacity(0.5),fontSize: 16.sp,fontWeight: FontWeight.w500),),
+                ),
                 Spacer(),
                 InkWell(
                   onTap: () => print('reply'),

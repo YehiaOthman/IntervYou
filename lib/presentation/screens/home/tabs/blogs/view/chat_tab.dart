@@ -47,7 +47,8 @@ class _ChatTabState extends State<ChatTab> {
     final vmId = Provider.of<BlogsViewModel>(context, listen: false).instanceId;
     print("🔵🔵🔵 ChatTab is building. It sees ViewModel ID: $vmId 🔵🔵🔵");
     return Consumer<BlogsViewModel>(builder: (context, value, child) {
-      print("🔄 Consumer in ChatTab REBUILT. It sees ViewModel ID: ${viewModel.instanceId} 🔄");
+      print(
+          "🔄 Consumer in ChatTab REBUILT. It sees ViewModel ID: ${viewModel.instanceId} 🔄");
       if (value.allConversationsLoading) {
         return const Center(child: CircularProgressIndicator());
       }
@@ -61,20 +62,34 @@ class _ChatTabState extends State<ChatTab> {
                 decoration: InputDecoration(
                     fillColor: Colors.grey.withOpacity(0.2),
                     filled: true,
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(25), borderSide: const BorderSide(color: Colors.transparent)),
-                    enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(25), borderSide: const BorderSide(color: Colors.transparent)),
-                    prefixIcon: Icon(Icons.search, size: 30.sp, color: Colors.black.withOpacity(0.5)),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(25),
+                        borderSide:
+                            const BorderSide(color: Colors.transparent)),
+                    enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(25),
+                        borderSide:
+                            const BorderSide(color: Colors.transparent)),
+                    prefixIcon: Icon(Icons.search,
+                        size: 30.sp, color: Colors.black.withOpacity(0.5)),
                     hintText: 'Search...',
-                    hintStyle: LightAppStyle.email.copyWith(color: Colors.black.withOpacity(0.5), fontWeight: FontWeight.w400, fontSize: 16.sp)),
+                    hintStyle: LightAppStyle.email.copyWith(
+                        color: Colors.black.withOpacity(0.5),
+                        fontWeight: FontWeight.w400,
+                        fontSize: 16.sp)),
               ),
             ),
             ListView.separated(
               itemBuilder: (context, index) => InkWell(
                   onTap: () {
-                    UserArgumentsModel argumentsModel = UserArgumentsModel(value.allConversations[index].otherUserId ?? "", viewModel);
-                    Navigator.pushNamed(context, RoutesManger.chat, arguments: argumentsModel);
+                    UserArgumentsModel argumentsModel = UserArgumentsModel(
+                        value.allConversations[index].otherUserId ?? "",
+                        viewModel);
+                    Navigator.pushNamed(context, RoutesManger.chat,
+                        arguments: argumentsModel);
                   },
-                  child: ChatUserItem(conversations: value.allConversations[index])),
+                  child: ChatUserItem(
+                      conversations: value.allConversations[index])),
               padding: REdgeInsets.symmetric(horizontal: 12, vertical: 15),
               itemCount: value.allConversations.length,
               shrinkWrap: true,
@@ -82,7 +97,10 @@ class _ChatTabState extends State<ChatTab> {
               separatorBuilder: (context, index) {
                 return Column(children: [
                   SizedBox(height: 15.h),
-                  Container(width: double.infinity, height: 1.h, color: ColorsManger.newSecondaryColor.withOpacity(0.2)),
+                  Container(
+                      width: double.infinity,
+                      height: 1.h,
+                      color: ColorsManger.newSecondaryColor.withOpacity(0.2)),
                   SizedBox(height: 15.h),
                 ]);
               },

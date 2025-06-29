@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 import 'package:signalr_core/signalr_core.dart';
 import 'package:intervyou_app/data/api_manager.dart';
 import '../../../../../../data/blogs_models/Pagination.dart';
@@ -134,23 +138,64 @@ class BlogsViewModel extends ChangeNotifier {
   }
 
 
+  Future<void> changeProfilePicture() async {
+    print("1. changeProfilePicture method started.");
+    try {
+      final picker = ImagePicker();
+      print("2. ImagePicker instance created. Awaiting user to pick an image...");
+
+      final pickedFile = await picker.pickImage(source: ImageSource.gallery, imageQuality: 80);
+
+      if (pickedFile == null) {
+        print("3. User canceled the image picker. Exiting function.");
+        return;
+      }
+
+      print("4. User selected an image. Path: ${pickedFile.path}");
+      print("5. Calling ApiManager to upload the file...");
+
+      final response = await ApiManger.uploadProfilePicture(pickedFile.path);
+
+      if (response != null && response.statusCode >= 200 && response.statusCode < 300) {
+        print("6. ✅ SUCCESS: Upload successful. Status: ${response.statusCode}");
+        final responseBody = jsonDecode(response.body);
+        final newUrl = responseBody['profilePictureUrl'] as String?;
+
+        if (newUrl != null && userProfile != null) {
+          final relativeUrl = newUrl.replaceFirst('https://intervyouquestions.runasp.net', '');
+          userProfile!.profilePictureUrl = relativeUrl;
+          print("7. Updated local profile with new URL: $relativeUrl");
+          notifyListeners();
+        } else {
+          print("⚠️ WARN: Upload was successful, but no URL in response body. Refetching profile as a fallback.");
+          if (currentUserId != null) await fetchUserProfile(currentUserId!);
+        }
+      } else {
+        print("8. ❌ FAILURE: Upload failed. Status: ${response?.statusCode}, Body: ${response?.body}");
+      }
+    } catch (e, stackTrace) {
+      print("9. ❌ FATAL ERROR in changeProfilePicture: $e");
+      print(stackTrace);
+    }
+  }
+
+
+  Future<void> logout() async {
+    const storage = FlutterSecureStorage();
+    await storage.deleteAll();
+    userProfile = null;
+    allConversations.clear();
+    notifyListeners();
+  }
 
   void initializeSignalRConnection(String accessToken) {
-    if (_hubConnection != null &&
-        _hubConnection?.state != HubConnectionState.disconnected) {
-      print(
-          "🔌 SignalR connection for ViewModel ID: $instanceId already exists and is not disconnected. Skipping initialization.");
+    if (_hubConnection != null && _hubConnection?.state != HubConnectionState.disconnected) {
       return;
     }
-
-    print("🔌 Initializing SignalR for ViewModel ID: $instanceId...");
     const hubUrl = "https://intervyouquestions.runasp.net/chathub";
 
     _hubConnection = HubConnectionBuilder()
-        .withUrl(hubUrl,
-            HttpConnectionOptions(accessTokenFactory: () async => accessToken))
-        .withAutomaticReconnect()
-        .build();
+        .withUrl(hubUrl, HttpConnectionOptions(accessTokenFactory: () async => accessToken)).withAutomaticReconnect().build();
 
     _hubConnection?.onclose((error) => print(
         "❌ SignalR Connection for ID: $instanceId Closed. Error: $error"));
@@ -200,8 +245,6 @@ class BlogsViewModel extends ChangeNotifier {
           }
 
           if (needsUIRefresh) {
-            print(
-                "🔄 ViewModel ID: $instanceId is notifying listeners due to a new message.");
             notifyListeners();
           }
         } catch (e) {
@@ -232,7 +275,6 @@ class BlogsViewModel extends ChangeNotifier {
   }
 
   Future<void> stopSignalRConnection() async {
-    print("🔌 Stopping SignalR connection for ID: $instanceId.");
     await _hubConnection?.stop();
   }
 

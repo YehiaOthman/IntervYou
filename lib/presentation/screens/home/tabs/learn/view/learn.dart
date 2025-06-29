@@ -43,6 +43,20 @@ class _LearnState extends State<Learn> {
     },);
     super.didChangeDependencies();
   }
+  int getAllTasks(){
+    int count = 0;
+    for(int i = 0; i < subTopics.length; i++){
+      count += subTopics[i].learningPoints!.length;
+    }
+    return count;
+  }
+  int getAllDoneTasks(){
+    int count = 0;
+    for(int i = 0; i < subTopics.length; i++){
+      count += subTopics[i].learningPoints!.where((element) => element.status == 2).length;
+    }
+    return count;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,6 +72,8 @@ class _LearnState extends State<Learn> {
         } else {
           subTopics =
               viewModel.topics[viewModel.currentTopicIndex].subTopics ?? [];
+          int tasks = getAllTasks();
+          int doneTasks = getAllDoneTasks();
           return Padding(
             padding: REdgeInsets.only(left: 20, right: 20),
             child: SingleChildScrollView(
@@ -66,7 +82,7 @@ class _LearnState extends State<Learn> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SizedBox(height: 45.h),
-                  learnHeader(),
+                  learnHeader(tasks, doneTasks),
                   SizedBox(height: 15.h),
                   GestureDetector(
                     onTap: () {
@@ -298,13 +314,32 @@ class _LearnState extends State<Learn> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            'Today’s milestones',
-                            style: LightAppStyle.email.copyWith(
-                              color: ColorsManger.newSecondaryColor,
-                              fontSize: 18.sp,
-                              fontWeight: FontWeight.w500,
-                            ),
+                          Row(
+                            children: [
+                              Text(
+                                'Today’s milestones',
+                                style: LightAppStyle.email.copyWith(
+                                  color: ColorsManger.newSecondaryColor,
+                                  fontSize: 18.sp,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              SizedBox(width: 10.w),
+                              Container(
+                                padding: REdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: ColorsManger.newSecondaryColor.withOpacity(0.5),
+                                ),
+                                child: Text(
+                                  '${subTopics.length}',
+                                  style: LightAppStyle.email.copyWith(
+                                    color: Colors.white,
+                                    fontSize: 18.sp,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                           SizedBox(
                             height:
@@ -343,18 +378,7 @@ class _LearnState extends State<Learn> {
                             ),
                           ),
                           SizedBox(height: 8.h),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Text(
-                                'Edit goals',
-                                style: LightAppStyle.email.copyWith(
-                                    color: ColorsManger.newSecondaryColor,
-                                    fontSize: 18.sp,
-                                    fontWeight: FontWeight.bold),
-                              )
-                            ],
-                          ),
+
                         ],
                       ),
                     ),
@@ -381,20 +405,21 @@ class _LearnState extends State<Learn> {
                                     fontSize: 18.sp,
                                     fontWeight: FontWeight.w500,
                                   )),
-                              Spacer(),
-                              Text(
-                                '0',
-                                style: LightAppStyle.email.copyWith(
-                                    color: ColorsManger.newSecondaryColor,
-                                    fontSize: 22.sp,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              Text('/${subTopics.length}',
+                              SizedBox(width: 10.w),
+                              Container(
+                                padding: REdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: ColorsManger.newSecondaryColor.withOpacity(0.5),
+                                ),
+                                child: Text(
+                                  '${subTopics.length}',
                                   style: LightAppStyle.email.copyWith(
-                                    color: ColorsManger.newSecondaryColor
-                                        .withOpacity(0.5),
-                                    fontSize: 22.sp,
-                                  ))
+                                    color: Colors.white,
+                                    fontSize: 18.sp,
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
                           SizedBox(height: 20.h),
@@ -419,7 +444,7 @@ class _LearnState extends State<Learn> {
                                         'subTopicName': subTopics[index].name,
                                       },),
                                     child: quizItemWidget(index + 1,
-                                        subTopics[index].name ?? ""));
+                                        subTopics[index].name ?? "",subTopics[index].isQuizPassed ?? false));
                               },
                               separatorBuilder: (context, index) =>
                                   SizedBox(height: 15.h),

@@ -71,7 +71,7 @@ Widget milestoneCard(Color color , String title , int taskTodo , int taskDone) {
 }
 
 
-Widget quizItemWidget(int index , String quizName) {
+Widget quizItemWidget(int index , String quizName,bool isDone) {
   return Container(
     width: 325.w,
     decoration: BoxDecoration(
@@ -134,26 +134,20 @@ Widget quizItemWidget(int index , String quizName) {
             ),
           ),
           Spacer(),
-          Padding(
-            padding: const EdgeInsets.only(top: 8,),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(right: 5),
-                  child: Icon(
-                    Icons.timer_sharp, color: ColorsManger.newSecondaryColor,
-                    size: 30.sp,),
-                ),
-                Text('30min',
-                    style: LightAppStyle.email.copyWith(
-                      color: ColorsManger.newSecondaryColor,
-                      fontSize: 12.sp,
-                    ))
-              ],
+          if (isDone)
+            Container(
+              width: 25.w,
+              height: 25.h,
+              decoration: BoxDecoration(
+                color: ColorsManger.newSecondaryColor,
+                borderRadius: BorderRadius.circular(25.r),
+              ),
+              child: Icon(
+                Icons.done,
+                color: Colors.white,
+                size: 20.sp
+              ),
             ),
-          )
         ],
       ),
     ),

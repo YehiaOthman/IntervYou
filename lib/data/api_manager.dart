@@ -12,6 +12,7 @@ import 'blogs_models/connections/Connections.dart';
 import 'blogs_models/connections/PendingConnections.dart';
 import 'blogs_models/connections/SentConnections.dart';
 import 'blogs_models/connections/SuggestionConnection.dart';
+import 'blogs_models/image/get_image.dart';
 import 'blogs_models/notifications/Notifications.dart';
 import 'blogs_models/notifications/UnReadCountNotifications.dart';
 import 'blogs_models/post/AuthorPosts.dart';
@@ -23,6 +24,7 @@ import 'blogs_models/timeline/TimeLine.dart';
 import 'models/LearnRespone.dart';
 import 'models/LearningPoints.dart';
 import 'models/SubmitQuizResponse.dart';
+import 'package:http_parser/http_parser.dart';
 
 class ApiManger {
   static const String baseUrl = 'intervyouquestions.runasp.net';
@@ -173,8 +175,7 @@ class ApiManger {
     return response;
   }
 
-  static Future<http.Response> verifyForgotPasswordOtp(String email,
-      String otp) async {
+  static Future<http.Response> verifyForgotPasswordOtp(String email, String otp) async {
     final Map<String, String> headers = {'Content-Type': 'application/json'};
     final Map<String, String> body = {'email': email, 'otp': otp};
     final response = await post(
@@ -954,6 +955,39 @@ class ApiManger {
     }
   }
 
+  static Future<GetImage?> fetchProfilePicture() async {
+    try {
+      final storage = FlutterSecureStorage();
+      final token = await storage.read(key: 'access_token');
+      if (token == null) return null;
+
+      final uri = Uri.https(
+        'intervyouquestions.runasp.net',
+        '/api/Profile/picture',
+      );
+
+      final response = await http.get(
+        uri,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final jsonData = jsonDecode(response.body);
+        return GetImage.fromJson(jsonData);
+      } else {
+        print('Failed to load profile picture: ${response.statusCode}');
+        return null;
+      }
+    } catch (e) {
+      print('Error fetching profile picture: $e');
+      return null;
+    }
+  }
+
+
 // Blogs-Get-Apis
 
 
@@ -1367,6 +1401,40 @@ class ApiManger {
       return response;
     } catch (e) {
       print('Error marking all notifications as read: $e');
+      return null;
+    }
+  }
+
+  static Future<http.Response?> uploadProfilePicture(String imagePath) async {
+    try {
+      final storage = FlutterSecureStorage();
+      final token = await storage.read(key: 'access_token');
+      if (token == null) {
+        print("Upload Error: Auth token is null.");
+        return null;
+      }
+
+      final uri = Uri.https('intervyouquestions.runasp.net', '/api/Profile/picture');
+      final request = http.MultipartRequest('POST', uri);
+
+      request.headers['Authorization'] = 'Bearer $token';
+
+      request.files.add(
+        await http.MultipartFile.fromPath(
+          'pictureFile',
+          imagePath,
+          contentType: MediaType('image', 'jpeg'),
+        ),
+      );
+
+      final streamedResponse = await request.send();
+
+      final response = await http.Response.fromStream(streamedResponse);
+
+      return response;
+
+    } catch (e) {
+      print('Error uploading profile picture: $e');
       return null;
     }
   }

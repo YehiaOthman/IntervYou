@@ -81,76 +81,6 @@ class _PostReplyItemState extends State<PostReplyItem> {
                     ),
                   ],
                 ),
-                Expanded(child: SizedBox()),
-                PopupMenuButton<int>(
-                  color: ColorsManger.newSecondaryColor,
-                  popUpAnimationStyle: AnimationStyle(
-                    duration: Duration(milliseconds: 300),
-                    curve: Curves.easeInCirc,
-                    reverseCurve: Curves.easeInCirc,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(25.r),
-                      bottomLeft: Radius.circular(25.r),
-                      bottomRight: Radius.circular(25.r),
-                    ),
-                    side: BorderSide(
-                        color: ColorsManger.newSecondaryColor.withOpacity(0.3),
-                        width: 2.w),
-                  ),
-                  icon: Icon(Icons.more_horiz,
-                      color: ColorsManger.newSecondaryColor, size: 30.sp),
-                  elevation: 6,
-                  onSelected: (value) {
-                    if (value == 1) {
-                      print("Report clicked");
-                    } else if (value == 2) {
-                      print("Delete clicked");
-                    }
-                  },
-                  itemBuilder: (context) => [
-                    PopupMenuItem<int>(
-                      value: 1,
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.share_outlined,
-                            color: Colors.white,
-                          ),
-                          SizedBox(width: 10.w),
-                          Text('Share', style: LightAppStyle.email),
-                        ],
-                      ),
-                    ),
-                    PopupMenuItem<int>(
-                      value: 2,
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.block_flipped,
-                            color: Colors.white,
-                          ),
-                          SizedBox(width: 10.w),
-                          Text('Block', style: LightAppStyle.email),
-                        ],
-                      ),
-                    ),
-                    PopupMenuItem<int>(
-                      value: 2,
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.report_gmailerrorred,
-                            color: Colors.white,
-                          ),
-                          SizedBox(width: 10.w),
-                          Text('Report', style: LightAppStyle.email),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
               ],
             ),
             SizedBox(height: 10.h),
@@ -173,6 +103,16 @@ class _PostReplyItemState extends State<PostReplyItem> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Spacer(),
+                if(widget.comment.currentUserVote != null)Container(
+                  padding: REdgeInsets.symmetric(horizontal: 15, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: ColorsManger.newSecondaryColor.withOpacity(0.13),
+                    shape: BoxShape.circle
+                  ),
+                  child: Text('${widget.comment.currentUserVote}',
+                    style: LightAppStyle.email.copyWith(color: Colors.black.withOpacity(0.5),fontSize: 16.sp,fontWeight: FontWeight.w500),),
+                ),
+                SizedBox(width: 10.w),
                 InkWell(
                   onTap: () => handleVote(widget.comment.id??0,1,),
                   child: Container(

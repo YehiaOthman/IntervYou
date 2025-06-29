@@ -21,7 +21,7 @@ class _PreferencesState extends State<Preferences> {
   bool _isLoading = false;
 
   final List<String> _tracks = ['Mobile', 'BackEnd', 'FrontEnd', 'AI'];
-  final List<String> _experiences = ['Junior', 'MidLevel', 'Senior'];
+  final List<String> _experiences = ['MidLevel', 'Junior', 'Senior'];
   final List<String> _studyHours = ['1-2 hours', '3-4 hours', '5-8 hours'];
 
   void _onSavePressed() {

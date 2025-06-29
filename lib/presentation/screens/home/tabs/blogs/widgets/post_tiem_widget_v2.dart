@@ -218,6 +218,15 @@ class _PostItemWidgetV2State extends State<PostItemWidgetV2> {
                   ),
                 ),
                 SizedBox(width: 10.w),
+                if(widget.item.blogPostCurrentUserVote != null)Container(
+                  padding: REdgeInsets.symmetric(horizontal: 15, vertical: 8),
+                  decoration: BoxDecoration(
+                      color: ColorsManger.newSecondaryColor.withOpacity(0.13),
+                      shape: BoxShape.circle
+                  ),
+                  child: Text('${widget.item.blogPostCurrentUserVote}',
+                    style: LightAppStyle.email.copyWith(color: Colors.black.withOpacity(0.5),fontSize: 16.sp,fontWeight: FontWeight.w500),),
+                ),
                 Spacer(),
                 SizedBox(width: 10.w),
                 InkWell(

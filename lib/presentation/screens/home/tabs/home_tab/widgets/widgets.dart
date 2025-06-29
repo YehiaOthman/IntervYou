@@ -182,17 +182,18 @@ Widget homeHeader(String name, String? imageUrl) {
   );
 }
 
-Widget learnHeader() {
+Widget learnHeader(int taskCount, int doneTasks) {
   return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 18),
+    padding:  REdgeInsets.symmetric(horizontal: 18),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Column(
+          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "25/53",
+              "$doneTasks/${taskCount}",
               style: GoogleFonts.poppins(
                 color: Colors.black.withOpacity(0.5),
                 fontSize: 24.sp,
@@ -219,19 +220,6 @@ Widget learnHeader() {
             ),
           ],
         ),
-        Container(
-          width: 60.w,
-          height: 60.h,
-          decoration: BoxDecoration(
-            color: ColorsManger.newSecondaryColor,
-            borderRadius: BorderRadius.circular(50.r),
-          ),
-          child: Icon(
-            Icons.bookmark_border_rounded,
-            color: Colors.white,
-            size: 35.sp,
-          ),
-        )
       ],
     ),
   );
