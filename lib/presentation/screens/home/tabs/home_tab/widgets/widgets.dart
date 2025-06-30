@@ -142,45 +142,7 @@ Widget buildDailyQuizTaskItem() {
   );
 }
 
-Widget homeHeader(String name, String? imageUrl) {
-  return Row(
-    mainAxisAlignment: MainAxisAlignment.start,
-    children: [
-      CircleAvatar(
-        radius: 23.r,
-        backgroundImage: imageUrl != null
-            ? NetworkImage("https://intervyouquestions.runasp.net$imageUrl")
-            : AssetImage(AssetsManager.guestPp) as ImageProvider,
-      ),
-      SizedBox(width: 10.w),
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "Welcome Back",
-            style: GoogleFonts.poppins(
-              color: Colors.white70,
-              fontSize: 13.sp,
-            ),
-          ),
-          Text(
-            name,
-            style: GoogleFonts.poppins(
-              color: Colors.white,
-              fontSize: 15.sp,
-            ),
-          ),
-        ],
-      ),
-      Spacer(),
-      Icon(
-        Icons.notifications_none,
-        color: Colors.white,
-        size: 30.sp,
-      ),
-    ],
-  );
-}
+
 
 Widget learnHeader(int taskCount, int doneTasks) {
   return Padding(
@@ -225,17 +187,3 @@ Widget learnHeader(int taskCount, int doneTasks) {
   );
 }
 
-Widget ppItemWidget() {
-  return Container(
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(50.r),
-          border: Border.all(
-            color: Colors.white,
-            width: 2.w,
-          )),
-      child: Image.asset(
-        AssetsManager.pp,
-        width: 23.w,
-        height: 23.h,
-      ));
-}

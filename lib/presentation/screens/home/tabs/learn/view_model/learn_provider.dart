@@ -32,6 +32,7 @@ class LearnViewModel extends ChangeNotifier {
     for (int i = 0; i < topics.length; i++) {
       final topic = topics[i];
       bool isTopicIncomplete = topic.progressPercentage != 100;
+
       if (isTopicIncomplete) {
         currentTopic = topic;
         currentTopicIndex = i;

@@ -116,6 +116,101 @@ class BlogsViewModel extends ChangeNotifier {
     return pagination.page! < pagination.pages!;
   }
 
+
+
+  void initializeSignalRConnection(String accessToken) {
+    if (_hubConnection != null && _hubConnection?.state != HubConnectionState.disconnected) return;
+    const hubUrl = "https://intervyouquestions.runasp.net/chathub";
+    _hubConnection = HubConnectionBuilder()
+        .withUrl(hubUrl, HttpConnectionOptions(accessTokenFactory: () async => accessToken))
+        .withAutomaticReconnect().build();
+    _hubConnection?.onclose((error) => debugPrint("SignalR Connection Closed: $error"));
+
+
+    _hubConnection?.on('ReceiveMessage', (arguments) {
+      if (arguments != null && arguments.isNotEmpty) {
+        try {
+          final newMessageData = arguments[0] as Map<String, dynamic>;
+          final newMessage = ConversationOtherUserIdItem.fromJson(newMessageData);
+          if (newMessage.senderId == currentUserId) return;
+          _handleNewMessage(newMessage, isIncoming: true);
+        } catch (e) {
+          debugPrint('Error processing received message: $e');
+        }
+      }
+    });
+
+
+    _hubConnection?.on('ReceiveNewNotification', (arguments) {
+      debugPrint("New notification received via SignalR!");
+      if (arguments != null && arguments.isNotEmpty) {
+        try {
+          final newNotificationData = arguments[0] as Map<String, dynamic>;
+          final newNotification = NotificationsItem.fromJson(newNotificationData);
+
+          notifications.insert(0, newNotification);
+
+          if (unreadNotificationCount != null) {
+            unreadNotificationCount!.unreadCount = (unreadNotificationCount!.unreadCount ?? 0) + 1;
+          } else {
+            unreadNotificationCount = UnReadCountNotifications(unreadCount: 1);
+          }
+
+          notifyListeners();
+
+        } catch (e) {
+          debugPrint('Error processing received notification: $e');
+        }
+      }
+    });
+
+    startSignalRConnection();
+  }
+
+
+
+  Future<void> fetchUnreadNotificationCount() async {
+    unreadCountLoading = true;
+    notifyListeners();
+    try {
+
+      final response = await ApiManger.fetchUnreadNotificationCount();
+      if (response != null) {
+        unreadNotificationCount = response;
+      }
+    } catch (e) {
+      unreadCountError = "Failed to load unread count.";
+      debugPrint("Error fetching unread notification count: $e");
+    } finally {
+      unreadCountLoading = false;
+      notifyListeners();
+    }
+  }
+
+
+  Future<void> markNotificationAsRead(NotificationsItem notification) async {
+    if (notification.isRead ?? false) return;
+
+    try {
+      final response = await ApiManger.markNotificationAsRead(notificationId: notification.id!);
+
+      if (response != null && response.statusCode >= 200 && response.statusCode < 300) {
+        int index = notifications.indexWhere((n) => n.id == notification.id);
+        if (index != -1) {
+          notifications[index].isRead = true;
+        }
+
+        if (unreadNotificationCount != null && (unreadNotificationCount!.unreadCount ?? 0) > 0) {
+          unreadNotificationCount!.unreadCount = unreadNotificationCount!.unreadCount! - 1;
+        }
+        notifyListeners();
+      }
+    } catch(e) {
+      debugPrint("Failed to mark notification as read: $e");
+    }
+  }
+
+
   Future<bool> createNewPost({required String title, required String content}) async {
     // ACT: Call the API
     final response = await ApiManger.createPost(title: title, content: content);
@@ -319,27 +414,27 @@ class BlogsViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void initializeSignalRConnection(String accessToken) {
-    if (_hubConnection != null && _hubConnection?.state != HubConnectionState.disconnected) return;
-    const hubUrl = "https://intervyouquestions.runasp.net/chathub";
-    _hubConnection = HubConnectionBuilder()
-        .withUrl(hubUrl, HttpConnectionOptions(accessTokenFactory: () async => accessToken))
-        .withAutomaticReconnect().build();
-    _hubConnection?.onclose((error) => debugPrint("SignalR Connection Closed: $error"));
-    _hubConnection?.on('ReceiveMessage', (arguments) {
-      if (arguments != null && arguments.isNotEmpty) {
-        try {
-          final newMessageData = arguments[0] as Map<String, dynamic>;
-          final newMessage = ConversationOtherUserIdItem.fromJson(newMessageData);
-          if (newMessage.senderId == currentUserId) return;
-          _handleNewMessage(newMessage, isIncoming: true);
-        } catch (e) {
-          debugPrint('Error processing received message: $e');
-        }
-      }
-    });
-    startSignalRConnection();
-  }
+  // void initializeSignalRConnection(String accessToken) {
+  //   if (_hubConnection != null && _hubConnection?.state != HubConnectionState.disconnected) return;
+  //   const hubUrl = "https://intervyouquestions.runasp.net/chathub";
+  //   _hubConnection = HubConnectionBuilder()
+  //       .withUrl(hubUrl, HttpConnectionOptions(accessTokenFactory: () async => accessToken))
+  //       .withAutomaticReconnect().build();
+  //   _hubConnection?.onclose((error) => debugPrint("SignalR Connection Closed: $error"));
+  //   _hubConnection?.on('ReceiveMessage', (arguments) {
+  //     if (arguments != null && arguments.isNotEmpty) {
+  //       try {
+  //         final newMessageData = arguments[0] as Map<String, dynamic>;
+  //         final newMessage = ConversationOtherUserIdItem.fromJson(newMessageData);
+  //         if (newMessage.senderId == currentUserId) return;
+  //         _handleNewMessage(newMessage, isIncoming: true);
+  //       } catch (e) {
+  //         debugPrint('Error processing received message: $e');
+  //       }
+  //     }
+  //   });
+  //   startSignalRConnection();
+  // }
 
   void _handleNewMessage(ConversationOtherUserIdItem message, {bool isIncoming = false}) {
     final partnerId = message.senderId == currentUserId ? message.receiverId : message.senderId;

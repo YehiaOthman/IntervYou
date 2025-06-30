@@ -20,4 +20,5 @@ class RoutesManger{
   static const String postDetails = 'postDetails';
   static const String invitations = 'invitations';
   static const String chat = 'chat';
+  static const String notifications = 'notifications';
 }

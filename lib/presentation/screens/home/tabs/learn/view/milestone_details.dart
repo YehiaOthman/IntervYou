@@ -124,6 +124,7 @@ class MilestoneDetails extends StatelessWidget {
                         ),
                       SizedBox(height: 40.h),
                       Container(
+                        height: MediaQuery.of(context).size.height,
                         width: double.infinity,
                         constraints: BoxConstraints(minHeight: 500.h),
                         decoration: BoxDecoration(

@@ -15,6 +15,7 @@ import 'package:intervyou_app/presentation/screens/home/tabs/blogs/view/invitati
 import 'package:intervyou_app/presentation/screens/home/tabs/blogs/view/post_details.dart';
 import 'package:intervyou_app/presentation/screens/home/tabs/blogs/view/user_info_profile.dart';
 import 'package:intervyou_app/presentation/screens/home/tabs/blogs/view/user_profile.dart';
+import 'package:intervyou_app/presentation/screens/home/tabs/home_tab/view/notifications_screen.dart';
 import 'package:intervyou_app/presentation/screens/home/tabs/learn/view/daily_quiz.dart';
 import 'package:intervyou_app/presentation/screens/home/tabs/learn/view/learn.dart';
 import 'package:intervyou_app/presentation/screens/home/tabs/learn/view/milestone_details.dart';
@@ -58,6 +59,7 @@ class MyApp extends StatelessWidget {
           RoutesManger.postDetails:(_)=> PostDetails(),
           RoutesManger.invitations:(_)=> Invitations(),
           RoutesManger.chat:(_)=> Chat(),
+          RoutesManger.notifications:(_)=> NotificationsScreen(),
         },
         initialRoute: RoutesManger.login ,
       ),

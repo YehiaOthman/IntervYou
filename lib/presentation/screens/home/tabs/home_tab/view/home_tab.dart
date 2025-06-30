@@ -4,6 +4,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intervyou_app/config/styles/light_app_style.dart';
 import 'package:intervyou_app/core/assets_manager.dart';
 import 'package:intervyou_app/presentation/screens/home/tabs/blogs/view_model/blogs_viewmodel.dart'; // Import BlogsViewModel
+import 'package:intervyou_app/presentation/screens/home/tabs/home_tab/widgets/home_header.dart';
 import 'package:intervyou_app/presentation/screens/home/tabs/home_tab/widgets/widgets.dart';
 import 'package:intervyou_app/presentation/screens/home/tabs/learn/view_model/learn_provider.dart';
 import 'package:provider/provider.dart';
@@ -32,16 +33,29 @@ class _HomeTabState extends State<HomeTab> {
     });
   }
 
+// In home_tab.dart
+
   Future<void> _loadInitialData() async {
     final learnViewModel = Provider.of<LearnViewModel>(context, listen: false);
     final blogsViewModel = Provider.of<BlogsViewModel>(context, listen: false);
-
-    learnViewModel.getLearnData();
-
     const storage = FlutterSecureStorage();
+
+    // Fetch the data needed for the UI
+    learnViewModel.getLearnData();
+    blogsViewModel.fetchUnreadNotificationCount(); // Fetches the count for the badge
+
+    // Get user ID and token from storage
     final userId = await storage.read(key: 'user_id');
+    final accessToken = await storage.read(key: 'access_token'); // Or whatever your token key is
+
+    // Fetch user profile
     if (userId != null && mounted) {
       blogsViewModel.fetchUserProfile(userId);
+    }
+
+    // Initialize the real-time connection with the token
+    if (accessToken != null && mounted) {
+      blogsViewModel.initializeSignalRConnection(accessToken);
     }
   }
 
@@ -99,9 +113,9 @@ class _HomeTabState extends State<HomeTab> {
                           Consumer<BlogsViewModel>(
                             builder: (context, blogsViewModel, _) {
                               final userProfile = blogsViewModel.userProfile;
-                              return homeHeader(
-                                userProfile?.fullName ?? 'Guest',
-                                userProfile?.profilePictureUrl,
+                              return HomeHeader(
+                              name:  userProfile?.fullName ?? 'Guest', imageUrl: userProfile?.profilePictureUrl,
+
                               );
                             },
                           ),
