@@ -149,15 +149,17 @@ class BlogsViewModel extends ChangeNotifier {
     }
   }
 
+
   Future<bool> createCommentOnPost({required num postId, required String content}) async {
     final response = await ApiManger.createCommentOnPost(postId: postId, content: content);
     if (response != null && response.statusCode >= 200 && response.statusCode < 300) {
       int postIndex = timelineItems.indexWhere((p) => p.sourceItemId == postId);
       if (postIndex != -1) {
         timelineItems[postIndex].blogPostCommentCount = (timelineItems[postIndex].blogPostCommentCount ?? 0) + 1;
-        notifyListeners();
       }
-      await fetchCommentsForPost(postId as int);
+
+      await fetchPostDetails(postId);
+
       return true;
     }
     return false;
@@ -172,50 +174,70 @@ class BlogsViewModel extends ChangeNotifier {
   }
 
   Future<void> voteOnPost(num postId, num voteType) async {
-    int postIndex = timelineItems.indexWhere((p) => p.sourceItemId == postId);
-    if (postIndex == -1) return;
+    // --- Part 1: Optimistic update for PostDetails screen ---
+    PostDetailsDm? originalPostDetails;
+    if (postDetails != null && postDetails!.id == postId) {
+      originalPostDetails = PostDetailsDm.fromJson(postDetails!.toJson());
 
-    final post = timelineItems[postIndex];
+      final oldVote = originalPostDetails.currentUserVote ?? 0;
+      num upvoteChange = 0;
+      num downvoteChange = 0;
 
-    final num oldVote = post.blogPostCurrentUserVote ?? 0;
-    final num newVote = voteType;
+      if (oldVote == 1) upvoteChange -= 1;
+      if (oldVote == -1) downvoteChange -= 1;
+      if (voteType == 1) upvoteChange += 1;
+      if (voteType == -1) downvoteChange += 1;
 
-    final num originalUpvotes = post.blogPostUpvotes ?? 0;
-    final num originalDownvotes = post.blogPostDownvotes ?? 0;
+      postDetails!.currentUserVote = voteType;
+      postDetails!.upvotes = (postDetails!.upvotes ?? 0) + upvoteChange;
+      postDetails!.downvotes = (postDetails!.downvotes ?? 0) + downvoteChange;
+    }
 
-    num upvoteChange = 0;
-    num downvoteChange = 0;
+    // --- Part 2: Optimistic update for Timeline screen ---
+    int timelineIndex = timelineItems.indexWhere((p) => p.sourceItemId == postId);
+    TimeLineItem? originalTimelineItem;
+    if (timelineIndex != -1) {
+      final post = timelineItems[timelineIndex];
+      originalTimelineItem = TimeLineItem.fromJson(post.toJson()); // Assuming you have a toJson method
 
-    if (oldVote == 1) upvoteChange -= 1;
-    if (oldVote == -1) downvoteChange -= 1;
-    if (newVote == 1) upvoteChange += 1;
-    if (newVote == -1) downvoteChange += 1;
+      final oldVote = originalTimelineItem.blogPostCurrentUserVote ?? 0;
+      num upvoteChange = 0;
+      num downvoteChange = 0;
 
-    // ✅ Add these debug logs here:
-    print('voteOnPost() called: postId=$postId');
-    print('oldVote: $oldVote, newVote: $newVote');
-    print('upvoteChange: $upvoteChange, downvoteChange: $downvoteChange');
-    print('originalUpvotes: $originalUpvotes, originalDownvotes: $originalDownvotes');
+      if (oldVote == 1) upvoteChange -= 1;
+      if (oldVote == -1) downvoteChange -= 1;
+      if (voteType == 1) upvoteChange += 1;
+      if (voteType == -1) downvoteChange += 1;
 
-    post.blogPostCurrentUserVote = newVote;
-    post.blogPostUpvotes = originalUpvotes + upvoteChange;
-    post.blogPostDownvotes = originalDownvotes + downvoteChange;
+      post.blogPostCurrentUserVote = voteType;
+      post.blogPostUpvotes = (post.blogPostUpvotes ?? 0) + upvoteChange;
+      post.blogPostDownvotes = (post.blogPostDownvotes ?? 0) + downvoteChange;
+    }
 
+    // --- Part 3: Notify UI and make API call ---
     notifyListeners();
 
     try {
-      final response = await ApiManger.voteOnPost(postId: postId, type: newVote);
+      final response = await ApiManger.voteOnPost(postId: postId, type: voteType);
 
       if (response == null || response.statusCode >= 400) {
-        post.blogPostCurrentUserVote = oldVote;
-        post.blogPostUpvotes = originalUpvotes;
-        post.blogPostDownvotes = originalDownvotes;
+        // Revert both if API fails
+        if (originalPostDetails != null) {
+          postDetails = originalPostDetails;
+        }
+        if (originalTimelineItem != null && timelineIndex != -1) {
+          timelineItems[timelineIndex] = originalTimelineItem;
+        }
         notifyListeners();
       }
     } catch (e) {
-      post.blogPostCurrentUserVote = oldVote;
-      post.blogPostUpvotes = originalUpvotes;
-      post.blogPostDownvotes = originalDownvotes;
+      // Revert both on error
+      if (originalPostDetails != null) {
+        postDetails = originalPostDetails;
+      }
+      if (originalTimelineItem != null && timelineIndex != -1) {
+        timelineItems[timelineIndex] = originalTimelineItem;
+      }
       notifyListeners();
     }
   }
@@ -246,6 +268,11 @@ class BlogsViewModel extends ChangeNotifier {
   Future<void> removeExistingConnection(String targetUserIdToRemove) async {
     final response = await ApiManger.removeConnection(targetUserIdToRemove: targetUserIdToRemove);
     if (response != null && response.statusCode >= 200 && response.statusCode < 300) {
+
+      if(userProfile != null && userProfile!.connectionsCount != null) {
+        userProfile!.connectionsCount = userProfile!.connectionsCount! - 1;
+      }
+
       await fetchConnections();
     }
   }

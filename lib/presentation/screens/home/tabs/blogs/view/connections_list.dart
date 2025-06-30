@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intervyou_app/presentation/screens/home/tabs/blogs/view_model/blogs_viewmodel.dart';
 import 'package:intervyou_app/presentation/screens/home/tabs/blogs/widgets/connection_item.dart';
 import 'package:provider/provider.dart';
-
 import '../../../../../../config/styles/light_app_style.dart';
 import '../../../../../../core/colors_manager.dart';
 

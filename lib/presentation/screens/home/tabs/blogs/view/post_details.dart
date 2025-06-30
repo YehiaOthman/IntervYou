@@ -3,10 +3,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intervyou_app/core/colors_manager.dart';
 import 'package:intervyou_app/data/blogs_models/post/Comments.dart';
 import 'package:intervyou_app/data/blogs_models/post/PostDetailsDm.dart';
-import 'package:intervyou_app/data/blogs_models/timeline/time_line_item.dart';
 import 'package:intervyou_app/presentation/screens/home/tabs/blogs/view/posts_tab.dart';
 import 'package:intervyou_app/presentation/screens/home/tabs/blogs/view_model/blogs_viewmodel.dart';
-import 'package:intervyou_app/presentation/screens/home/tabs/blogs/widgets/post_tiem_widget_v2.dart';
+import 'package:intervyou_app/presentation/screens/home/tabs/blogs/widgets/post_details_item.dart';
 import 'package:intervyou_app/presentation/screens/home/tabs/blogs/widgets/post_reply_item.dart';
 import 'package:provider/provider.dart';
 import '../../../../../../config/styles/light_app_style.dart';
@@ -65,24 +64,13 @@ class _PostDetailsState extends State<PostDetails> {
 
             final PostDetailsDm post = value.postDetails!;
             final List<Comments> comments = value.postDetails?.comments ?? [];
-            final timeLineItemForPost = TimeLineItem(
-              sourceItemId: post.id,
-              sourceUserName: post.author?.userName,
-              sourceUserProfilePictureUrl: post.author?.profilePictureUrl,
-              timestamp: post.createdAt,
-              blogPostTitle: post.title,
-              blogPostSnippet: post.content,
-              blogPostUpvotes: post.upvotes,
-              blogPostDownvotes: post.downvotes,
-              blogPostCommentCount: post.comments?.length,
-              blogPostCurrentUserVote: post.currentUserVote,
-            );
+
             return SingleChildScrollView(
               child: Padding(
                 padding: REdgeInsets.symmetric(horizontal: 12, vertical: 15),
                 child: Column(
                   children: [
-                    PostItemWidgetV2(item: timeLineItemForPost),
+                    PostDetailsItem(post: post),
                     SizedBox(height: 15.h),
                     if (comments.isNotEmpty)
                       Text('Replies',
