@@ -19,21 +19,27 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   int selectedIndex = 0;
+  late final List<Widget> tabs;
 
-  // It's better to define the tabs here for clarity.
-  final List<Widget> tabs = [
-    HomeTab(),
-    Blogs(),
-    Learn(),
-    Profile(),
-  ];
+  @override
+  void initState() {
+    super.initState();
+    tabs = [
+      HomeTab(onNavigateToLearn: () => _changeTab(2)),
+      const Blogs(),
+      const Learn(),
+      const Profile(),
+    ];
+  }
 
-  // REMOVED the ViewModel instances and the initState.
-  // Provider now manages their lifecycle globally from main.dart.
+  void _changeTab(int index) {
+    setState(() {
+      selectedIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    // THE FIX: Removed the MultiProvider wrapper from here.
     return Scaffold(
       extendBody: true,
       backgroundColor: Colors.black,
@@ -54,18 +60,18 @@ class _HomeState extends State<Home> {
               rippleColor: Colors.white.withOpacity(0.1),
               hoverColor: Colors.white.withOpacity(0.1),
               gap: 8,
-              activeColor: Colors.white, // Changed for better contrast
+              activeColor: Colors.white,
               iconSize: 24,
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
               duration: const Duration(milliseconds: 300),
               tabBackgroundColor: Colors.white.withOpacity(0.1),
-              color: Colors.white.withOpacity(0.7), // Changed for better contrast
+              color: Colors.white.withOpacity(0.7),
               textStyle: const TextStyle(fontWeight: FontWeight.w500, color: Colors.white),
               tabs: [
                 GButton(
                   leading: SvgPicture.asset(AssetsManager.home, colorFilter: ColorFilter.mode(selectedIndex == 0 ? Colors.white : Colors.white.withOpacity(0.7), BlendMode.srcIn)),
                   text: 'Home',
-                  icon: Icons.home, // GNav requires an icon, but leading replaces it.
+                  icon: Icons.home,
                 ),
                 GButton(
                   leading: SvgPicture.asset(AssetsManager.blogs, colorFilter: ColorFilter.mode(selectedIndex == 1 ? Colors.white : Colors.white.withOpacity(0.7), BlendMode.srcIn)),
@@ -84,11 +90,7 @@ class _HomeState extends State<Home> {
                 ),
               ],
               selectedIndex: selectedIndex,
-              onTabChange: (index) {
-                setState(() {
-                  selectedIndex = index;
-                });
-              },
+              onTabChange: _changeTab,
             ),
           ),
         ),

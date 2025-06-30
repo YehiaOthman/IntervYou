@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:intervyou_app/data/blogs_models/chat/conversation_item.dart';
 import 'package:intervyou_app/presentation/screens/home/tabs/blogs/view/netwrok_tab.dart';
 import 'package:intervyou_app/presentation/screens/home/tabs/blogs/view_model/blogs_viewmodel.dart';
 import 'package:intervyou_app/presentation/screens/home/tabs/blogs/widgets/chat_user_item.dart';
@@ -44,13 +43,11 @@ class _ChatTabState extends State<ChatTab> {
 
   @override
   Widget build(BuildContext context) {
-    final vmId = Provider.of<BlogsViewModel>(context, listen: false).instanceId;
-    print("🔵🔵🔵 ChatTab is building. It sees ViewModel ID: $vmId 🔵🔵🔵");
+
     return Consumer<BlogsViewModel>(builder: (context, value, child) {
-      print(
-          "🔄 Consumer in ChatTab REBUILT. It sees ViewModel ID: ${viewModel.instanceId} 🔄");
+
       if (value.allConversationsLoading) {
-        return const Center(child: CircularProgressIndicator());
+        return const Center(child: CircularProgressIndicator(color: ColorsManger.newSecondaryColor,));
       }
       return SingleChildScrollView(
         child: Column(

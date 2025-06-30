@@ -11,7 +11,8 @@ import '../../../../../../core/colors_manager.dart';
 import '../../../../../../data/models/SubTopics.dart';
 
 class HomeTab extends StatefulWidget {
-  const HomeTab({super.key});
+  final VoidCallback onNavigateToLearn;
+  const HomeTab({super.key, required this.onNavigateToLearn});
 
   @override
   State<HomeTab> createState() => _HomeTabState();
@@ -75,7 +76,8 @@ class _HomeTabState extends State<HomeTab> {
             );
           } else {
             subTopics = viewModel.topics.isNotEmpty
-                ? (viewModel.topics[viewModel.currentTopicIndex].subTopics ?? [])
+                ? (viewModel.topics[viewModel.currentTopicIndex].subTopics ??
+                [])
                 : [];
 
             return SingleChildScrollView(
@@ -104,29 +106,37 @@ class _HomeTabState extends State<HomeTab> {
                             },
                           ),
                           SizedBox(height: 40.h),
-                          Text(
-                            'Continue Your',
-                            style: LightAppStyle.email.copyWith(
-                              fontSize: 20.sp,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          const Row(
-                            children: [
-                              Text(
-                                'Learning Adventure!',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w500,
+                          GestureDetector(
+                            onTap: widget.onNavigateToLearn,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Continue Your',
+                                  style: LightAppStyle.email.copyWith(
+                                    fontSize: 20.sp,
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
-                              ),
-                              Spacer(),
-                              Icon(
-                                Icons.arrow_forward,
-                                color: Colors.white,
-                              ),
-                            ],
+                                const Row(
+                                  children: [
+                                    Text(
+                                      'Learning Adventure!',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                    Spacer(),
+                                    Icon(
+                                      Icons.arrow_forward,
+                                      color: Colors.white,
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
@@ -135,31 +145,13 @@ class _HomeTabState extends State<HomeTab> {
                   SizedBox(height: 20.h),
                   Padding(
                     padding: REdgeInsets.symmetric(horizontal: 18),
-                    child: Row(
-                      children: [
-                        Text(
-                          'Current Topics',
-                          style: LightAppStyle.email.copyWith(
-                            fontSize: 18.sp,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
-                        ),
-                        const Spacer(),
-                        Text(
-                          'See all',
-                          style: LightAppStyle.email.copyWith(
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black,
-                          ),
-                        ),
-                        Icon(
-                          Icons.arrow_forward_ios_sharp,
-                          color: ColorsManger.newSecondaryColor,
-                          size: 16.sp,
-                        ),
-                      ],
+                    child: Text(
+                      'Current Topics Progress',
+                      style: LightAppStyle.email.copyWith(
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
                     ),
                   ),
                   SizedBox(height: 5.h),
@@ -172,10 +164,13 @@ class _HomeTabState extends State<HomeTab> {
                       padding: REdgeInsets.symmetric(horizontal: 10),
                       separatorBuilder: (_, __) => SizedBox(width: 8.w),
                       itemBuilder: (context, index) {
-                        // Your original logic is preserved
                         finishedTasks = finishedTasksCount(index);
                         totalTasks = totalTasksCount(index);
-                        return buildCardItem(subTopics[index].name ?? '', subTopics[index].description ?? '', finishedTasks, totalTasks);
+                        return buildCardItem(
+                            subTopics[index].name ?? '',
+                            subTopics[index].description ?? '',
+                            finishedTasks,
+                            totalTasks);
                       },
                     ),
                   ),
@@ -194,12 +189,14 @@ class _HomeTabState extends State<HomeTab> {
                   SizedBox(height: 5.h),
                   if (subTopics.isNotEmpty)
                     ListView.separated(
-                      itemCount: subTopics.length > 3 ? 3 : subTopics.length,
+                      itemCount: subTopics.length,
                       shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
+                      physics:NeverScrollableScrollPhysics(),
                       padding: REdgeInsets.symmetric(horizontal: 10),
                       separatorBuilder: (_, __) => SizedBox(width: 8.w),
-                      itemBuilder: (context, index) => buildQuizCard(subTopics[index].name ?? ''),
+                      itemBuilder: (context, index) => buildQuizCard(
+                          subTopics[index].name ?? '',
+                          subTopics[index].isQuizPassed ?? false),
                     ),
                 ],
               ),
@@ -210,7 +207,7 @@ class _HomeTabState extends State<HomeTab> {
     );
   }
 
-  Widget buildQuizCard(String quizName) {
+  Widget buildQuizCard(String quizName, bool isDone) {
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15.r),
@@ -231,7 +228,16 @@ class _HomeTabState extends State<HomeTab> {
               ),
             ),
             const Spacer(),
-            Icon(Icons.arrow_forward_ios_sharp, color: ColorsManger.newSecondaryColor, size: 18.sp),
+            if (isDone)
+              Container(
+                width: 25.w,
+                height: 25.h,
+                decoration: BoxDecoration(
+                  color: ColorsManger.newSecondaryColor,
+                  borderRadius: BorderRadius.circular(25.r),
+                ),
+                child: Icon(Icons.done, color: Colors.white, size: 20.sp),
+              ),
           ],
         ),
       ),

@@ -1023,7 +1023,7 @@ class ApiManger {
     }
   }
 
-  static Future<http.Response?> updatePost({required String postId, required String title, required String content}) async {
+  static Future<http.Response?> updatePost({required num postId, required String title, required String content}) async {
     try {
       final storage = FlutterSecureStorage();
       final token = await storage.read(key: 'access_token');
@@ -1353,7 +1353,7 @@ class ApiManger {
     }
   }
 
-  static Future<http.Response?> markNotificationAsRead({required int notificationId}) async {
+  static Future<http.Response?> markNotificationAsRead({required num notificationId}) async {
     try {
       final storage = FlutterSecureStorage();
       final token = await storage.read(key: 'access_token');
@@ -1439,8 +1439,6 @@ class ApiManger {
     }
   }
 
-  // 2 missing endPoints ( pp - blogsImage )
-
   static Future<http.Response?> ProfileSummary({required String summary}) async {
     try {
       final storage = FlutterSecureStorage();
@@ -1469,6 +1467,8 @@ class ApiManger {
       return null;
     }
   }
+
+  // 2 missing endPoints ( pp - blogsImage )
 
 // Blogs-(post - put - delete) -Apis       * ياااااااااااااااااررررررررررب *
 

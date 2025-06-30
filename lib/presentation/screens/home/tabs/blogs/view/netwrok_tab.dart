@@ -18,32 +18,20 @@ class NetwrokTab extends StatefulWidget {
 }
 
 class _NetwrokTabState extends State<NetwrokTab> {
-  // REMOVE the viewModel and list instances from here.
-  // Let the Consumer manage it.
 
-  // Use initState for one-time setup.
   @override
   void initState() {
     super.initState();
-    // Use a post-frame callback to safely access the provider
-    // after the first frame has been built.
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      // Get the provider but DO NOT LISTEN.
-      // We only want to call the function once.
       Provider.of<BlogsViewModel>(context, listen: false).fetchConnectionSuggestions();
     });
   }
 
-  // REMOVE didChangeDependencies. It's not needed for this.
-
   @override
   Widget build(BuildContext context) {
-    // Let the Consumer handle getting the ViewModel and rebuilding on change.
+
     return Consumer<BlogsViewModel>(
       builder: (context, viewModel, child) {
-        // Now, you get the viewModel directly from the builder.
-        // It will always be the latest, correct instance.
-
         if (viewModel.suggestionConnectionsLoading && viewModel.suggestionConnections.isEmpty) {
           return Center(
             child: CircularProgressIndicator(
@@ -52,8 +40,6 @@ class _NetwrokTabState extends State<NetwrokTab> {
           );
         }
 
-        // You don't need the local `suggestionsConnections` variable anymore.
-        // Just use `viewModel.suggestionConnections` directly.
         final suggestionsConnections = viewModel.suggestionConnections;
 
         return SingleChildScrollView(
@@ -90,15 +76,7 @@ class _NetwrokTabState extends State<NetwrokTab> {
                 color: ColorsManger.newSecondaryColor.withOpacity(0.2),
               ),
               ListView.separated(
-                itemBuilder: (context, index) => InkWell(
-                    onTap: () {
-                      // Note: It's better not to pass the whole viewModel in arguments
-                      // if the destination screen can access it with Provider.of itself.
-                      // But for now, this is fine.
-                      final argumentsModel = UserArgumentsModel(suggestionsConnections[index].userId ?? '', viewModel);
-                      Navigator.pushNamed(context, RoutesManger.userInfoProfile, arguments: argumentsModel);
-                    },
-                    child: ConnectionRequestCardItem(userInfo: suggestionsConnections[index])),
+                itemBuilder: (context, index) => ConnectionRequestCardItem(userInfo: suggestionsConnections[index]),
                 padding: REdgeInsets.symmetric(horizontal: 12, vertical: 15),
                 itemCount: suggestionsConnections.length,
                 shrinkWrap: true,

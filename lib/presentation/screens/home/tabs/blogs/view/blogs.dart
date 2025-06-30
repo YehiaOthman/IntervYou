@@ -20,6 +20,7 @@ class Blogs extends StatefulWidget {
 }
 
 class _BlogsState extends State<Blogs> {
+  String currentUserId = '';
 
   @override
   void initState() {
@@ -36,6 +37,11 @@ class _BlogsState extends State<Blogs> {
     final viewModel = Provider.of<BlogsViewModel>(context, listen: false);
     const storage = FlutterSecureStorage();
     final userId = await storage.read(key: 'user_id');
+    if(mounted){
+      setState(() {
+        currentUserId = userId ?? '';
+      });
+    }
     if (userId != null && mounted) {
       viewModel.fetchUserProfile(userId);
     }
@@ -53,6 +59,7 @@ class _BlogsState extends State<Blogs> {
             body: NestedScrollView(
               headerSliverBuilder: (context, innerBoxIsScrolled) {
                 return [
+
                   SliverAppBar(
                     backgroundColor: ColorsManger.newSecondaryColor,
                     floating: true,
@@ -72,7 +79,7 @@ class _BlogsState extends State<Blogs> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         InkWell(
-                          onTap: () => Navigator.pushNamed(context, RoutesManger.userProfile),
+                          onTap: () => Navigator.pushNamed(context, RoutesManger.userProfile,arguments: currentUserId),
                           child: Container(
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
@@ -83,9 +90,9 @@ class _BlogsState extends State<Blogs> {
                             ),
                             child: CircleAvatar(
                               radius: 20,
-                              backgroundImage: (userProfile?.profilePictureUrl != null
-                                  ? NetworkImage('https://intervyouquestions.runasp.net${userProfile!.profilePictureUrl!}')
-                                  : AssetImage(AssetsManager.guestPp)) as ImageProvider,
+                              backgroundImage: (userProfile?.profilePictureUrl != null && userProfile!.profilePictureUrl!.isNotEmpty
+                                  ? NetworkImage('https://intervyouquestions.runasp.net${userProfile.profilePictureUrl!}')
+                                  : const AssetImage(AssetsManager.guestPp)) as ImageProvider,
                             ),
                           ),
                         ),
@@ -104,7 +111,7 @@ class _BlogsState extends State<Blogs> {
                           ),
                         ),
                         InkWell(
-                          onTap: () => Navigator.pushNamed(context, RoutesManger.addPost),
+                          onTap: () => Navigator.pushNamed(context, RoutesManger.addPost,arguments: viewModel),
                           child: Container(
                             padding: REdgeInsets.all(4),
                             decoration: BoxDecoration(

@@ -15,14 +15,7 @@ class PostDetailsItem extends StatefulWidget {
 }
 
 class _PostDetailsItemState extends State<PostDetailsItem> {
-  num currentVote = 0;
-  int votes = 50;
 
-  @override
-  void initState() {
-    super.initState();
-    currentVote = widget.post.currentUserVote ?? 0;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -106,45 +99,7 @@ class _PostDetailsItemState extends State<PostDetailsItem> {
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                InkWell(
-                  onTap: () => handleVote(widget.post.id??0,1,),
-                  child: Container(
-                    padding:
-                    REdgeInsets.symmetric(horizontal: 15, vertical: 8),
-                    decoration: BoxDecoration(
-                      color: currentVote == 1
-                          ? ColorsManger.newSecondaryColor.withOpacity(0.5)
-                          : ColorsManger.newSecondaryColor.withOpacity(0.13),
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(25.r),
-                        bottomLeft: Radius.circular(25.r),
-                      ),
-                    ),
-                    child: Icon(Icons.arrow_upward,
-                        color: ColorsManger.newSecondaryColor.withOpacity(0.8),
-                        size: 22),
-                  ),
-                ),
-                SizedBox(width: 2.w),
-                InkWell(
-                  onTap: () => handleVote(widget.post.id??0,-1),
-                  child: Container(
-                    padding:
-                    REdgeInsets.symmetric(horizontal: 15, vertical: 8),
-                    decoration: BoxDecoration(
-                      color: currentVote == -1
-                          ? ColorsManger.newSecondaryColor.withOpacity(0.5)
-                          : ColorsManger.newSecondaryColor.withOpacity(0.13),
-                      borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(25.r),
-                        bottomRight: Radius.circular(25.r),
-                      ),
-                    ),
-                    child: Icon(Icons.arrow_downward,
-                        color: ColorsManger.newSecondaryColor.withOpacity(0.8),
-                        size: 22),
-                  ),
-                ),
+
                 SizedBox(width: 10.w),
                 if(widget.post.currentUserVote != null)Container(
                   padding: REdgeInsets.symmetric(horizontal: 15, vertical: 8),
@@ -197,11 +152,4 @@ class _PostDetailsItemState extends State<PostDetailsItem> {
     );
   }
 
-  void handleVote(num postId,num voteType,) async {
-    num newVote = currentVote == voteType ? 0 : voteType;
-    setState(() {
-      currentVote = newVote;
-    });
-    await ApiManger.voteOnPost(postId: postId, type: newVote);
-  }
 }
