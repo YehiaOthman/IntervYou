@@ -27,7 +27,7 @@ class CustomTxtField extends StatelessWidget {
       children: [
         Text(
           label,
-          style: LightAppStyle.email.copyWith(fontWeight: FontWeight.w700,color: Colors.black),
+          style: TextStyle(fontWeight: FontWeight.w700,color: Colors.black),
         ),
         SizedBox(
           height: 10.h,

@@ -92,41 +92,73 @@ class _RoadMapState extends State<RoadMap> {
                           ],
                         ),
                         SizedBox(width: 10.w),
+                        // In road_map.dart -> ListView.builder -> Row
+
                         Expanded(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: vm.currentTopicIndex == index
-                                  ? ColorsManger.newSecondaryColor
-                                  : ColorsManger.newSecondaryColor
+                          child: Stack(
+                            children: [
+                              Container(
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  color: vm.currentTopicIndex == index
+                                      ? ColorsManger.newSecondaryColor
+                                      : ColorsManger.newSecondaryColor
                                       .withOpacity(0.8),
-                              borderRadius: BorderRadius.circular(35.r),
-                              border: Border.all(
-                                color: ColorsManger.newSecondaryColor
-                                    .withOpacity(0.5),
-                                width: 2,
+                                  borderRadius: BorderRadius.circular(35.r),
+                                  border: Border.all(
+                                    color: ColorsManger.newSecondaryColor
+                                        .withOpacity(0.5),
+                                    width: 2,
+                                  ),
+                                ),
+                                child: Padding(
+                                  padding: REdgeInsets.only(left: 10),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: REdgeInsets.all(8.0),
+                                        child: Text(
+                                          topic.name ?? '',
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                            color: vm.currentTopicIndex == index
+                                                ? Colors.white
+                                                : Colors.white70,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ),
-                            ),
-                            child: Padding(
-                              padding: REdgeInsets.only(left: 10),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: REdgeInsets.all(8.0),
+
+                              if (topic.recommendedFocus ?? false)
+                                Positioned(
+                                  top: 0,
+                                  right: 0,
+                                  child: Container(
+                                    padding: REdgeInsets.symmetric(
+                                        horizontal: 12, vertical: 4),
+                                    decoration: BoxDecoration(
+                                      color: Colors.green,
+                                      borderRadius: BorderRadius.only(
+                                        topRight: Radius.circular(35.r),
+                                        bottomLeft: Radius.circular(15.r),
+                                      ),
+                                    ),
                                     child: Text(
-                                      topic.name ?? '',
-                                      style: TextStyle(
-                                        fontSize: 18,
+                                      'FOCUS',
+                                      style: LightAppStyle.email.copyWith(
+                                        color: Colors.white,
                                         fontWeight: FontWeight.bold,
-                                        color: vm.currentTopicIndex == index
-                                            ? Colors.white
-                                            : Colors.white70,
+                                        fontSize: 11.sp,
                                       ),
                                     ),
                                   ),
-                                ],
-                              ),
-                            ),
+                                ),
+                            ],
                           ),
                         ),
                       ],

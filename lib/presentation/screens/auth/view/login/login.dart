@@ -10,6 +10,7 @@ import 'package:intervyou_app/core/routes_manger.dart';
 import 'package:intervyou_app/core/strings_manager.dart';
 import 'package:intervyou_app/data/api_manager.dart';
 import 'package:intervyou_app/data/models/login_response.dart';
+import 'package:intervyou_app/presentation/screens/auth/widgets/custom_password_txt.dart';
 import '../../widgets/custom_txt_field.dart';
 
 class Login extends StatefulWidget {
@@ -63,13 +64,11 @@ class _LoginState extends State<Login> {
                     icon: Icons.email_outlined,
                   ),
                   SizedBox(height: 25.h),
-                  CustomTxtField(
-                    title: 'Enter your password',
+                  CustomPasswordTxt(  title: 'Enter your password',
                     label: 'Password',
                     validator: (String? value) => null,
                     controller: passwordController,
-                    icon: CupertinoIcons.lock,
-                  ),
+                    icon: CupertinoIcons.lock,),
                   SizedBox(height: 12.h),
                   Row(
                     children: [
@@ -138,8 +137,9 @@ class _LoginState extends State<Login> {
                     },
                     child: Text(
                       StringsManger.loggedIn,
-                      style:
-                          LightAppStyle.loggedIn.copyWith(color: Colors.white),
+                      style:TextStyle( color: Colors.white,
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.w400,),
                     ),
                   ),
                   SizedBox(height: 28.h),

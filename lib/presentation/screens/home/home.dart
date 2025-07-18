@@ -19,12 +19,24 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   int selectedIndex = 0;
-  List<Widget> tabs = [
-    HomeTab(),
-    Blogs(),
-    Learn(),
-    Profile(),
-  ];
+  late final List<Widget> tabs;
+
+  @override
+  void initState() {
+    super.initState();
+    tabs = [
+      HomeTab(onNavigateToLearn: () => _changeTab(2)),
+      const Blogs(),
+      const Learn(),
+      const Profile(),
+    ];
+  }
+
+  void _changeTab(int index) {
+    setState(() {
+      selectedIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,54 +55,42 @@ class _HomeState extends State<Home> {
         ),
         child: SafeArea(
           child: Padding(
-            padding:  REdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
+            padding: REdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
             child: GNav(
               rippleColor: Colors.white.withOpacity(0.1),
               hoverColor: Colors.white.withOpacity(0.1),
               gap: 8,
-              activeColor: ColorsManger.newSecondaryColor,
+              activeColor: Colors.white,
               iconSize: 24,
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-              duration: Duration(milliseconds: 300),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              duration: const Duration(milliseconds: 300),
               tabBackgroundColor: Colors.white.withOpacity(0.1),
-              color: Colors.black,
-              textStyle: TextStyle(fontWeight: FontWeight.w500,color: Colors.white),
+              color: Colors.white.withOpacity(0.7),
+              textStyle: const TextStyle(fontWeight: FontWeight.w500, color: Colors.white),
               tabs: [
                 GButton(
-                  leading: SvgPicture.asset(
-                    AssetsManager.home,
-                    color: Colors.white
-                  ),
-                  text: 'Home', icon: Icons.circle,
+                  leading: SvgPicture.asset(AssetsManager.home, colorFilter: ColorFilter.mode(selectedIndex == 0 ? Colors.white : Colors.white.withOpacity(0.7), BlendMode.srcIn)),
+                  text: 'Home',
+                  icon: Icons.home,
                 ),
                 GButton(
-                  leading: SvgPicture.asset(
-                    AssetsManager.blogs,
-                    color: Colors.white,
-                  ),
-                  text: 'Blogs', icon: Icons.circle,
+                  leading: SvgPicture.asset(AssetsManager.blogs, colorFilter: ColorFilter.mode(selectedIndex == 1 ? Colors.white : Colors.white.withOpacity(0.7), BlendMode.srcIn)),
+                  text: 'Blogs',
+                  icon: Icons.article,
                 ),
                 GButton(
-                  leading: SvgPicture.asset(
-                    AssetsManager.learn,
-                    color: Colors.white,
-                  ),
-                  text: 'Learning', icon: Icons.circle,
+                  leading: SvgPicture.asset(AssetsManager.learn, colorFilter: ColorFilter.mode(selectedIndex == 2 ? Colors.white : Colors.white.withOpacity(0.7), BlendMode.srcIn)),
+                  text: 'Learning',
+                  icon: Icons.school,
                 ),
                 GButton(
-                  leading: SvgPicture.asset(
-                    AssetsManager.profile,
-                    color:  Colors.white,
-                  ),
-                  text: 'Profile', icon: Icons.circle,
+                  leading: SvgPicture.asset(AssetsManager.profile, colorFilter: ColorFilter.mode(selectedIndex == 3 ? Colors.white : Colors.white.withOpacity(0.7), BlendMode.srcIn)),
+                  text: 'Profile',
+                  icon: Icons.person,
                 ),
               ],
               selectedIndex: selectedIndex,
-              onTabChange: (index) {
-                setState(() {
-                  selectedIndex = index;
-                });
-              },
+              onTabChange: _changeTab,
             ),
           ),
         ),
@@ -99,65 +99,3 @@ class _HomeState extends State<Home> {
     );
   }
 }
-// bottomNavigationBar: SafeArea(
-//           child: Padding(
-//         padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-//         child: Container(
-//           height: 60.h,
-//             decoration: BoxDecoration(
-//               borderRadius: BorderRadius.circular(25.r),
-//               color: Colors.black.withOpacity(0.8),
-//             ),
-//             child: BottomNavigationBar(
-//                 backgroundColor: Colors.transparent,
-//                 currentIndex: selectedIndex,
-//                 onTap: (index) {
-//                   setState(() {
-//                     selectedIndex = index;
-//                   });
-//                 },
-//                 selectedItemColor: ColorsManger.secondaryColor,
-//                 unselectedItemColor: ColorsManger.txtFillColor,
-//                 selectedLabelStyle: const TextStyle(fontSize: 12),
-//                 unselectedLabelStyle: const TextStyle(fontSize: 12),
-//                 type: BottomNavigationBarType.fixed,
-//                 showSelectedLabels: true,
-//                 showUnselectedLabels: false,
-//                 elevation: 0,
-//                 iconSize: 25,
-//                 items: [
-//                   BottomNavigationBarItem(
-//                       icon: SvgPicture.asset(
-//                         AssetsManager.home,
-//                         color: selectedIndex == 0
-//                             ? ColorsManger.secondaryColor
-//                             : ColorsManger.txtFillColor,
-//                       ),
-//                       label: 'Home'),
-//                   BottomNavigationBarItem(
-//                       icon: SvgPicture.asset(
-//                         AssetsManager.blogs,
-//                         color: selectedIndex == 1
-//                             ? ColorsManger.secondaryColor
-//                             : ColorsManger.txtFillColor,
-//                       ),
-//                       label: 'Blogs'),
-//                   BottomNavigationBarItem(
-//                       icon: SvgPicture.asset(
-//                         AssetsManager.learn,
-//                         color: selectedIndex == 2
-//                             ? ColorsManger.secondaryColor
-//                             : ColorsManger.txtFillColor,
-//                       ),
-//                       label: 'Learning'),
-//                   BottomNavigationBarItem(
-//                       icon: SvgPicture.asset(
-//                         AssetsManager.profile,
-//                         color: selectedIndex == 3
-//                             ? ColorsManger.secondaryColor
-//                             : ColorsManger.txtFillColor,
-//
-//                       ),
-//                       label: 'Profile'),
-//                 ])),
-//       )),

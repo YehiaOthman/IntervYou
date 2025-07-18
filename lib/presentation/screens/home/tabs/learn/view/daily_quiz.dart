@@ -312,19 +312,6 @@ class _DailyQuizState extends State<DailyQuiz> {
                             ),
                           ),
                           SizedBox(width: 10.w),
-                          Column(
-                            children: [
-                              Icon(Icons.access_time_outlined,
-                                  color: Colors.white, size: 25.sp),
-                              Text(
-                                '10:00',
-                                style: LightAppStyle.email.copyWith(
-                                    fontSize: 12.sp,
-                                    fontWeight: FontWeight.normal,
-                                    color: Colors.white),
-                              ),
-                            ],
-                          ),
                         ],
                       ),
                       SizedBox(height: 30.h),

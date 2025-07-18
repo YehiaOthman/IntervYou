@@ -14,4 +14,5 @@ class AssetsManager{
   static const String svgLogo = 'assets/svg/svg_logo.svg';
   static const String whiteLogo = 'assets/images/white_logo.png';
   static const String splashBg = 'assets/images/Splash_bg.png';
+  static const String guestPp = 'assets/images/guestpp.png';
 }

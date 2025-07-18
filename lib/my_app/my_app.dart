@@ -7,7 +7,15 @@ import 'package:intervyou_app/presentation/screens/auth/view/forgot_password_otp
 import 'package:intervyou_app/presentation/screens/auth/view/login/login.dart';
 import 'package:intervyou_app/presentation/screens/auth/view/login/reset_password.dart';
 import 'package:intervyou_app/presentation/screens/auth/view/sign_up/sign_up.dart';
+import 'package:intervyou_app/presentation/screens/home/tabs/blogs/view/add_post.dart';
 import 'package:intervyou_app/presentation/screens/home/tabs/blogs/view/blogs.dart';
+import 'package:intervyou_app/presentation/screens/home/tabs/blogs/view/chat.dart';
+import 'package:intervyou_app/presentation/screens/home/tabs/blogs/view/connections_list.dart';
+import 'package:intervyou_app/presentation/screens/home/tabs/blogs/view/invitations.dart';
+import 'package:intervyou_app/presentation/screens/home/tabs/blogs/view/post_details.dart';
+import 'package:intervyou_app/presentation/screens/home/tabs/blogs/view/user_info_profile.dart';
+import 'package:intervyou_app/presentation/screens/home/tabs/blogs/view/user_profile.dart';
+import 'package:intervyou_app/presentation/screens/home/tabs/home_tab/view/notifications_screen.dart';
 import 'package:intervyou_app/presentation/screens/home/tabs/learn/view/daily_quiz.dart';
 import 'package:intervyou_app/presentation/screens/home/tabs/learn/view/learn.dart';
 import 'package:intervyou_app/presentation/screens/home/tabs/learn/view/milestone_details.dart';
@@ -44,8 +52,16 @@ class MyApp extends StatelessWidget {
           RoutesManger.roadMap:(_)=> RoadMap(),
           RoutesManger.emailConfirmationOtp:(_)=> EmailConfirmationOtp(),
           RoutesManger.preferences:(_)=> Preferences(),
+          RoutesManger.userInfoProfile:(_)=> UserInfoProfile(),
+          RoutesManger.userProfile:(_)=> UserProfile(),
+          RoutesManger.connectionsList:(_)=> ConnectionsList(),
+          RoutesManger.addPost:(_)=> AddPost(),
+          RoutesManger.postDetails:(_)=> PostDetails(),
+          RoutesManger.invitations:(_)=> Invitations(),
+          RoutesManger.chat:(_)=> Chat(),
+          RoutesManger.notifications:(_)=> NotificationsScreen(),
         },
-        initialRoute: RoutesManger.splash ,
+        initialRoute: RoutesManger.login ,
       ),
     );
   }
