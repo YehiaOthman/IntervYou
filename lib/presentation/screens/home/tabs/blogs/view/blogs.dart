@@ -102,7 +102,6 @@ class _BlogsState extends State<Blogs> {
                             dividerColor: Colors.transparent,
                             unselectedLabelColor: Colors.white.withOpacity(0.4),
                             indicatorColor: ColorsManger.newWhite,
-                            labelStyle: LightAppStyle.email,
                             tabs: const [
                               Tab(text: 'Posts'),
                               Tab(text: 'Network'),

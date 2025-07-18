@@ -137,8 +137,9 @@ class _LoginState extends State<Login> {
                     },
                     child: Text(
                       StringsManger.loggedIn,
-                      style:
-                          LightAppStyle.loggedIn.copyWith(color: Colors.white),
+                      style:TextStyle( color: Colors.white,
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.w400,),
                     ),
                   ),
                   SizedBox(height: 28.h),
